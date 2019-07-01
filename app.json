@@ -1,0 +1,7 @@
+{
+	"name": "tiapp",
+	"displayName": "tia",
+	"expo": {
+		"sdkVersion": "33.0.0"
+	}
+}
