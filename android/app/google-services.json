@@ -1,0 +1,47 @@
+{
+	"project_info": {
+		"project_number": "67755937701",
+		"firebase_url": "https://ti-app-client-6e554.firebaseio.com",
+		"project_id": "ti-app-client-6e554",
+		"storage_bucket": "ti-app-client-6e554.appspot.com"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "1:67755937701:android:50432e03bc390dac",
+				"android_client_info": {
+					"package_name": "com.tiapp"
+				}
+			},
+			"oauth_client": [
+				{
+					"client_id": "67755937701-5afkh1f94cv99a9qmmqc37kmrjtefikc.apps.googleusercontent.com",
+					"client_type": 1,
+					"android_info": {
+						"package_name": "com.tiapp",
+						"certificate_hash": "50ccc0358f94c76b4ec629c40602f4f6c72b5d1c"
+					}
+				}
+			],
+			"api_key": [
+				{
+					"current_key": "AIzaSyD_lfcoZtqePFGMvAsc5Iec9JxK5X6k4Do"
+				}
+			],
+			"services": {
+				"appinvite_service": {
+					"other_platform_oauth_client": [
+						{
+							"client_id": "67755937701-li78dlgmlgd56i0pcpktapjoiuoqigbc.apps.googleusercontent.com",
+							"client_type": 2,
+							"ios_info": {
+								"bundle_id": "com.tia.tiatree"
+							}
+						}
+					]
+				}
+			}
+		}
+	],
+	"configuration_version": "1"
+}

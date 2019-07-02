@@ -29,6 +29,16 @@ target 'tiapp' do
 
   use_unimodules!
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
+
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'tiappTests' do
     inherit! :search_paths
   end

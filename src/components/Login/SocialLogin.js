@@ -14,9 +14,8 @@ const FB_APP_ID = '2439803646062305';
 class SocialLogin extends React.Component {
 	componentDidMount() {
 		GoogleSignin.configure({
-			// Repleace with your webClientId generated from Firebase console
+			scopes: ['https://www.googleapis.com/auth/drive.readonly'],
 			webClientId: '67755937701-5371f081rqom8d5lhc6m9hmdqlspjpmv.apps.googleusercontent.com',
-			// webClientId: '141502997719-sui87ofok969fm799kl43k3sr6s1hg6v.apps.googleusercontent.com'
 		});
 	}
 
