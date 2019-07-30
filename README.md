@@ -46,9 +46,21 @@ If you get an error like Nullable is not a symbol or something, try this:
 
 Generating Keystore:
 
-```
+```bash
 keytool -genkey -v -keystore "C:\Users\aksha\.android\debug.keystore" -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US"
 ```
+
+For following error && Running on Device:
+
+`error Could not install the app on the device, read the error above for details. Make sure you have an Android emulator running or a device connected and have set up your Android development environment:`
+
+```
+adb kill-server
+adb start-server
+```
+
+Facing problem with blocked port:
+`https://stackoverflow.com/a/55450873/5692089`
 
 # Samples
 

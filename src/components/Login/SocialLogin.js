@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import * as Facebook from 'expo-facebook';
-import { GoogleSignin, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin } from 'react-native-google-signin';
 
 import ProductButton from '../shared/ProductButton';
 import { setLoading } from '../../store/actions/ui-interactions.action';
@@ -11,35 +11,11 @@ import { updateUserStatus } from '../../store/actions/auth.action';
 
 const FB_APP_ID = '2439803646062305';
 
+GoogleSignin.configure({
+	webClientId: '67755937701-f7sf64nd0jnbqke4vuf209b8els3uq13.apps.googleusercontent.com',
+});
+
 class SocialLogin extends React.Component {
-	componentDidMount() {
-		GoogleSignin.configure({
-			scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-			webClientId: '67755937701-5371f081rqom8d5lhc6m9hmdqlspjpmv.apps.googleusercontent.com',
-		});
-	}
-
-	_signIn = async () => {
-		try {
-			await GoogleSignin.hasPlayServices({
-				showPlayServicesUpdateDialog: true,
-			});
-			const userInfo = await GoogleSignin.signIn();
-			console.log('User Info --> ', userInfo);
-		} catch (error) {
-			console.log('Message', error.message);
-			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-				console.log('User Cancelled the Login Flow');
-			} else if (error.code === statusCodes.IN_PROGRESS) {
-				console.log('Signing In');
-			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-				console.log('Play Services Not Available or Outdated');
-			} else {
-				console.log('Some Other Error', error);
-			}
-		}
-	};
-
 	isUserEqual = (googleUser, firebaseUser) => {
 		if (firebaseUser) {
 			const { providerData } = firebaseUser;
@@ -56,6 +32,24 @@ class SocialLogin extends React.Component {
 		return false;
 	};
 
+	onSignIn = async (googleUser) => {
+		// Build Firebase credential with the Google ID token.
+		const credential = firebase.auth.GoogleAuthProvider.credential(
+			googleUser.idToken,
+			googleUser.accessToken
+		);
+		// Sign in with credential from the Google user.
+		firebase
+			.auth()
+			.signInWithCredential(credential)
+			.then(async (result) => {
+				console.log('user registered!', result);
+			})
+			.catch((error) => {
+				console.log('error while signing!', error);
+			});
+	};
+
 	signInWithFBAsync = async () => {
 		const options = {
 			permission: ['public_profile'],
@@ -66,7 +60,7 @@ class SocialLogin extends React.Component {
 			const credential = firebase.auth.FacebookAuthProvider.credential(token);
 			firebase
 				.auth()
-				.signInAndRetrieveDataWithCredential(credential)
+				.signInWithCredential(credential)
 				.then((response) => {
 					console.log('FB Login successfully ', response);
 				})
@@ -75,6 +69,19 @@ class SocialLogin extends React.Component {
 				});
 		} else {
 			console.log('Facebook log in failed.');
+		}
+	};
+
+	signInWithGoogle = async () => {
+		const { navigation } = this.props;
+		try {
+			await GoogleSignin.hasPlayServices();
+			const result = await GoogleSignin.signIn();
+			await this.onSignIn(result);
+			navigation.navigate('Home');
+			return result.accessToken;
+		} catch (error) {
+			console.log('Google Login failed', error);
 		}
 	};
 
@@ -96,9 +103,8 @@ class SocialLogin extends React.Component {
 						full
 						style={styles.googleButton}
 						onPress={() => {
-							console.log('Google Sign in implementation is pending with expo unimodule.');
-							//   this.signInWithGoogleAsync();
-							this._signIn();
+							this.signInWithGoogle();
+							console.log('Google Sign in implementation is pending.');
 						}}
 					>
 						GOOGLE

@@ -51,7 +51,9 @@ class AppContent extends React.Component {
 		}
 		firebase.auth().onAuthStateChanged(async (user) => {
 			const { updateUser } = this.props;
-			this.setState({ authenticationStatus: user ? 'authenticated' : 'unauthenticated' });
+			this.setState({
+				authenticationStatus: user ? 'authenticated' : 'unauthenticated',
+			});
 			updateUser(!!user, user);
 
 			await AsyncStorage.setItem('USER', JSON.stringify(user));
@@ -59,6 +61,7 @@ class AppContent extends React.Component {
 
 			if (user) {
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
+				console.log(JSON.parse(JSON.stringify(user)));
 				console.log('Access Token:', accessToken);
 				axios.interceptors.request.use(
 					(config) => {
@@ -66,6 +69,7 @@ class AppContent extends React.Component {
 						if (!noloading) {
 							setLoading(true);
 						}
+
 						return {
 							headers: {
 								'x-id-token': accessToken,
