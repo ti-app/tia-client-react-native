@@ -4,15 +4,15 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
 // import Feather from '@expo/vector-icons/Feather';
 // import Foundation from '@expo/vector-icons/Foundation';
-import Feather from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { toggleDrawer, toggleFilter } from '../../store/actions/ui-interactions.action';
 
 const HomeNavigationBar = ({ nearbyTreesCount, toggleDrawer, toggleFilter }) => (
 	<View style={styles.container}>
 		<TouchableOpacity style={styles.menuButton} onPress={() => toggleDrawer()}>
-			<Feather size={20} name="menu" />
+			<Ionicons size={20} name="md-menu" />
 		</TouchableOpacity>
 		<View style={styles.textContainer}>
 			<Text style={styles.title}> Nearby </Text>
