@@ -14,14 +14,14 @@ export default {
 	platformStyle,
 	platform,
 
-	//Accordion
+	// Accordion
 	headerStyle: '#edebed',
 	iconStyle: '#000',
 	contentStyle: '#f5f4f5',
 	expandedIconStyle: '#000',
 	accordionBorderColor: '#d3d3d3',
 
-	//Android
+	// Android
 	androidRipple: true,
 	androidRippleColor: 'rgba(256, 256, 256, 0.3)',
 	androidRippleColorDark: 'rgba(0, 0, 0, 0.15)',
@@ -104,18 +104,18 @@ export default {
 	checkboxTickColor: '#fff',
 
 	// Color
-	brandPrimary: platform === 'ios' ? '#007aff' : '#3F51B5',
-	brandInfo: '#62B1F6',
-	brandSuccess: '#5cb85c',
-	brandDanger: '#d9534f',
-	brandWarning: '#f0ad4e',
-	brandDark: '#000',
-	brandLight: '#f4f4f4',
+	brandPrimary: '#4267b2',
+	brandInfo: '#62B1F6', // tia-blue
+	brandSuccess: '#00dbb0', // tia-green
+	brandDanger: '#ea4335', // tia-red
+	brandWarning: '#f5a623', // tia-orange
+	brandDark: '#5f5d70', // tia-darkest-gray
+	brandLight: '#f6f6f9', // tia-light-white
 
-	//Container
+	// Container
 	containerBgColor: '#fff',
 
-	//Date Picker
+	// Date Picker
 	datePickerTextColor: '#000',
 	datePickerBg: 'transparent',
 
@@ -264,7 +264,7 @@ export default {
 	isIphoneX,
 	inputGroupRoundedBorderRadius: 30,
 
-	//iPhoneX SafeArea
+	// iPhoneX SafeArea
 	Inset: {
 		portrait: {
 			topInset: 24,

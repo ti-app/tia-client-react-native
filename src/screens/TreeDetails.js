@@ -8,6 +8,7 @@ import MapView from 'react-native-maps';
 import { waterTree, deleteTree } from '../store/actions/tree.action';
 import Tree from '../components/Map/Tree';
 import TreeDetailsNavBar from '../components/Navigation/TreeDetailsNavBar';
+import variables from '../../native-base-theme/variables/platform';
 
 class TreeDetails extends React.Component {
 	constructor(props) {
@@ -100,7 +101,7 @@ class TreeDetails extends React.Component {
 	getDeleteButton = () => {
 		return (
 			<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
-				<MaterialIcons name="delete" size={24} color="red" />
+				<MaterialIcons name="delete" size={24} color={variables.brandSuccess} />
 			</TouchableOpacity>
 		);
 	};
@@ -228,9 +229,9 @@ const styles = StyleSheet.create({
 	distanceLabel: { fontSize: 12, color: 'gray', textAlignVertical: 'bottom' },
 	weekStatus: { display: 'flex', flexDirection: 'row' },
 	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
-	healthy: { backgroundColor: 'green' },
+	healthy: { backgroundColor: variables.brandSuccess },
 	weak: { backgroundColor: 'orange' },
-	almostDead: { backgroundColor: 'red' },
+	almostDead: { backgroundColor: variables.brandDanger },
 	lastWateredText: { fontSize: 12, color: 'gray' },
 	wateredButton: {
 		width: '100%',

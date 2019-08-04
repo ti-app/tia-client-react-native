@@ -17,7 +17,7 @@ const defaultHeaderOptions = {
 	headerTransparent: true,
 	headerStyle: {
 		height: 80,
-		borderBottomColor: 'red',
+		borderBottomColor: '#ea4335',
 		borderBottomWidth: 2,
 		backgroundColor: '#ffff',
 		opacity: 0.8,

@@ -15,6 +15,7 @@ import MainTabNavigator from './navigation/MainNavigator';
 import NavigationUtil from './utils/Navigation';
 import { setLoading } from './store/actions/ui-interactions.action';
 import { updateUserStatus } from './store/actions/auth.action';
+import variables from '../native-base-theme/variables/material';
 
 const {
 	FIREBASE_CONFIG_API_KEY,
@@ -63,7 +64,7 @@ class AppContent extends React.Component {
 				Toast.show({
 					text: `Welcome! Successfully logged in`,
 					buttonText: 'Okay',
-					type: 'success',
+					style: { backgroundColor: variables.brandSuccess },
 				});
 
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;

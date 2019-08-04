@@ -1,7 +1,9 @@
-export const getColorByTreeStatus = (status) => {
-	return {
-		healthy: '#00dbb0',
-		weak: '#f5a623',
-		almostDead: '#ea4335',
-	}[status];
-};
+import variables from '../../native-base-theme/variables/material';
+
+// eslint-disable-next-line import/prefer-default-export
+export const getColorByTreeStatus = (status) =>
+	({
+		healthy: variables.brandSuccess,
+		weak: variables.brandWarning,
+		almostDead: variables.brandDanger,
+	}[status]);
