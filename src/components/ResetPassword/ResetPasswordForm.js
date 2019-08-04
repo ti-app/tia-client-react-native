@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-// import { Entypo } from '@expo/vector-icons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { Toast } from 'native-base';
 import * as firebase from 'firebase';

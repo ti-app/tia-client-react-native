@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-// import ClusteredMapView from 'react-native-maps-super-cluster';
 import MapView from 'react-native-maps';
 
 export default class Map extends React.Component {

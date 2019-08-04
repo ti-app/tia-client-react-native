@@ -2,9 +2,7 @@ import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Toast, Text, List, ListItem, View } from 'native-base';
-// import { FontAwesome } from '@expo/vector-icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// import { LinearGradient } from 'expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import firebase from 'firebase';
 

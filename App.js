@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { StyleSheet } from 'react-native';
-// import { AppLoading } from 'expo';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { StyleProvider, Root } from 'native-base';
 import { Provider } from 'react-redux';
@@ -17,7 +15,6 @@ export default class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			// isLoadingComplete: false,
 			showIntroduction: false,
 		};
 	}
@@ -52,20 +49,9 @@ export default class App extends React.Component {
 
 	render() {
 		const { showIntroduction } = this.state;
-		// const { skipLoadingScreen } = this.props;
 		if (showIntroduction) {
 			return <AppIntroSlider slides={slides} onDone={this.onIntroductionDone} />;
 		}
-
-		// if (!isLoadingComplete && !skipLoadingScreen) {
-		//   return (
-		//     <AppLoading
-		//       startAsync={loadResourcesAsync}
-		//       onError={this._handleLoadingError}
-		//       onFinish={this._handleFinishLoading}
-		//     />
-		//   );
-		// }
 
 		return (
 			<Root>
@@ -77,16 +63,6 @@ export default class App extends React.Component {
 			</Root>
 		);
 	}
-
-	_handleLoadingError = (error) => {
-		// In this case, you might want to report the error to your error
-		// reporting service, for example Sentry
-		console.warn(error);
-	};
-
-	// _handleFinishLoading = () => {
-	//   this.setState({ isLoadingComplete: true });
-	// };
 }
 
 const styles = StyleSheet.create({

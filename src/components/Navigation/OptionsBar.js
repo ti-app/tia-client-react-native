@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
 		flexDirection: 'row',
-		// justifyContent: 'space-between',
 		width: '100%',
 	},
 	titleContainer: {
@@ -40,7 +39,9 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	leftOptionLabel: {},
-	rightOptionLabel: {},
+	rightOptionLabel: {
+		textAlign: 'right',
+	},
 	leftButton: {
 		display: 'flex',
 		flexDirection: 'column',

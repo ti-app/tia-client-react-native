@@ -17,8 +17,7 @@ function navigate(routeName, params) {
 	);
 }
 
-// add other navigation functions that you need and export them
-
+// Add other navigation functions that you need and export them
 export default {
 	navigate,
 	setTopLevelNavigator,

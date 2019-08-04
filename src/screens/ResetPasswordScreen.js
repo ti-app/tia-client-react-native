@@ -8,7 +8,7 @@ import ResetPasswordForm from '../components/ResetPassword/ResetPasswordForm';
 export default class ResetPassword extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { text: 'Email Address', isKeyboardOpen: false };
+		this.state = { isKeyboardOpen: false };
 	}
 
 	componentDidMount() {
@@ -35,15 +35,12 @@ export default class ResetPassword extends React.Component {
 		this.setState({ isKeyboardOpen: false });
 	}
 
-	onResetPasswordPress() {
-		console.log('Reset Password clicked!');
-	}
-
 	render() {
+		const { isKeyboardOpen } = this.state;
 		return (
 			<Container style={styles.container}>
 				<KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-					<View style={[styles.iconContainer, this.state.isKeyboardOpen ? styles.hide : null]}>
+					<View style={[styles.iconContainer, isKeyboardOpen ? styles.hide : null]}>
 						<LogoWithText />
 					</View>
 					<View style={styles.formContainer}>
@@ -56,6 +53,7 @@ export default class ResetPassword extends React.Component {
 		);
 	}
 }
+
 const styles = StyleSheet.create({
 	iconContainer: {
 		marginTop: 60,

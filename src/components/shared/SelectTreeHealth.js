@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Slider } from 'react-native';
-import { Container, Content, View, Text, Button } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { View, Text, Button } from 'native-base';
 
-export class SelectTreeHealth extends React.Component {
+export default class SelectTreeHealth extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,6 +15,9 @@ export class SelectTreeHealth extends React.Component {
 	}
 
 	handleSelection = (field) => {
+		const { onSelectedStatusChange } = this.props;
+		const { selectedHealthStatus } = this.state;
+
 		const { type } = this.props;
 		this.setState(
 			(prevState) => {
@@ -33,13 +36,14 @@ export class SelectTreeHealth extends React.Component {
 					  };
 			},
 			() => {
-				this.props.onSelectedStatusChange(this.state.selectedHealthStatus);
+				onSelectedStatusChange(selectedHealthStatus);
 			}
 		);
 	};
 
 	render() {
-		const { healthy, weak, almostDead } = this.state.selectedHealthStatus;
+		const { selectedHealthStatus } = this.state;
+		const { healthy, weak, almostDead } = selectedHealthStatus;
 		return (
 			<View style={styles.view}>
 				<Button

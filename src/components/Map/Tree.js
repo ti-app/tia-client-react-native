@@ -36,7 +36,12 @@ export default class Tree extends PureComponent {
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
-				<View style={{ ...styles.outerCircle, backgroundColor: getColorByTreeStatus(status) }}>
+				<View
+					style={{
+						...styles.outerCircle,
+						backgroundColor: getColorByTreeStatus(status),
+					}}
+				>
 					<View style={styles.innerCircle} />
 				</View>
 			</Marker>

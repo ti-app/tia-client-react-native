@@ -1,5 +1,4 @@
 import { Toast } from 'native-base';
-// import axios from 'axios';
 
 import apiClient from '../../utils/ApiClient';
 
@@ -14,10 +13,6 @@ export const RESET_SELECTED_TREE_DETAILS = 'RESET_SELECTED_TREE_DETAILS';
 export const WATER_TREE_SUCCESS = 'WATER_TREE_SUCCESS';
 export const WATER_TREE_FAILURE = 'WATER_TREE_FAILURE';
 export const DELETE_TREE = 'DELETE_TREE';
-
-// TODO: Need to implement cancel on refetch for treegroups. Following commented implmentaion is not working well.
-// const { CancelToken } = axios;
-// let cancel;
 
 /**
  * Accepts parameter treeGroup which should be a FormData including an Image.
@@ -34,7 +29,10 @@ export const addGroup = (treeGroup) => async (dispatch, getState) => {
 			method: 'post',
 			url: '/tree_group',
 			data: treeGroup,
-			headers: { Accept: 'application/json', 'Content-Type': 'multipart/form-data' },
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'multipart/form-data',
+			},
 		});
 
 		NavigationUtil.navigate('Home');
@@ -93,7 +91,6 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 	try {
 		const { _id } = tree;
 		const url = `/tree/water/${_id}`;
-		console.log(`[tree-action::waterTree] making request to "${url}"`);
 		const response = await apiClient({
 			url,
 			headers: {
@@ -101,7 +98,6 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 			},
 			noloading: true,
 		});
-		console.log(`[tree-action::waterTree] request to "${url}" was successful`);
 		dispatch(waterTreeSuccess(response.data));
 		Toast.show({
 			text: 'Successfully updated watering details',
@@ -110,6 +106,8 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 				textAlign: 'center',
 			},
 		});
+
+		NavigationUtil.navigate('Home');
 
 		dispatch(
 			fetchTreeGroups({
@@ -148,6 +146,9 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 				textAlign: 'center',
 			},
 		});
+
+		NavigationUtil.navigate('Home');
+
 		dispatch(
 			fetchTreeGroups({
 				...userLocation,
@@ -167,10 +168,6 @@ export const fetchTreeGroupsSuccess = (payload) => ({
 export const setSelectedTreeDetails = (payload) => ({
 	type: SET_SELECTED_TREE_DETAILS,
 	payload,
-});
-
-export const resetSelectedTreeDetails = () => ({
-	type: RESET_SELECTED_TREE_DETAILS,
 });
 
 export const waterTreeSuccess = (payload) => ({

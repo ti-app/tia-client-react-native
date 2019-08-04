@@ -3,6 +3,7 @@ import HomeScreen from '../screens/HomeScreen';
 import AddNewSpotScreen from '../screens/AddNewSpotScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import FaqScreen from '../screens/FaqScreen';
+import TreeDetails from '../screens/TreeDetails';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -11,6 +12,9 @@ const MainNavigator = createStackNavigator(
 		},
 		AddNewSpot: {
 			screen: AddNewSpotScreen,
+		},
+		TreeDetails: {
+			screen: TreeDetails,
 		},
 		UserProfile: {
 			screen: UserProfileScreen,
