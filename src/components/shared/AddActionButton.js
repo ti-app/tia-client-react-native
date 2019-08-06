@@ -16,6 +16,12 @@ export default class AddActionButton extends Component {
 		navigation.navigate('AddNewSpot');
 	};
 
+	handleOnAddPlantationPress = () => {
+		const { navigation } = this.props;
+
+		navigation.navigate('AddPlantionSite');
+	};
+
 	render() {
 		const { clicked } = this.state;
 		return (
@@ -36,6 +42,13 @@ export default class AddActionButton extends Component {
 			>
 				<ActionButton.Item buttonColor="#f5a623" title="Coming soon!" onPress={() => {}}>
 					<AntDesign name="question" size={40} style={styles.icon} />
+				</ActionButton.Item>
+				<ActionButton.Item
+					buttonColor="#a8a5a0"
+					title="New plantation site"
+					onPress={this.handleOnAddPlantationPress}
+				>
+					<Entypo name="flow-tree" size={40} style={styles.icon} />
 				</ActionButton.Item>
 				<ActionButton.Item
 					buttonColor="#4267b2"

@@ -112,6 +112,7 @@ export default {
 	brandWarning: '#f5a623', // tia-orange
 	brandDark: '#5f5d70', // tia-darkest-gray
 	brandLight: '#f6f6f9', // tia-light-white
+	brandGrey: '#a8a5a0', // tia-light-grey
 
 	// Container
 	containerBgColor: '#fff',

@@ -6,4 +6,5 @@ export const getColorByTreeStatus = (status) =>
 		healthy: variables.brandSuccess,
 		weak: variables.brandWarning,
 		almostDead: variables.brandDanger,
+		plantationSite: variables.brandGrey,
 	}[status]);
