@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
-// import { Entypo, EvilIcons, AntDesign } from '@expo/vector-icons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -12,6 +11,7 @@ import * as firebase from 'firebase';
 import FormInput from '../shared/FormInput';
 import ProductButton from '../shared/ProductButton';
 import { setLoading } from '../../store/actions/ui-interactions.action';
+import variables from '../../../native-base-theme/variables/material';
 
 class RegisterPasswordForm extends React.Component {
 	constructor(props) {
@@ -64,7 +64,7 @@ class RegisterPasswordForm extends React.Component {
 								Toast.show({
 									text: `Welcome! Successfully registerd in TIA`,
 									buttonText: 'Great',
-									type: 'success',
+									style: { backgroundColor: variables.brandSuccess },
 								});
 							} catch (error) {
 								Toast.show({

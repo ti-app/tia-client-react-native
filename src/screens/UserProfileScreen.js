@@ -3,8 +3,15 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import OptionsBar from '../components/Navigation/OptionsBar';
-// import UserStarRating from "../components/shared/UserStarRating";
-// import BioTextInput from "../components/shared/BioTextInput";
+
+const getCurrentUser = async () => {
+	try {
+		const user = await AsyncStorage.getItem('USER');
+		return JSON.parse(user) || 'INITIAL';
+	} catch (error) {
+		throw error;
+	}
+};
 
 export default class UserProfileScreen extends Component {
 	constructor(props) {
@@ -15,20 +22,10 @@ export default class UserProfileScreen extends Component {
 	}
 
 	async componentWillMount() {
-		const currentUser = await this.getCurrentUser();
+		const currentUser = await getCurrentUser();
 		this.setState({ currentUser });
 	}
 
-	async getCurrentUser() {
-		try {
-			const user = await AsyncStorage.getItem('USER');
-			return JSON.parse(user) || 'INITIAL';
-		} catch (error) {
-			throw error;
-		}
-	}
-
-	// Header{}
 	static navigationOptions = ({ navigation }) => {
 		const header = navigation.getParam('header', {
 			headerTitle: (
@@ -108,7 +105,6 @@ const styles = StyleSheet.create({
 		borderColor: 'white',
 		marginBottom: 10,
 		alignSelf: 'center',
-		// position: "absolute",
 		marginTop: 10,
 	},
 	name: {

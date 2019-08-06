@@ -5,34 +5,32 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import axios from 'axios';
-import InitialLoadingScreen from './screens/InitialLoadingScreen';
+import { Toast } from 'native-base';
+import Config from 'react-native-config';
 
+import InitialLoadingScreen from './screens/InitialLoadingScreen';
 import AppNavigator from './navigation/AppNavigator';
 import MainTabNavigator from './navigation/MainNavigator';
-// import {
-// 	FIREBASE_CONFIG_API_KEY,
-// 	FIREBASE_CONFIG_AUTH_DOMAIN,
-// 	FIREBASE_CONFIG_DATABASE_URL,
-// 	FIREBASE_CONFIG_PROJECT_ID,
-// 	FIREBASE_CONFIG_STORAGE_BUCKET,
-// 	FIREBASE_CONFIG_MESSAGING_SENDER_ID,
-// } from 'react-native-dotenv';
+
 import NavigationUtil from './utils/Navigation';
 import { setLoading } from './store/actions/ui-interactions.action';
 import { updateUserStatus } from './store/actions/auth.action';
+import variables from '../native-base-theme/variables/material';
 
-const FIREBASE_CONFIG_API_KEY = 'AIzaSyD20hbjW0i5Yh5aT_rJL6dLDQ1oyX59ljo';
-const FIREBASE_CONFIG_AUTH_DOMAIN = 'ti-app-client-6e554.firebaseapp.com';
-const FIREBASE_CONFIG_DATABASE_URL = 'https://ti-app-client-6e554.firebaseio.com';
-const FIREBASE_CONFIG_PROJECT_ID = 'ti-app-client-6e554';
-const FIREBASE_CONFIG_STORAGE_BUCKET = 'ti-app-client-6e554.appspot.com';
-const FIREBASE_CONFIG_MESSAGING_SENDER_ID = '67755937701';
+const {
+	FIREBASE_CONFIG_API_KEY,
+	FIREBASE_CONFIG_AUTH_DOMAIN,
+	FIREBASE_CONFIG_DATABASE_URL,
+	FIREBASE_CONFIG_PROJECT_ID,
+	FIREBASE_CONFIG_STORAGE_BUCKET,
+	FIREBASE_CONFIG_MESSAGING_SENDER_ID,
+} = Config;
 
 class AppContent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			authenticationStatus: 'checking', // values: checking, authenticated, unauthenticated
+			authenticationStatus: 'checking',
 		};
 	}
 
@@ -49,17 +47,26 @@ class AppContent extends React.Component {
 			};
 			firebase.initializeApp(firebaseConfig);
 		}
+
 		firebase.auth().onAuthStateChanged(async (user) => {
-			const { updateUser } = this.props;
+			const { updateUser, setLoading } = this.props;
+
 			this.setState({
 				authenticationStatus: user ? 'authenticated' : 'unauthenticated',
 			});
+
 			updateUser(!!user, user);
 
 			await AsyncStorage.setItem('USER', JSON.stringify(user));
 			setLoading(false);
 
 			if (user) {
+				Toast.show({
+					text: `Welcome! Successfully logged in`,
+					buttonText: 'Okay',
+					style: { backgroundColor: variables.brandSuccess },
+				});
+
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
 				console.log(JSON.parse(JSON.stringify(user)));
 				console.log('Access Token:', accessToken);
@@ -89,14 +96,6 @@ class AppContent extends React.Component {
 				);
 			}
 		});
-	}
-
-	componentDidMount() {
-		// const { setLoading, user } = this.props;
-		// if (!user || !user.stsTokenManager) {
-		//   return;
-		// }
-		// const xIdToken = user.stsTokenManager.accessToken;
 	}
 
 	render() {

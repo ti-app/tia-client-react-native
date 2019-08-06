@@ -4,6 +4,7 @@ import AddNewSpotScreen from '../screens/AddNewSpotScreen';
 import AddPlantionSiteScreen from '../screens/AddPlantionSiteScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import FaqScreen from '../screens/FaqScreen';
+import TreeDetails from '../screens/TreeDetails';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -15,6 +16,9 @@ const MainNavigator = createStackNavigator(
 		},
 		AddPlantionSite: {
 			screen: AddPlantionSiteScreen,
+		},
+		TreeDetails: {
+			screen: TreeDetails,
 		},
 		UserProfile: {
 			screen: UserProfileScreen,

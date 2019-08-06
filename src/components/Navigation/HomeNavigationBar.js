@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
-// import Feather from '@expo/vector-icons/Feather';
-// import Foundation from '@expo/vector-icons/Foundation';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 

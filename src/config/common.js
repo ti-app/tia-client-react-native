@@ -1,5 +1,5 @@
 export default {
 	api: {
-		base: 'http://35.197.134.56/v1/',
+		base: 'https://tia-server.herokuapp.com/v1',
 	},
 };

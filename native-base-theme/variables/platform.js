@@ -104,13 +104,13 @@ export default {
 	checkboxTickColor: '#fff',
 
 	// Color
-	brandPrimary: platform === 'ios' ? '#007aff' : '#3F51B5',
-	brandInfo: '#62B1F6',
-	brandSuccess: '#5cb85c',
-	brandDanger: '#d9534f',
-	brandWarning: '#f0ad4e',
-	brandDark: '#000',
-	brandLight: '#f4f4f4',
+	brandPrimary: '#4267b2',
+	brandInfo: '#62B1F6', // tia-blue
+	brandSuccess: '#00dbb0', // tia-green
+	brandDanger: '#ea4335', // tia-red
+	brandWarning: '#f5a623', // tia-orange
+	brandDark: '#5f5d70', // tia-darkest-gray
+	brandLight: '#f6f6f9', // tia-light-white
 
 	// Container
 	containerBgColor: '#fff',

@@ -1,12 +1,7 @@
-import {
-	FETCH_TREE_GROUP_SUCCESS,
-	RESET_SELECTED_TREE_DETAILS,
-	SET_SELECTED_TREE_DETAILS,
-} from '../actions/tree.action';
+import { FETCH_TREE_GROUP_SUCCESS, SET_SELECTED_TREE_DETAILS } from '../actions/tree.action';
 
 const initialState = {
 	treeGroups: [],
-	// holds the details of the tree currently displayed on HomeScree / HomeMap
 	selectedTreeDetails: null,
 };
 
@@ -20,13 +15,6 @@ const treeReducer = (state = initialState, action) => {
 			return {
 				...state,
 				selectedTreeDetails: { ...action.payload },
-			};
-		}
-
-		case RESET_SELECTED_TREE_DETAILS: {
-			return {
-				...state,
-				selectedTreeDetails: null,
 			};
 		}
 

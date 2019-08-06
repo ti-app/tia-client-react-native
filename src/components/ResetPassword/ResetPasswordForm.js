@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-// import { Entypo } from '@expo/vector-icons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { Toast } from 'native-base';
 import * as firebase from 'firebase';
@@ -8,6 +7,7 @@ import * as firebase from 'firebase';
 import FormInput from '../shared/FormInput';
 import { space } from '../../styles/variables';
 import ProductButton from '../shared/ProductButton';
+import variables from '../../../native-base-theme/variables/material';
 
 export default class ResetPasswordForm extends React.Component {
 	constructor(props) {
@@ -31,7 +31,7 @@ export default class ResetPasswordForm extends React.Component {
 				Toast.show({
 					text: `Email has been sent! `,
 					buttonText: 'Okay',
-					type: 'success',
+					style: { backgroundColor: variables.brandSuccess },
 				});
 			})
 			.catch(() => {

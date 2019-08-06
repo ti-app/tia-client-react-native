@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import ActionButton from 'react-native-action-button';
-// import { MaterialIcons, AntDesign, Entypo } from '@expo/vector-icons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';

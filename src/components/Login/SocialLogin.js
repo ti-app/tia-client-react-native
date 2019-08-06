@@ -4,53 +4,20 @@ import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import * as Facebook from 'expo-facebook';
 import { GoogleSignin } from 'react-native-google-signin';
+import Config from 'react-native-config';
 
 import ProductButton from '../shared/ProductButton';
 import { setLoading } from '../../store/actions/ui-interactions.action';
 import { updateUserStatus } from '../../store/actions/auth.action';
 
-const FB_APP_ID = '2439803646062305';
+const { FB_APP_ID, GOOGLE_WEB_CLIENT_ID } = Config;
 
 GoogleSignin.configure({
-	webClientId: '67755937701-f7sf64nd0jnbqke4vuf209b8els3uq13.apps.googleusercontent.com',
+	webClientId: GOOGLE_WEB_CLIENT_ID,
 });
 
 class SocialLogin extends React.Component {
-	isUserEqual = (googleUser, firebaseUser) => {
-		if (firebaseUser) {
-			const { providerData } = firebaseUser;
-			for (let i = 0; i < providerData.length; i += 1) {
-				if (
-					providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
-					providerData[i].uid === googleUser.getBasicProfile().getId()
-				) {
-					// We don't need to reauth the Firebase connection.
-					return true;
-				}
-			}
-		}
-		return false;
-	};
-
-	onSignIn = async (googleUser) => {
-		// Build Firebase credential with the Google ID token.
-		const credential = firebase.auth.GoogleAuthProvider.credential(
-			googleUser.idToken,
-			googleUser.accessToken
-		);
-		// Sign in with credential from the Google user.
-		firebase
-			.auth()
-			.signInWithCredential(credential)
-			.then(async (result) => {
-				console.log('user registered!', result);
-			})
-			.catch((error) => {
-				console.log('error while signing!', error);
-			});
-	};
-
-	signInWithFBAsync = async () => {
+	signInWithFB = async () => {
 		const options = {
 			permission: ['public_profile'],
 		};
@@ -73,13 +40,24 @@ class SocialLogin extends React.Component {
 	};
 
 	signInWithGoogle = async () => {
-		const { navigation } = this.props;
 		try {
 			await GoogleSignin.hasPlayServices();
-			const result = await GoogleSignin.signIn();
-			await this.onSignIn(result);
-			navigation.navigate('Home');
-			return result.accessToken;
+			const googleUser = await GoogleSignin.signIn();
+
+			const credential = firebase.auth.GoogleAuthProvider.credential(
+				googleUser.idToken,
+				googleUser.accessToken
+			);
+
+			firebase
+				.auth()
+				.signInWithCredential(credential)
+				.then(async (result) => {
+					console.log('user registered!', result);
+				})
+				.catch((error) => {
+					console.log('Google Login failed', error);
+				});
 		} catch (error) {
 			console.log('Google Login failed', error);
 		}
@@ -90,11 +68,7 @@ class SocialLogin extends React.Component {
 		return (
 			<View style={[styles.container, style]}>
 				<View style={styles.button}>
-					<ProductButton
-						full
-						style={styles.facebookButton}
-						onPress={() => this.signInWithFBAsync()}
-					>
+					<ProductButton full style={styles.facebookButton} onPress={() => this.signInWithFB()}>
 						FACEBOOK
 					</ProductButton>
 				</View>
@@ -104,7 +78,6 @@ class SocialLogin extends React.Component {
 						style={styles.googleButton}
 						onPress={() => {
 							this.signInWithGoogle();
-							console.log('Google Sign in implementation is pending.');
 						}}
 					>
 						GOOGLE

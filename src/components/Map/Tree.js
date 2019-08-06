@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { getColorByTreeStatus } from '../../utils/ColorMapping';
+import variables from '../../../native-base-theme/variables/material';
 
 export default class Tree extends PureComponent {
 	state = {
@@ -36,7 +37,12 @@ export default class Tree extends PureComponent {
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
-				<View style={{ ...styles.outerCircle, backgroundColor: getColorByTreeStatus(status) }}>
+				<View
+					style={{
+						...styles.outerCircle,
+						backgroundColor: getColorByTreeStatus(status),
+					}}
+				>
 					<View style={styles.innerCircle} />
 				</View>
 			</Marker>
@@ -46,7 +52,7 @@ export default class Tree extends PureComponent {
 
 const styles = StyleSheet.create({
 	outerCircle: {
-		backgroundColor: '#228B22',
+		backgroundColor: variables.brandSuccess,
 		padding: 0,
 		borderRadius: 7.5,
 		width: 15,

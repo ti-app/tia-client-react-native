@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
-// import { AntDesign } from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default ({ leftOption }) => (
@@ -10,7 +9,7 @@ export default ({ leftOption }) => (
 			<AntDesign name="arrowleft" size={20} />
 		</TouchableOpacity>
 		<View style={styles.titleContainer}>
-			<Text style={styles.title}> Spot Details </Text>
+			<Text style={styles.title}> Tree Details </Text>
 		</View>
 		<View style={styles.placeholder} />
 	</View>
@@ -32,11 +31,11 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	leftButton: {
-		// display: 'flex',
-		// flexDirection: 'column',
-		// justifyContent: 'center',
 		paddingLeft: 10,
 		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
 	},
 	leftIcon: { color: '#fff' },
 	placeholder: {

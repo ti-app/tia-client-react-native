@@ -14,7 +14,7 @@ export default {
 	platformStyle,
 	platform,
 
-	//Accordion
+	// Accordion
 	headerStyle: '#edebed',
 	iconStyle: '#000',
 	contentStyle: '#f5f4f5',
@@ -36,6 +36,7 @@ export default {
 	btnFontFamily: 'Roboto',
 	btnDisabledBg: '#b5b5b5',
 	buttonPadding: 6,
+
 	get btnPrimaryBg() {
 		return this.brandPrimary;
 	},
@@ -111,11 +112,12 @@ export default {
 	brandWarning: '#f5a623', // tia-orange
 	brandDark: '#5f5d70', // tia-darkest-gray
 	brandLight: '#f6f6f9', // tia-light-white
+	brandGrey: '#a8a5a0', // tia-light-grey
 
-	//Container
+	// Container
 	containerBgColor: '#fff',
 
-	//Date Picker
+	// Date Picker
 	datePickerTextColor: '#000',
 	datePickerBg: 'transparent',
 
@@ -264,7 +266,7 @@ export default {
 	isIphoneX,
 	inputGroupRoundedBorderRadius: 30,
 
-	//iPhoneX SafeArea
+	// iPhoneX SafeArea
 	Inset: {
 		portrait: {
 			topInset: 24,

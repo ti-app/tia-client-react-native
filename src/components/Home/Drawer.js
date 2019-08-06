@@ -1,6 +1,5 @@
 import React from 'react';
 import Drawer from 'react-native-drawer';
-import { StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import SideDrawerContent from './SideDrawerContent';
@@ -49,8 +48,6 @@ class HomeDrawer extends React.Component {
 		);
 	}
 }
-
-// const styles = StyleSheet.create({});
 
 const mapStateToProps = (state) => ({
 	isDrawerOpen: state.ui.isDrawerOpen,

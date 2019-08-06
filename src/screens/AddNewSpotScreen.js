@@ -1,16 +1,15 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
-import { Container, View, Text, Button } from 'native-base';
+import { View, Text, Button, Container } from 'native-base';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
-// import { ImagePicker, Permissions } from 'expo';
 import { Permissions } from 'react-native-unimodules';
 import * as ImagePicker from 'expo-image-picker';
 
 import OptionsBar from '../components/Navigation/OptionsBar';
 import Tree from '../components/Map/Tree';
 import FormInput from '../components/shared/FormInput';
-import { SelectTreeHealth } from '../components/shared/SelectTreeHealth';
+import SelectTreeHealth from '../components/shared/SelectTreeHealth';
 import { addGroup } from '../store/actions/tree.action';
 import { fetchUserLocation } from '../store/actions/location.action';
 
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		padding: 20,
 		justifyContent: 'space-between',
-		height: '100%',
 	},
 	healthOfPlantText: {
 		paddingBottom: 10,
@@ -214,7 +212,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-	// mapCenter: state.location.mapCenter,
 	userLocation: state.location.userLocation,
 });
 

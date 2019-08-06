@@ -11,6 +11,7 @@ import ProductButton from '../shared/ProductButton';
 import FormInput from '../shared/FormInput';
 import ProductText from '../shared/ProductText';
 import { setLoading } from '../../store/actions/ui-interactions.action';
+import variables from '../../../native-base-theme/variables/material';
 
 class LoginForm extends React.Component {
 	state = {
@@ -39,7 +40,7 @@ class LoginForm extends React.Component {
 					Toast.show({
 						text: `Welcome! Successfully logged in`,
 						buttonText: 'Okay',
-						type: 'success',
+						style: { backgroundColor: variables.brandSuccess },
 					});
 					navigation.navigate('Home');
 					await AsyncStorage.setItem('USER', JSON.stringify(firebaseUser));

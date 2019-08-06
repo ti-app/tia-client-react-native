@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { View, Text, Container, Button } from 'native-base';
-// import { MaterialIcons } from '@expo/vector-icons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MapView from 'react-native-maps';
 
-import { toggleTreeDetails } from '../../store/actions/ui-interactions.action';
-import { waterTree, deleteTree, resetSelectedTreeDetails } from '../../store/actions/tree.action';
+import { waterTree, deleteTree } from '../store/actions/tree.action';
+import Tree from '../components/Map/Tree';
+import TreeDetailsNavBar from '../components/Navigation/TreeDetailsNavBar';
+import variables from '../../native-base-theme/variables/platform';
 
 class TreeDetails extends React.Component {
 	constructor(props) {
@@ -16,18 +18,38 @@ class TreeDetails extends React.Component {
 				disabled: false,
 				text: 'WATERED',
 			},
+			centerBias: 0.00015,
 		};
 	}
 
-	renderWeekStatus = (weekStatus) => {
-		return (
-			<View style={styles.weekStatus}>
-				{weekStatus.map((aWeek) => (
-					<View key={aWeek.key} style={{ ...styles.weekDot, ...styles[aWeek.status] }} />
-				))}
-			</View>
-		);
+	static navigationOptions = ({ navigation }) => {
+		const header = {
+			headerTitle: (
+				<TreeDetailsNavBar
+					leftOption={{
+						action: () => {
+							navigation.navigate('Home');
+						},
+					}}
+				/>
+			),
+			headerTransparent: true,
+			headerStyle: {
+				backgroundColor: '#ffff',
+				opacity: 0.8,
+			},
+			headerLeft: null,
+		};
+		return header;
 	};
+
+	renderWeekStatus = (weekStatus) => (
+		<View style={styles.weekStatus}>
+			{weekStatus.map((aWeek) => (
+				<View key={aWeek.key} style={{ ...styles.weekDot, ...styles[aWeek.status] }} />
+			))}
+		</View>
+	);
 
 	updateWaterButton = (props) => {
 		this.setState({ waterButton: { ...props } });
@@ -35,20 +57,15 @@ class TreeDetails extends React.Component {
 
 	waterTree = () => {
 		this.updateWaterButton({ disabled: true, text: 'please wait...' });
-		const { tree } = this.props;
-		const treeWatered = tree.selectedTreeDetails;
-		console.log(`[TreeDetails.js::waterTree] watering tree with id "${treeWatered._id}"`);
-		// I am sorry I am doing eslint disable for this one. Don't tell anyone. Shhhh....
-		// eslint-disable-next-line react/destructuring-assignment
-		this.props.waterTree(treeWatered);
+		const { selectedTreeDetails, waterTree } = this.props;
+		const treeWatered = selectedTreeDetails;
+		waterTree(treeWatered);
 	};
 
 	deletePlantConfirmed = () => {
-		const { deleteTree, tree, toggleTreeDetails, resetSelectedTreeDetails } = this.props;
-		const treeToDelete = tree.selectedTreeDetails;
+		const { deleteTree, selectedTreeDetails } = this.props;
+		const treeToDelete = selectedTreeDetails;
 		deleteTree(treeToDelete);
-		toggleTreeDetails();
-		resetSelectedTreeDetails();
 	};
 
 	showConfirmDeleteAlert = () => {
@@ -84,7 +101,7 @@ class TreeDetails extends React.Component {
 	getDeleteButton = () => {
 		return (
 			<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
-				<MaterialIcons name="delete" size={24} color="red" />
+				<MaterialIcons name="delete" size={24} color={variables.brandSuccess} />
 			</TouchableOpacity>
 		);
 	};
@@ -100,14 +117,38 @@ class TreeDetails extends React.Component {
 	};
 
 	render() {
-		const { waterButton } = this.state;
-		const { tree } = this.props;
-		const { selectedTreeDetails } = tree;
+		const { waterButton, centerBias } = this.state;
+		const { selectedTreeDetails } = this.props;
+
+		if (!selectedTreeDetails) {
+			return <Text>Loading...</Text>;
+		}
+
 		const photo = selectedTreeDetails ? selectedTreeDetails.photo : null;
+		const { health, location } = selectedTreeDetails;
+		const { coordinates } = location;
+		const [longitude, latitude] = coordinates;
 
 		return (
 			<Container style={styles.container}>
-				<View style={styles.content}>
+				<View style={styles.mapView}>
+					<MapView
+						style={styles.mapView}
+						initialRegion={{
+							latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
+							longitude,
+							latitudeDelta: 0.000882007226706992,
+							longitudeDelta: 0.000752057826519012,
+						}}
+						scrollEnabled={false}
+						pitchEnabled={false}
+						rotateEnabled={false}
+						zoomEnabled={false}
+					>
+						<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+					</MapView>
+				</View>
+				<View style={styles.treeDetails}>
 					<View style={styles.heading}>
 						<View style={styles.plantHeading}>
 							<Text style={styles.addressLabel}>Two Stones</Text>
@@ -115,15 +156,15 @@ class TreeDetails extends React.Component {
 						</View>
 						{this.getDeleteButton()}
 					</View>
-					<View style={styles.weekStatusContainer}>
+					<View>
 						{this.renderWeekStatus([
 							{ key: 1, status: 'healthy' },
-							{ key: 2, status: 'healthy' },
-							{ key: 3, status: 'healthy' },
+							{ key: 2, status: 'weak' },
+							{ key: 3, status: 'weak' },
 							{ key: 4, status: 'healthy' },
 							{ key: 5, status: 'healthy' },
-							{ key: 6, status: 'healthy' },
-							{ key: 7, status: 'healthy' },
+							{ key: 6, status: 'weak' },
+							{ key: 7, status: 'weak' },
 						])}
 						<Text style={styles.lastWateredText}>LAST WATERED ON 05/10/2018 05:55 PM</Text>
 					</View>
@@ -142,11 +183,14 @@ class TreeDetails extends React.Component {
 					)}
 					<Text>82 more have watered here</Text>
 					<Button
-						style={{ ...styles.wateredButton, opacity: waterButton.disabled ? 0.4 : 1 }}
+						style={{
+							...styles.wateredButton,
+							opacity: waterButton.disabled ? 0.4 : 1,
+						}}
 						/**
-						 * For some reason, the button does not look 'disabled'
+						 * Anand: For some reason, the button does not look 'disabled'
 						 * even if waterButton.disabled is true :/
-						 * Akshay: Yeah, that's the case with native-base or react-native component.
+						 * Akshay: Yeah, apparently that's the case with native-base or react-native component.
 						 * So I've added opacity to make it look disabled.
 						 */
 						disabled={waterButton.disabled}
@@ -163,27 +207,31 @@ class TreeDetails extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		width: '100%',
+		display: 'flex',
+	},
+	mapView: { flex: 1.0, height: '100%' },
+	treeDetails: {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-around',
 		paddingRight: 16,
 		paddingLeft: 16,
 		paddingTop: 8,
 		paddingBottom: 16,
+		flex: 1.4,
 	},
-	content: {
+	heading: {
 		display: 'flex',
-		flexDirection: 'column',
+		flexDirection: 'row',
 		justifyContent: 'space-between',
-		height: '100%',
 	},
-	heading: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between' },
 	addressLabel: { fontSize: 20, textAlignVertical: 'bottom', paddingRight: 8 },
 	distanceLabel: { fontSize: 12, color: 'gray', textAlignVertical: 'bottom' },
 	weekStatus: { display: 'flex', flexDirection: 'row' },
-	weekStatusContainer: {},
 	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
-	healthy: { backgroundColor: 'green' },
+	healthy: { backgroundColor: variables.brandSuccess },
 	weak: { backgroundColor: 'orange' },
-	almostDead: { backgroundColor: 'red' },
+	almostDead: { backgroundColor: variables.brandDanger },
 	lastWateredText: { fontSize: 12, color: 'gray' },
 	wateredButton: {
 		width: '100%',
@@ -209,20 +257,19 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		backgroundColor: 'lightgray',
 	},
 	imageNotFoundText: { textAlign: 'center' },
 });
 
 const mapStateToProps = (state) => ({
-	tree: state.tree,
+	selectedTreeDetails: state.tree.selectedTreeDetails,
 	user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
 	waterTree: (tree) => dispatch(waterTree(tree)),
 	deleteTree: (tree) => dispatch(deleteTree(tree)),
-	resetSelectedTreeDetails: () => dispatch(resetSelectedTreeDetails()),
-	toggleTreeDetails: () => dispatch(toggleTreeDetails()),
 });
 
 export default connect(

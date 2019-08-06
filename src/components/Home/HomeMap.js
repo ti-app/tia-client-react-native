@@ -7,13 +7,7 @@ import { connect } from 'react-redux';
 import Map from '../Map/Map';
 import Tree from '../Map/Tree';
 import Spot from '../Map/Spot';
-import { toggleTreeDetails } from '../../store/actions/ui-interactions.action';
-import {
-	fetchTreeGroups,
-	setSelectedTreeDetails,
-	resetSelectedTreeDetails,
-} from '../../store/actions/tree.action';
-import store from '../../store';
+import { fetchTreeGroups, setSelectedTreeDetails } from '../../store/actions/tree.action';
 
 class HomeMap extends React.Component {
 	constructor(props) {
@@ -44,9 +38,14 @@ class HomeMap extends React.Component {
 		}
 	}
 
+	selectTree(tree) {
+		const { navigation, setSelectedTreeDetails } = this.props;
+		setSelectedTreeDetails(tree);
+		navigation.navigate('TreeDetails');
+	}
+
 	renderMarker = (data) => {
 		const { splittedTreeGroup } = this.state;
-		const { toggleTreeDetails } = this.props;
 
 		if (data.trees.length === 1) {
 			return (
@@ -54,7 +53,7 @@ class HomeMap extends React.Component {
 					key={data.trees[0]._id}
 					coordinate={data.location}
 					onPress={() => {
-						toggleTreeDetails(data.trees[0]);
+						this.selectTree(data.trees[0]);
 					}}
 					status={data.trees[0].health}
 				/>
@@ -80,7 +79,7 @@ class HomeMap extends React.Component {
 						key={tree._id}
 						coordinate={{ longitude: modifiedLng, latitude: modifiedLat }}
 						onPress={() => {
-							toggleTreeDetails(tree);
+							this.selectTree(tree);
 						}}
 						status={tree.health}
 					/>
@@ -167,19 +166,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	toggleTreeDetails: (spot) => {
-		dispatch(toggleTreeDetails());
-		const { isTreeDetailsOpen } = store.getState().ui;
-		if (isTreeDetailsOpen) {
-			// prettier-ignore
-			console.log('[HomeMap.js::mapDispatchToProps] isTreeDetailsOpen is truthy, dispatching setSelectedTreeDetails')
-			dispatch(setSelectedTreeDetails(spot));
-		} else {
-			// prettier-ignore
-			console.log('[HomeMap.js::mapDispatchToProps] isTreeDetailsOpen is falsy, dispatching resetSelectedTreeDetails')
-			dispatch(resetSelectedTreeDetails());
-		}
-	},
+	setSelectedTreeDetails: (spot) => dispatch(setSelectedTreeDetails(spot)),
 	fetchTreeGroups: (...param) => dispatch(fetchTreeGroups(...param)),
 });
 

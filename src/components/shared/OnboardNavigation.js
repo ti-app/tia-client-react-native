@@ -23,12 +23,15 @@ const login = ({ navigation }) => (
 	</TouchableOpacity>
 );
 
-const OnboardNavigation = (props) => (
-	<View style={props.style}>
-		{props.linkToRegister && !props.linkToLogin ? register(props) : null}
-		{!props.linkToRegister && props.linkToLogin ? login(props) : null}
-	</View>
-);
+const OnboardNavigation = (props) => {
+	const { style, linkToRegister, linkToLogin } = props;
+	return (
+		<View style={style}>
+			{linkToRegister && !linkToLogin ? register(props) : null}
+			{!linkToRegister && linkToLogin ? login(props) : null}
+		</View>
+	);
+};
 
 const styles = StyleSheet.create({
 	text: {
