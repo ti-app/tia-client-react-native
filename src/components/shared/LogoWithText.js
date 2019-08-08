@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import ProductText from './ProductText';

@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { Toast } from 'native-base';
 import * as firebase from 'firebase';
 
 import FormInput from '../shared/FormInput';
 import { space } from '../../styles/variables';
 import ProductButton from '../shared/ProductButton';
-import variables from '../../../native-base-theme/variables/material';
+import {
+	showEmailSuccessfullToast,
+	showPasswordResetIssueToast,
+} from '../../utils/PreDefinedToasts';
 
 export default class ResetPasswordForm extends React.Component {
 	constructor(props) {
@@ -28,18 +30,10 @@ export default class ResetPasswordForm extends React.Component {
 		auth
 			.sendPasswordResetEmail(email)
 			.then(() => {
-				Toast.show({
-					text: `Email has been sent! `,
-					buttonText: 'Okay',
-					style: { backgroundColor: variables.brandSuccess },
-				});
+				showEmailSuccessfullToast();
 			})
 			.catch(() => {
-				Toast.show({
-					text: `Issue while reseting password`,
-					buttonText: 'Okay',
-					type: 'error',
-				});
+				showPasswordResetIssueToast();
 			});
 	}
 

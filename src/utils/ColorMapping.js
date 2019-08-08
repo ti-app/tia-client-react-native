@@ -1,9 +1,9 @@
-import variables from '../../native-base-theme/variables/material';
+import * as colors from '../styles/colors';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getColorByTreeStatus = (status) =>
 	({
-		healthy: variables.brandSuccess,
-		weak: variables.brandWarning,
-		almostDead: variables.brandDanger,
+		healthy: colors.green,
+		weak: colors.orange,
+		almostDead: colors.red,
 	}[status]);

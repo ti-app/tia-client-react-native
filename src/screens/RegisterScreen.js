@@ -40,10 +40,11 @@ export default class Register extends React.Component {
 	}
 
 	render() {
+		const { isKeyboardOpen } = this.state;
 		return (
 			<Container style={styles.container}>
 				<KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-					<View style={[styles.iconContainer, this.state.isKeyboardOpen ? styles.hide : null]}>
+					<View style={[styles.iconContainer, isKeyboardOpen ? styles.hide : null]}>
 						<LogoWithText />
 					</View>
 					<View style={styles.formContainer}>

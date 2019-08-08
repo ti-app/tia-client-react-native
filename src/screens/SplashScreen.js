@@ -2,10 +2,12 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import * as colors from '../styles/colors';
+
 export default () => (
 	<View style={{ flex: 1 }}>
 		<LinearGradient
-			colors={['#FCE38A', '#42E695']}
+			colors={[colors.orange, colors.green]}
 			style={{
 				position: 'relative',
 				left: 0,
@@ -23,7 +25,7 @@ export default () => (
 const styles = StyleSheet.create({
 	contentText: {
 		top: '33%',
-		color: 'white',
+		color: colors.white,
 		fontWeight: 'bold',
 		fontSize: '20px',
 		textAlign: 'center',

@@ -22,7 +22,7 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	static navigationOptions = ({ navigation }) => {
-		const header = navigation.getParam('header', {
+		const header = {
 			headerTitle: (
 				<OptionsBar
 					title="Add a spot"
@@ -39,7 +39,8 @@ class AddNewSpotScreen extends React.Component {
 				opacity: 0.8,
 			},
 			headerLeft: null,
-		});
+		};
+
 		return header;
 	};
 

@@ -12,16 +12,16 @@ import { white } from '../styles/colors';
 import { space } from '../styles/variables';
 
 export default class LoginScreen extends React.Component {
-	static navigationOptions = {
-		header: null,
-	};
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			isKeyboardOpen: false,
 		};
 	}
+
+	static navigationOptions = {
+		header: null,
+	};
 
 	render() {
 		const { isKeyboardOpen } = this.state;

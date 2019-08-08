@@ -5,6 +5,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 
+import * as colors from '../../styles/colors';
+
 export default class AddActionButton extends Component {
 	state = {
 		clicked: false,
@@ -20,7 +22,7 @@ export default class AddActionButton extends Component {
 		const { clicked } = this.state;
 		return (
 			<ActionButton
-				buttonColor="#00dbb0"
+				buttonColor={colors.green.toString()}
 				onPress={() =>
 					this.setState((prevState) => ({
 						clicked: !prevState.clicked,
@@ -34,11 +36,15 @@ export default class AddActionButton extends Component {
 					)
 				}
 			>
-				<ActionButton.Item buttonColor="#f5a623" title="Coming soon!" onPress={() => {}}>
+				<ActionButton.Item
+					buttonColor={colors.orange.toString()}
+					title="Coming soon!"
+					onPress={() => {}}
+				>
 					<AntDesign name="question" size={40} style={styles.icon} />
 				</ActionButton.Item>
 				<ActionButton.Item
-					buttonColor="#4267b2"
+					buttonColor={colors.blue.toString()}
 					title="Add a tree"
 					onPress={this.handleOnAddTreePress}
 				>
@@ -50,5 +56,5 @@ export default class AddActionButton extends Component {
 }
 
 const styles = StyleSheet.create({
-	icon: { color: '#fff' },
+	icon: { color: colors.white },
 });

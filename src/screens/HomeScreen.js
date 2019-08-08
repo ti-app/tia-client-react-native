@@ -11,15 +11,16 @@ import AddActionButton from '../components/shared/AddActionButton';
 import FilterTree from '../components/Home/FilterTree';
 import { fetchUserLocation } from '../store/actions/location.action';
 import { toggleFilter } from '../store/actions/ui-interactions.action';
+import * as colors from '../styles/colors';
 
 const defaultHeaderOptions = {
 	headerTitle: <HomeNavigationBar nearbyTreesCount={0} />,
 	headerTransparent: true,
 	headerStyle: {
 		height: 80,
-		borderBottomColor: '#ea4335',
+		borderBottomColor: colors.red,
 		borderBottomWidth: 2,
-		backgroundColor: '#ffff',
+		backgroundColor: colors.white,
 		opacity: 0.8,
 	},
 	headerLeft: null,
@@ -66,7 +67,6 @@ class HomeScreen extends React.Component {
 			if (isFilterOpen) {
 				navigation.setParams({ header: { header: null } });
 			} else {
-				console.log('here');
 				this.setDefaultNavigationBar(nearbyTreesCount);
 			}
 		}
@@ -115,7 +115,7 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
 	filterContainer: {
 		height: 300,
-		backgroundColor: 'white',
+		backgroundColor: colors.white,
 	},
 	myLocationIcon: {
 		position: 'absolute',

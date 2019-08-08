@@ -2,13 +2,7 @@ import React from 'react';
 import { Text } from 'native-base';
 import { darkGray } from '../../styles/colors';
 
-export default class ProductText extends React.Component {
-	render() {
-		return (
-			<Text
-				{...this.props}
-				style={[{ fontFamily: 'product-sans', color: darkGray }, this.props.style]}
-			/>
-		);
-	}
-}
+export default (props) => {
+	const { style } = props;
+	return <Text {...props} style={[{ fontFamily: 'product-sans', color: darkGray }, style]} />;
+};

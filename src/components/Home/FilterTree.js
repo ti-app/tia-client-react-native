@@ -6,14 +6,13 @@ import { toggleFilter } from '../../store/actions/ui-interactions.action';
 import SelectTreeHealth from '../shared/SelectTreeHealth';
 import OptionsBar from '../Navigation/OptionsBar';
 
+import * as colors from '../../styles/colors';
+
 class FilterTree extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			distance: 2,
-			selectedStatus: {},
-		};
-	}
+	state = {
+		distance: 2,
+		selectedStatus: {},
+	};
 
 	render() {
 		const { distance, selectedStatus } = this.state;
@@ -47,7 +46,7 @@ class FilterTree extends React.Component {
 								this.setState({ distance: val });
 								onFilterChanged({ distance, selectedStatus });
 							}}
-							thumbTintColor="rgb(252, 228, 149)"
+							thumbTintColor={colors.blue}
 							maximumTrackTintColor="#000"
 							minimumTrackTintColor="#2f2f2f"
 						/>

@@ -3,6 +3,7 @@ import Drawer from 'react-native-drawer';
 import { connect } from 'react-redux';
 
 import SideDrawerContent from './SideDrawerContent';
+import * as colors from '../../styles/colors';
 
 class HomeDrawer extends React.Component {
 	state = {
@@ -31,7 +32,11 @@ class HomeDrawer extends React.Component {
 				content={<SideDrawerContent {...this.props} />}
 				acceptDoubleTap
 				styles={{
-					main: { shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 15 },
+					main: {
+						shadowColor: colors.black,
+						shadowOpacity: 0.3,
+						shadowRadius: 15,
+					},
 				}}
 				captureGestures={false}
 				tweenDuration={100}

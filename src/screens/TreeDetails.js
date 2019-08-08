@@ -8,7 +8,7 @@ import MapView from 'react-native-maps';
 import { waterTree, deleteTree } from '../store/actions/tree.action';
 import Tree from '../components/Map/Tree';
 import TreeDetailsNavBar from '../components/Navigation/TreeDetailsNavBar';
-import variables from '../../native-base-theme/variables/platform';
+import * as colors from '../styles/colors';
 
 class TreeDetails extends React.Component {
 	constructor(props) {
@@ -35,7 +35,7 @@ class TreeDetails extends React.Component {
 			),
 			headerTransparent: true,
 			headerStyle: {
-				backgroundColor: '#ffff',
+				backgroundColor: colors.white,
 				opacity: 0.8,
 			},
 			headerLeft: null,
@@ -101,7 +101,7 @@ class TreeDetails extends React.Component {
 	getDeleteButton = () => {
 		return (
 			<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
-				<MaterialIcons name="delete" size={24} color={variables.brandSuccess} />
+				<MaterialIcons name="delete" size={24} color={colors.green.toString()} />
 			</TouchableOpacity>
 		);
 	};
@@ -226,13 +226,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 	addressLabel: { fontSize: 20, textAlignVertical: 'bottom', paddingRight: 8 },
-	distanceLabel: { fontSize: 12, color: 'gray', textAlignVertical: 'bottom' },
+	distanceLabel: {
+		fontSize: 12,
+		color: colors.gray,
+		textAlignVertical: 'bottom',
+	},
 	weekStatus: { display: 'flex', flexDirection: 'row' },
 	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
-	healthy: { backgroundColor: variables.brandSuccess },
-	weak: { backgroundColor: 'orange' },
-	almostDead: { backgroundColor: variables.brandDanger },
-	lastWateredText: { fontSize: 12, color: 'gray' },
+	healthy: { backgroundColor: colors.green },
+	weak: { backgroundColor: colors.orange },
+	almostDead: { backgroundColor: colors.red },
+	lastWateredText: { fontSize: 12, color: colors.gray },
 	wateredButton: {
 		width: '100%',
 		paddingRight: 8,
@@ -257,7 +261,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
-		backgroundColor: 'lightgray',
+		backgroundColor: colors.lightGray,
 	},
 	imageNotFoundText: { textAlign: 'center' },
 });

@@ -1,17 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-import { Toast } from 'native-base';
 import * as firebase from 'firebase';
 
 import FormInput from '../shared/FormInput';
 import ProductButton from '../shared/ProductButton';
 import { setLoading } from '../../store/actions/ui-interactions.action';
-import variables from '../../../native-base-theme/variables/material';
+import {
+	showSuccessfulRegisterToast,
+	showSomethingBadToast,
+	showErrorToast,
+} from '../../utils/PreDefinedToasts';
 
 class RegisterPasswordForm extends React.Component {
 	constructor(props) {
@@ -37,10 +39,14 @@ class RegisterPasswordForm extends React.Component {
 	};
 
 	onRegisterClick = () => {
+		this.registerWithFirebase();
+	};
+
+	registerWithFirebase() {
+		setLoading(true);
+
 		const { setLoading, navigation } = this.props;
 		const { email, password, location } = this.state;
-		setLoading(true);
-		console.log('calling createUserWithEmailAndPassword ....', this.state);
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
@@ -61,32 +67,20 @@ class RegisterPasswordForm extends React.Component {
 									password: '',
 									location: '',
 								});
-								Toast.show({
-									text: `Welcome! Successfully registerd in TIA`,
-									buttonText: 'Great',
-									style: { backgroundColor: variables.brandSuccess },
-								});
+								showSuccessfulRegisterToast();
 							} catch (error) {
-								Toast.show({
-									text: `Something bad happened!`,
-									buttonText: 'Oops',
-									type: 'error',
-								});
+								showSomethingBadToast();
 								console.log('Error while registering', error);
 							}
 						});
 				},
 				(error) => {
 					setLoading(false);
-					Toast.show({
-						text: `${error.message}`,
-						buttonText: 'Oops',
-						type: 'error',
-					});
+					showErrorToast(error.message);
 					console.log(error.message);
 				}
 			);
-	};
+	}
 
 	onTogglePasswordVisiblity = () => {
 		this.setState((prevState) => {
@@ -97,7 +91,7 @@ class RegisterPasswordForm extends React.Component {
 	render() {
 		const { showPassword } = this.state;
 		return (
-			<View style={styles.container}>
+			<View>
 				<FormInput
 					icon={<AntDesign name="user" />}
 					placeholder="Email Address"
@@ -128,10 +122,6 @@ class RegisterPasswordForm extends React.Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {},
-});
 
 const mapDispatchToProps = (dispatch) => ({
 	setLoading: (flag) => dispatch(setLoading(flag)),

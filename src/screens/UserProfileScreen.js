@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import OptionsBar from '../components/Navigation/OptionsBar';
+import * as colors from '../styles/colors';
 
 const getCurrentUser = async () => {
 	try {
@@ -27,7 +28,7 @@ export default class UserProfileScreen extends Component {
 	}
 
 	static navigationOptions = ({ navigation }) => {
-		const header = navigation.getParam('header', {
+		const header = {
 			headerTitle: (
 				<OptionsBar
 					title="User Profile"
@@ -44,18 +45,18 @@ export default class UserProfileScreen extends Component {
 			headerTransparent: true,
 			headerStyle: {
 				height: 80,
-				backgroundColor: '#ffff',
+				backgroundColor: colors.white,
 				opacity: 0.8,
 			},
 			headerLeft: null,
-		});
+		};
+
 		return header;
 	};
 
 	render() {
 		const { currentUser } = this.state;
 
-		console.log('+++ User Profile Page', currentUser);
 		return (
 			<View style={styles.container}>
 				<Image
@@ -113,12 +114,12 @@ const styles = StyleSheet.create({
 	},
 	info: {
 		fontSize: 16,
-		color: '#00BFFF',
+		color: colors.blue,
 		marginTop: 10,
 	},
 	description: {
 		fontSize: 16,
-		color: '#696969',
+		color: colors.gray,
 		marginTop: 10,
 		textAlign: 'center',
 	},
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		width: 250,
 		borderRadius: 30,
-		backgroundColor: '#00BFFF',
+		backgroundColor: colors.blue,
 	},
 	buttonContainer2: {
 		marginTop: 10,
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginBottom: 10,
 		width: 250,
-		backgroundColor: 'white',
+		backgroundColor: colors.white,
 	},
 	bio: {
 		fontSize: 10,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic',
 		justifyContent: 'center',
 		borderWidth: 1,
-		borderColor: '#696969',
+		borderColor: colors.gray,
 	},
 	biopublic: {
 		fontSize: 20,

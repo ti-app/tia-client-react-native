@@ -76,7 +76,6 @@ export const fetchTreeGroups = (
 				textAlign: 'center',
 			},
 		});
-		console.log('Getting Nearby Trees.');
 	} catch (err) {
 		showErrorToast('Error fetching nearby trees.', err, dispatch);
 	}

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { getColorByTreeStatus } from '../../utils/ColorMapping';
-import variables from '../../../native-base-theme/variables/material';
+import * as colors from '../../styles/colors';
 
 export default class Tree extends PureComponent {
 	state = {
@@ -52,7 +52,7 @@ export default class Tree extends PureComponent {
 
 const styles = StyleSheet.create({
 	outerCircle: {
-		backgroundColor: variables.brandSuccess,
+		backgroundColor: colors.green,
 		padding: 0,
 		borderRadius: 7.5,
 		width: 15,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	innerCircle: {
-		backgroundColor: '#ffffff',
+		backgroundColor: colors.white,
 		width: 10,
 		height: 10,
 		borderRadius: 5,
