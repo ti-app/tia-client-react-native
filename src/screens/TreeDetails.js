@@ -98,13 +98,11 @@ class TreeDetails extends React.Component {
 	 * If he is the OWNER or MODERATOR, he should be able to delete it.
 	 * Other wise, do not render the delete button
 	 */
-	getDeleteButton = () => {
-		return (
-			<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
-				<MaterialIcons name="delete" size={24} color={colors.green.toString()} />
-			</TouchableOpacity>
-		);
-	};
+	getDeleteButton = () => (
+		<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
+			<MaterialIcons name="delete" size={24} color={colors.red.toString()} />
+		</TouchableOpacity>
+	);
 
 	getDeletionBackdrop = () => {
 		const { deleting } = this.state;

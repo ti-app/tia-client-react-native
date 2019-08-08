@@ -4,7 +4,6 @@ import { View } from 'native-base';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import HomeDrawer from '../components/Home/Drawer';
 import HomeMap from '../components/Home/HomeMap';
 import HomeNavigationBar from '../components/Navigation/HomeNavigationBar';
 import AddActionButton from '../components/shared/AddActionButton';
@@ -43,7 +42,7 @@ class HomeScreen extends React.Component {
 		navigation.setParams({
 			header: {
 				...defaultHeaderOptions,
-				headerTitle: <HomeNavigationBar nearbyTreesCount={nearbyTreesCount} />,
+				headerTitle: <HomeNavigationBar {...this.props} nearbyTreesCount={nearbyTreesCount} />,
 			},
 		});
 	}
@@ -89,7 +88,8 @@ class HomeScreen extends React.Component {
 		const { isFilterOpen } = this.props;
 
 		return (
-			<HomeDrawer {...this.props}>
+			// <HomeDrawer {...this.props}>
+			<>
 				{isFilterOpen ? (
 					<View style={styles.filterContainer}>
 						<FilterTree />
@@ -107,7 +107,8 @@ class HomeScreen extends React.Component {
 						<MaterialIcons name="my-location" size={40} />
 					</TouchableOpacity>
 				</React.Fragment>
-			</HomeDrawer>
+			</>
+			// </HomeDrawer>
 		);
 	}
 }

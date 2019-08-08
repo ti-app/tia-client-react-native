@@ -3,7 +3,6 @@ import { StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { Container, View, Text, Button } from 'native-base';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
-// import { ImagePicker, Permissions } from 'expo';
 import { Permissions } from 'react-native-unimodules';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -12,6 +11,7 @@ import Tree from '../components/Map/Tree';
 import FormInput from '../components/shared/FormInput';
 import { addGroup } from '../store/actions/tree.action';
 import { fetchUserLocation } from '../store/actions/location.action';
+import * as colors from '../styles/colors';
 
 class AddPlantionSiteScreen extends React.Component {
 	state = {
@@ -35,7 +35,7 @@ class AddPlantionSiteScreen extends React.Component {
 			headerTransparent: true,
 			headerStyle: {
 				height: 80,
-				backgroundColor: '#ffff',
+				backgroundColor: colors.white,
 				opacity: 0.8,
 			},
 			headerLeft: null,
@@ -65,7 +65,7 @@ class AddPlantionSiteScreen extends React.Component {
 
 	handleAddSpot = () => {
 		const { addGroup } = this.props;
-		const { photo, plants, health } = this.state;
+		const { photo, plants } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 		const formData = this.createFormData(photo, {
@@ -98,8 +98,8 @@ class AddPlantionSiteScreen extends React.Component {
 	};
 
 	isAddButtonDisabled = () => {
-		const { plants, health } = this.state;
-		return !(plants && health);
+		const { plants } = this.state;
+		return !plants;
 	};
 
 	render() {

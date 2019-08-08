@@ -81,7 +81,6 @@ class SideDrawerContent extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		top: 30,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-around',
