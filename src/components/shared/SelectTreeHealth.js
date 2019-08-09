@@ -14,20 +14,6 @@ export default class SelectTreeHealth extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		const { presetHealthStatus, onSelectedStatusChange } = this.props;
-
-		if (presetHealthStatus) {
-			this.setState(
-				() => ({ selectedHealthStatus: { ...presetHealthStatus } }),
-				() => {
-					const { selectedHealthStatus } = this.state;
-					onSelectedStatusChange(selectedHealthStatus);
-				}
-			);
-		}
-	}
-
 	handleSelection = (field) => {
 		const { onSelectedStatusChange } = this.props;
 

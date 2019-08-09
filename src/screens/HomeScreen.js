@@ -115,7 +115,12 @@ class HomeScreen extends React.Component {
 					</View>
 				) : null}
 
-				<HomeMap onMapLoad={this.handleOnMapLoad} {...this.props} />
+				<HomeMap
+					currentRangeFilter={currentRangeFilter}
+					currentHealthFilter={currentHealthFilter}
+					onMapLoad={this.handleOnMapLoad}
+					{...this.props}
+				/>
 
 				<React.Fragment>
 					<AddActionButton {...this.props} mapRef={this.mapRef} />

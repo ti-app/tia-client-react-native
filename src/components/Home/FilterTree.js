@@ -14,6 +14,18 @@ class FilterTree extends React.Component {
 		selectedStatus: { healthy: true, weak: true, almostDead: true },
 	};
 
+	componentDidMount() {
+		const { currentRangeFilter, currentHealthFilter } = this.props;
+
+		if (currentRangeFilter) {
+			this.setState({ range: currentRangeFilter });
+		}
+
+		if (currentHealthFilter) {
+			this.setState({ selectedStatus: currentHealthFilter });
+		}
+	}
+
 	render() {
 		const { range, selectedStatus } = this.state;
 		const { toggleFilter, onFilterChanged, currentHealthFilter, currentRangeFilter } = this.props;

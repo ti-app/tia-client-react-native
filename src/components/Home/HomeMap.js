@@ -22,11 +22,31 @@ class HomeMap extends React.Component {
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		const {
+			currentHealthFilter: prevCurrentHealthFilter,
+			currentRangeFilter: prevCurrentRangeFilter,
+		} = prevProps;
 		const { latitude: prevUserLat, longitude: prevUserLng } = prevProps.userLocation;
-		const { userLocation, fetchTreeGroups } = this.props;
+
+		const { userLocation, fetchTreeGroups, currentRangeFilter, currentHealthFilter } = this.props;
+
 		const { latitude: userLatitude, longitude: userLongitude } = userLocation;
 
-		if ((userLatitude !== prevUserLat || userLongitude !== prevUserLng) && this.mapRef) {
+		const {
+			healthy: prevHealthy,
+			weak: prevWeak,
+			almostDead: prevAlmostDead,
+		} = prevCurrentHealthFilter;
+
+		const { healthy, weak, almostDead } = currentHealthFilter;
+
+		// prettier-ignore
+		const healthFilterChanged = healthy !== prevHealthy ||weak !== prevWeak ||almostDead !== prevAlmostDead;
+		// prettier-ignore
+		const locationChanged = userLatitude !== prevUserLat || userLongitude !== prevUserLng;
+		const rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
+
+		if ((locationChanged || rangeChanged || healthFilterChanged) && this.mapRef) {
 			const mapLocation = {
 				latitude: userLatitude,
 				longitude: userLongitude,
@@ -34,8 +54,29 @@ class HomeMap extends React.Component {
 				longitudeDelta: 0.010652057826519012,
 			};
 			this.mapRef.animateToRegion(mapLocation, 2000);
-			fetchTreeGroups(userLocation);
+			fetchTreeGroups(userLocation, currentRangeFilter * 1000, this.getAPIParamForHealth());
 		}
+	}
+
+	getAPIParamForHealth() {
+		const { currentHealthFilter } = this.props;
+		const { healthy, weak, almostDead } = currentHealthFilter;
+		if (healthy && weak && almostDead) {
+			return 'healthy,weak,almostDead';
+		}
+		if (healthy && weak) {
+			return 'healthy,weak';
+		}
+		if (weak && almostDead) {
+			return 'weak,almostDead';
+		}
+		if (healthy) {
+			return 'healthy';
+		}
+		if (weak) {
+			return 'weak';
+		}
+		return 'almostDead';
 	}
 
 	selectTree(tree) {
