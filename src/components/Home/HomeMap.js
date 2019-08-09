@@ -64,6 +64,9 @@ class HomeMap extends React.Component {
 		if (healthy && weak && almostDead) {
 			return 'healthy,weak,almostDead';
 		}
+		if (healthy && almostDead) {
+			return 'healthy,almostDead';
+		}
 		if (healthy && weak) {
 			return 'healthy,weak';
 		}

@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import * as colors from '../styles/colors';
 
 export default () => (
 	<View style={{ flex: 1 }}>
-		<LinearGradient
-			colors={[colors.orange, colors.green]}
+		<View
 			style={{
 				position: 'relative',
 				left: 0,
@@ -18,7 +16,7 @@ export default () => (
 		>
 			{/* Icon to be added here */}
 			<Text style={styles.contentText}>CREATING A BETTER TOMORROW</Text>
-		</LinearGradient>
+		</View>
 	</View>
 );
 
