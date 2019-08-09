@@ -16,15 +16,17 @@ npx jetify
 
 4: Create `.env` file in root, copy content from `https://ti-app.slack.com/archives/CE68JUXPC/p1564943184000300` and paste it in the file.
 
-5: Ensure that emulator is on or an android device is connected with `adb` setup properly.
+5: (Optional) Create `.prettierrc` in root and add your config ;)
 
-6: Run following command in seperate terminal (not in integrated terminal of vscode).
+6: Ensure that emulator is on or an android device is connected with `adb` setup properly.
+
+7: Run following command in seperate terminal (not in integrated terminal of vscode).
 
 ```
 react-native run-android
 ```
 
-7: Now get your headphones on and spill out pure fire. TIA.
+8: Now get your headphones on and spill out pure fire. TIA.
 
 # Build
 
