@@ -29,6 +29,14 @@ class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.mapRef = React.createRef();
+		this.state = {
+			currentHealthFilter: {
+				healthy: true,
+				weak: false,
+				almostDead: true,
+			},
+			currentRangeFilter: 0.5,
+		};
 	}
 
 	static navigationOptions = ({ navigation }) => {
@@ -84,15 +92,26 @@ class HomeScreen extends React.Component {
 		this.mapRef = ref;
 	};
 
+	handleFilterChange = ({ range, selectedStatus }) => {
+		this.setState({
+			currentRangeFilter: range,
+			currentHealthFilter: selectedStatus,
+		});
+	};
+
 	render() {
 		const { isFilterOpen } = this.props;
+		const { currentHealthFilter, currentRangeFilter } = this.state;
 
 		return (
-			// <HomeDrawer {...this.props}>
 			<>
 				{isFilterOpen ? (
 					<View style={styles.filterContainer}>
-						<FilterTree />
+						<FilterTree
+							currentHealthFilter={currentHealthFilter}
+							onFilterChanged={this.handleFilterChange}
+							currentRangeFilter={currentRangeFilter}
+						/>
 					</View>
 				) : null}
 
@@ -108,7 +127,6 @@ class HomeScreen extends React.Component {
 					</TouchableOpacity>
 				</React.Fragment>
 			</>
-			// </HomeDrawer>
 		);
 	}
 }

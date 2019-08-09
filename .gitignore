@@ -72,7 +72,7 @@ src/config/auth/FirebaseConfig.js
 src/config/auth/FacebookConfig.js
 
 # Prettier config file
-.prettierrc
+/.prettierrc
 
 .vscode
 

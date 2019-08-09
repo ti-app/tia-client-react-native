@@ -14,14 +14,27 @@ export default class SelectTreeHealth extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		const { presetHealthStatus, onSelectedStatusChange } = this.props;
+
+		if (presetHealthStatus) {
+			this.setState(
+				() => ({ selectedHealthStatus: { ...presetHealthStatus } }),
+				() => {
+					const { selectedHealthStatus } = this.state;
+					onSelectedStatusChange(selectedHealthStatus);
+				}
+			);
+		}
+	}
+
 	handleSelection = (field) => {
 		const { onSelectedStatusChange } = this.props;
-		const { selectedHealthStatus } = this.state;
 
 		const { type } = this.props;
 		this.setState(
-			(prevState) => {
-				return type === 'multiple'
+			(prevState) =>
+				type === 'multiple'
 					? {
 							selectedHealthStatus: {
 								...prevState.selectedHealthStatus,
@@ -33,9 +46,9 @@ export default class SelectTreeHealth extends React.Component {
 								...{ healthy: false, weak: false, almostDead: false }, // First set all values to false
 								[field]: !prevState.selectedHealthStatus[field], // Then make only single value true
 							},
-					  };
-			},
+					  },
 			() => {
+				const { selectedHealthStatus } = this.state;
 				onSelectedStatusChange(selectedHealthStatus);
 			}
 		);
@@ -44,6 +57,7 @@ export default class SelectTreeHealth extends React.Component {
 	render() {
 		const { selectedHealthStatus } = this.state;
 		const { healthy, weak, almostDead } = selectedHealthStatus;
+
 		return (
 			<View style={styles.view}>
 				<Button
