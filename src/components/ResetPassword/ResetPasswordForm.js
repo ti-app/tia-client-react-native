@@ -11,6 +11,8 @@ import {
 	showPasswordResetIssueToast,
 } from '../../utils/PreDefinedToasts';
 
+import * as colors from '../../styles/colors';
+
 export default class ResetPasswordForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -41,7 +43,7 @@ export default class ResetPasswordForm extends React.Component {
 		return (
 			<View style={styles.container}>
 				<FormInput
-					icon={<Entypo name="user" />}
+					icon={<Entypo color={colors.black.toString()} name="user" />}
 					placeholder="Email Address"
 					textContentType="emailAddress"
 					onChangeText={this.onEmailChange}

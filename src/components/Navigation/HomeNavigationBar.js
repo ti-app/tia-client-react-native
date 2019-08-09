@@ -6,11 +6,12 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { toggleFilter } from '../../store/actions/ui-interactions.action';
+import * as colors from '../../styles/colors';
 
 const HomeNavigationBar = ({ nearbyTreesCount, navigation, toggleFilter }) => (
 	<View style={styles.container}>
 		<TouchableOpacity style={styles.menuButton} onPress={() => navigation.toggleDrawer()}>
-			<Ionicons size={20} name="md-menu" />
+			<Ionicons size={20} color={colors.black.toString()} name="md-menu" />
 		</TouchableOpacity>
 		<View style={styles.textContainer}>
 			<Text style={styles.title}> Nearby </Text>
@@ -19,7 +20,7 @@ const HomeNavigationBar = ({ nearbyTreesCount, navigation, toggleFilter }) => (
 			</Text>
 		</View>
 		<TouchableOpacity style={styles.filterButton} onPress={() => toggleFilter()}>
-			<Foundation size={20} name="filter" />
+			<Foundation size={20} color={colors.black.toString()} name="filter" />
 		</TouchableOpacity>
 	</View>
 );

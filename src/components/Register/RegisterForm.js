@@ -15,6 +15,8 @@ import {
 	showErrorToast,
 } from '../../utils/PreDefinedToasts';
 
+import * as colors from '../../styles/colors';
+
 class RegisterPasswordForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -93,15 +95,19 @@ class RegisterPasswordForm extends React.Component {
 		return (
 			<View>
 				<FormInput
-					icon={<AntDesign name="user" />}
+					icon={<AntDesign color={colors.black.toString()} name="user" />}
 					placeholder="Email Address"
 					textContentType="emailAddress"
 					onChangeText={this.onEmailChange}
 				/>
 				<FormInput
-					icon={<Entypo name="lock" />}
+					icon={<Entypo color={colors.black.toString()} name="lock" />}
 					secondaryIcon={
-						showPassword ? <AntDesign size={15} name="eye" /> : <AntDesign size={15} name="eyeo" />
+						showPassword ? (
+							<AntDesign size={15} color={colors.black.toString()} name="eye" />
+						) : (
+							<AntDesign size={15} color={colors.black.toString()} name="eyeo" />
+						)
 					}
 					placeholder="Passsword"
 					textContentType="password"
@@ -110,7 +116,7 @@ class RegisterPasswordForm extends React.Component {
 					secondaryIconPress={this.onTogglePasswordVisiblity}
 				/>
 				<FormInput
-					icon={<EvilIcons name="location" />}
+					icon={<EvilIcons color={colors.black.toString()} name="location" />}
 					placeholder="Location"
 					textContentType="location"
 					onChangeText={this.onLocationChange}

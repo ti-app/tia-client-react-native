@@ -8,10 +8,6 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import * as colors from '../../styles/colors';
 
 export default class AddActionButton extends Component {
-	state = {
-		clicked: false,
-	};
-
 	handleOnAddTreePress = () => {
 		const { navigation } = this.props;
 
@@ -25,17 +21,11 @@ export default class AddActionButton extends Component {
 	};
 
 	render() {
-		const { clicked } = this.state;
 		return (
 			<ActionButton
 				buttonColor={colors.green.toString()}
-				onPress={() =>
-					this.setState((prevState) => ({
-						clicked: !prevState.clicked,
-					}))
-				}
-				renderIcon={() =>
-					clicked ? (
+				renderIcon={(active) =>
+					active ? (
 						<AntDesign name="plus" size={40} style={styles.icon} />
 					) : (
 						<MaterialIcons name="add-location" size={40} style={styles.icon} />

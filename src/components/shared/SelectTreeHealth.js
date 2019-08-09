@@ -14,6 +14,36 @@ export default class SelectTreeHealth extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		const { presetHealthStatus } = this.props;
+
+		if (presetHealthStatus) {
+			this.setState({ selectedHealthStatus: { ...presetHealthStatus } });
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		const { presetHealthStatus } = this.props;
+
+		if (presetHealthStatus) {
+			const {
+				healthy: prevHealthy,
+				weak: prevWeak,
+				almostDead: prevAlmostDead,
+			} = prevProps.presetHealthStatus;
+
+			const { healthy, weak, almostDead } = presetHealthStatus;
+
+			const presetHealthStatusChanged =
+				healthy !== prevHealthy || weak !== prevWeak || almostDead !== prevAlmostDead;
+
+			if (presetHealthStatusChanged) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({ selectedHealthStatus: { ...presetHealthStatus } });
+			}
+		}
+	}
+
 	handleSelection = (field) => {
 		const { onSelectedStatusChange } = this.props;
 

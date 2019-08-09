@@ -49,7 +49,12 @@ class SideDrawerContent extends React.Component {
 									onPress={() => this.navigateTo('UserProfile')}
 								/>
 							) : (
-								<FontAwesome style={styles.userIcon} name="user-circle" size={60} />
+								<FontAwesome
+									style={styles.userIcon}
+									color={colors.black.toString()}
+									name="user-circle"
+									size={60}
+								/>
 							)}
 						</View>
 						<Text style={styles.displayName} onPress={() => this.navigateTo('UserProfile')}>

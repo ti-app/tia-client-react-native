@@ -128,7 +128,7 @@ class HomeScreen extends React.Component {
 						style={styles.myLocationIcon}
 						onPress={() => this.handleMyLocationClick()}
 					>
-						<MaterialIcons name="my-location" size={40} />
+						<MaterialIcons color={colors.black.toString()} name="my-location" size={40} />
 					</TouchableOpacity>
 				</React.Fragment>
 			</>

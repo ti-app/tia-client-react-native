@@ -13,6 +13,8 @@ import ProductText from '../shared/ProductText';
 import { setLoading } from '../../store/actions/ui-interactions.action';
 import { showWelcomeLoginToast } from '../../utils/PreDefinedToasts';
 
+import * as colors from '../../styles/colors';
+
 class LoginForm extends React.Component {
 	state = {
 		email: '',
@@ -66,13 +68,13 @@ class LoginForm extends React.Component {
 		return (
 			<View style={style}>
 				<FormInput
-					icon={<Entypo name="user" />}
+					icon={<Entypo color={colors.black.toString()} name="user" />}
 					placeholder="Email Address"
 					textContentType="emailAddress"
 					onChangeText={this.onEmailChange}
 				/>
 				<FormInput
-					icon={<Entypo name="lock" />}
+					icon={<Entypo color={colors.black.toString()} name="lock" />}
 					placeholder="Password"
 					textContentType="password"
 					onChangeText={this.onPasswordChange}

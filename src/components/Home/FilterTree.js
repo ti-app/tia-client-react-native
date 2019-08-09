@@ -22,13 +22,13 @@ class FilterTree extends React.Component {
 		}
 
 		if (currentHealthFilter) {
-			this.setState({ selectedStatus: currentHealthFilter });
+			this.setState({ selectedStatus: { ...currentHealthFilter } });
 		}
 	}
 
 	render() {
 		const { range, selectedStatus } = this.state;
-		const { toggleFilter, onFilterChanged, currentHealthFilter, currentRangeFilter } = this.props;
+		const { toggleFilter, onFilterChanged, currentRangeFilter } = this.props;
 
 		return (
 			<Container style={styles.container}>
@@ -82,7 +82,7 @@ class FilterTree extends React.Component {
 						onSelectedStatusChange={(selectedStatus) => {
 							this.setState({ selectedStatus });
 						}}
-						presetHealthStatus={currentHealthFilter}
+						presetHealthStatus={selectedStatus}
 						type="multiple"
 					/>
 				</Content>
