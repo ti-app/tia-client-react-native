@@ -85,7 +85,7 @@ export default class UserProfileScreen extends Component {
 					</Text>
 				</View>
 				<TouchableOpacity style={styles.buttonContainer}>
-					<Text>History</Text>
+					<Text style={styles.historyText}>History</Text>
 				</TouchableOpacity>
 			</View>
 		);
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
 		height: 130,
 		borderRadius: 65,
 		borderWidth: 4,
-		borderColor: 'white',
+		borderColor: colors.white,
 		marginBottom: 10,
 		alignSelf: 'center',
 		marginTop: 10,
@@ -133,6 +133,9 @@ const styles = StyleSheet.create({
 		width: 250,
 		borderRadius: 30,
 		backgroundColor: colors.blue,
+	},
+	historyText: {
+		color: colors.white,
 	},
 	buttonContainer2: {
 		marginTop: 10,

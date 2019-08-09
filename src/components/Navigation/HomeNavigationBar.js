@@ -47,12 +47,14 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		padding: 20,
 		paddingLeft: 10,
 	},
 	filterButton: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		padding: 20,
 		paddingRight: 10,
 	},
 });

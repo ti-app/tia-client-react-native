@@ -1,6 +1,30 @@
-# Setup
+# Setup (Currently for Android Only)
 
-(Yet To Add)
+1: Clone the repo and `cd` to root directory.
+
+2: Install the depedencies.
+
+```
+yarn install
+```
+
+3: We are using React Native modules with native Java code that isn't converted to AndroidX, and our app is AndroidX. That is why following command:
+
+```
+npx jetify
+```
+
+4: Create `.env` file in root, copy content from `https://ti-app.slack.com/archives/CE68JUXPC/p1564943184000300` and paste it in the file.
+
+5: Ensure that emulator is on or an android device is connected with `adb` setup properly.
+
+6: Run following command in seperate terminal (not in integrated terminal of vscode).
+
+```
+react-native run-android
+```
+
+7: Now get your headphones on and spill out pure fire. TIA.
 
 # Build
 

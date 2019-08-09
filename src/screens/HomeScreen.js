@@ -32,7 +32,7 @@ class HomeScreen extends React.Component {
 		this.state = {
 			currentHealthFilter: {
 				healthy: true,
-				weak: false,
+				weak: true,
 				almostDead: true,
 			},
 			currentRangeFilter: 0.5,
