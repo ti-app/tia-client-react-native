@@ -30,6 +30,8 @@ react-native run-android
 
 # Build
 
+## Debug Build:
+
 Step 1:
 
 ```
