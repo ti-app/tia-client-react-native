@@ -18,6 +18,7 @@ class AddNewSpotScreen extends React.Component {
 		photo: null,
 		plants: 0,
 		health: null,
+		plantType: '',
 		centerBias: 0.00015,
 	};
 
@@ -53,6 +54,10 @@ class AddNewSpotScreen extends React.Component {
 		this.setState({ plants: numberOfPlants });
 	};
 
+	handlePlantType = (inputPlantType) => {
+		this.setState({ plantType: inputPlantType });
+	};
+
 	handleSelectedStatusChange = (selectedStatus) => {
 		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
 		if (healthEntry && healthEntry[0]) {
@@ -73,11 +78,12 @@ class AddNewSpotScreen extends React.Component {
 
 	handleAddSpot = () => {
 		const { addGroup } = this.props;
-		const { photo, plants, health } = this.state;
+		const { photo, plants, health, plantType } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 		const formData = this.createFormData(photo, {
 			plants,
+			plantType,
 			health,
 			lat: latitude,
 			lng: longitude,
@@ -106,8 +112,8 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	isAddButtonDisabled = () => {
-		const { plants, health } = this.state;
-		return !(plants && health);
+		const { plants, health, plantType } = this.state;
+		return !(plants && health && plantType);
 	};
 
 	render() {
@@ -142,6 +148,11 @@ class AddNewSpotScreen extends React.Component {
 						keyboardType="number-pad"
 						onChangeText={this.handleNumberOfPlantsChange}
 					/>
+					<FormInput
+						placeholder="PLANT TYPE"
+						keyboardType="default"
+						onChangeText={this.handlePlantType}
+					/>
 					<View>
 						<Text style={styles.healthOfPlantText}> Health of plant(s) </Text>
 						<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
@@ -166,7 +177,7 @@ class AddNewSpotScreen extends React.Component {
 						success
 						onPress={this.handleAddSpot}
 					>
-						<Text> ADD </Text>
+						<Text> ADD Plant </Text>
 					</Button>
 				</View>
 			</Container>
