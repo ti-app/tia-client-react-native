@@ -114,6 +114,10 @@ class TreeDetails extends React.Component {
 		);
 	};
 
+	getFormatDate = (date) => {
+		return new Date(date).toDateString().substr(4, 12);
+	};
+
 	render() {
 		const { waterButton, centerBias } = this.state;
 		const { selectedTreeDetails } = this.props;
@@ -123,10 +127,11 @@ class TreeDetails extends React.Component {
 		}
 
 		const photo = selectedTreeDetails ? selectedTreeDetails.photo : null;
-		const { health, location, lastActivityDate } = selectedTreeDetails;
+		const { health, location, lastActivityDate, lastActedUser, uploadedDate } = selectedTreeDetails;
 		const { coordinates } = location;
 		const [longitude, latitude] = coordinates;
-		const formattedLastActivityDate = new Date(lastActivityDate).toDateString().substr(4, 12);
+		const formattedLastActivityDate = getFormatDate(lastActivityDate);
+		const formattedUploadedDateDate = getFormatDate(uploadedDate);
 		const wateredPlant = Math.floor(Math.random() * 20);
 
 		return (
@@ -152,7 +157,8 @@ class TreeDetails extends React.Component {
 					<View style={styles.heading}>
 						<View style={styles.plantHeading}>
 							<Text style={styles.addressLabel}>{{ plantType }}</Text>
-							<Text style={styles.distanceLabel}>1.3 km FROM HOME</Text>
+							<Text style={styles.distanceLabel}>Uploaded by : {{ lastActedUser }}</Text>
+							<Text style={styles.distanceLabel}>Created on {{ formattedUploadedDateDate }}</Text>
 						</View>
 						{this.getDeleteButton()}
 					</View>
@@ -167,8 +173,7 @@ class TreeDetails extends React.Component {
 							{ key: 7, status: 'weak' },
 						])}
 						<Text style={styles.lastWateredText}>
-							LAST WATERED ON
-							{{ formattedLastActivityDate }}
+							I was watered {{ formattedLastActivityDate }}. Please don't forget to water me.
 						</Text>
 					</View>
 					{photo && photo.length > 0 ? (
