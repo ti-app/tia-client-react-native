@@ -49,7 +49,7 @@ export const addGroup = (treeGroup) => async (dispatch, getState) => {
 export const fetchTreeGroups = (
 	location,
 	radius = 500,
-	health = 'healthy,weak,almostDead'
+	health = 'healthy,adequate,average,weak,almostDead'
 ) => async (dispatch) => {
 	try {
 		const { latitude: lat, longitude: lng } = location;
