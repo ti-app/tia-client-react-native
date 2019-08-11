@@ -114,6 +114,10 @@ class TreeDetails extends React.Component {
 		);
 	};
 
+	getFormatDate = (date) => {
+		return new Date(date).toDateString().substr(4, 12);
+	};
+
 	render() {
 		const { waterButton, centerBias } = this.state;
 		const { selectedTreeDetails } = this.props;
@@ -123,9 +127,12 @@ class TreeDetails extends React.Component {
 		}
 
 		const photo = selectedTreeDetails ? selectedTreeDetails.photo : null;
-		const { health, location } = selectedTreeDetails;
+		const { health, location, lastActivityDate, lastActedUser, uploadedDate } = selectedTreeDetails;
 		const { coordinates } = location;
 		const [longitude, latitude] = coordinates;
+		const formattedLastActivityDate = getFormatDate(lastActivityDate);
+		const formattedUploadedDateDate = getFormatDate(uploadedDate);
+		const wateredPlant = Math.floor(Math.random() * 20);
 
 		return (
 			<Container style={styles.container}>
@@ -149,8 +156,9 @@ class TreeDetails extends React.Component {
 				<View style={styles.treeDetails}>
 					<View style={styles.heading}>
 						<View style={styles.plantHeading}>
-							<Text style={styles.addressLabel}>Two Stones</Text>
-							<Text style={styles.distanceLabel}>1.3 km FROM HOME</Text>
+							<Text style={styles.addressLabel}>{{ plantType }}</Text>
+							<Text style={styles.distanceLabel}>Uploaded by : {{ lastActedUser }}</Text>
+							<Text style={styles.distanceLabel}>Created on {{ formattedUploadedDateDate }}</Text>
 						</View>
 						{this.getDeleteButton()}
 					</View>
@@ -164,12 +172,14 @@ class TreeDetails extends React.Component {
 							{ key: 6, status: 'weak' },
 							{ key: 7, status: 'weak' },
 						])}
-						<Text style={styles.lastWateredText}>LAST WATERED ON 05/10/2018 05:55 PM</Text>
+						<Text style={styles.lastWateredText}>
+							I was watered {{ formattedLastActivityDate }}. Please don't forget to water me.
+						</Text>
 					</View>
 					{photo && photo.length > 0 ? (
 						<Image
 							source={{
-								uri: selectedTreeDetails.photo,
+								uri: photo,
 							}}
 							resizeMode="contain"
 							style={{ width: '100%', height: 200 }}
@@ -179,7 +189,7 @@ class TreeDetails extends React.Component {
 							<Text style={styles.imageNotFoundText}>No Image.</Text>
 						</View>
 					)}
-					<Text>82 more have watered here</Text>
+					<Text>{{ wateredPlant }} more have watered here</Text>
 					<Button
 						style={{
 							...styles.wateredButton,
@@ -232,6 +242,8 @@ const styles = StyleSheet.create({
 	weekStatus: { display: 'flex', flexDirection: 'row' },
 	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
 	healthy: { backgroundColor: colors.green },
+	adequate: { backgroundColor: colors.linkBlue },
+	average: { backgroundColor: colors.yellow },
 	weak: { backgroundColor: colors.orange },
 	almostDead: { backgroundColor: colors.red },
 	lastWateredText: { fontSize: 12, color: colors.gray },
@@ -255,7 +267,7 @@ const styles = StyleSheet.create({
 	wateredButtonText: { textAlign: 'center' },
 	imageNotFound: {
 		width: '100%',
-		height: 200,
+		height: 50,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',

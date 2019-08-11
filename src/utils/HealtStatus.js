@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-const healthList = ['almostDead', 'weak', 'healthy'];
+const healthList = ['almostDead', 'weak', 'healthy', 'adequate', 'average'];
 
 export const getAvgHealthStatus = (healthStatusArray) => {
 	let totalHealthScore = 0;

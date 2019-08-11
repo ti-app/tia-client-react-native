@@ -18,6 +18,8 @@ class AddNewSpotScreen extends React.Component {
 		photo: null,
 		plants: 0,
 		health: null,
+		plantType: '',
+		waterCycle: 0,
 		centerBias: 0.00015,
 	};
 
@@ -53,6 +55,14 @@ class AddNewSpotScreen extends React.Component {
 		this.setState({ plants: numberOfPlants });
 	};
 
+	handlePlantType = (plantType) => {
+		this.setState({ plantType });
+	};
+
+	handleWaterCycleChange = (waterCycle) => {
+		this.setState({ waterCycle });
+	};
+
 	handleSelectedStatusChange = (selectedStatus) => {
 		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
 		if (healthEntry && healthEntry[0]) {
@@ -73,11 +83,13 @@ class AddNewSpotScreen extends React.Component {
 
 	handleAddSpot = () => {
 		const { addGroup } = this.props;
-		const { photo, plants, health } = this.state;
+		const { photo, plants, health, plantType, waterCycle } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 		const formData = this.createFormData(photo, {
 			plants,
+			plantType,
+			waterCycle,
 			health,
 			lat: latitude,
 			lng: longitude,
@@ -106,8 +118,8 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	isAddButtonDisabled = () => {
-		const { plants, health } = this.state;
-		return !(plants && health);
+		const { plants, health, plantType, waterCycle } = this.state;
+		return !(plants && health && plantType & waterCycle);
 	};
 
 	render() {
@@ -138,9 +150,19 @@ class AddNewSpotScreen extends React.Component {
 				<Text style={styles.whereIsItText}> Where is it?</Text>
 				<View style={styles.form}>
 					<FormInput
-						placeholder="NUMBER OF PLANTS?"
+						placeholder="Number of plants?"
 						keyboardType="number-pad"
 						onChangeText={this.handleNumberOfPlantsChange}
+					/>
+					<FormInput
+						placeholder="Plant type"
+						keyboardType="default"
+						onChangeText={this.handlePlantType}
+					/>
+					<FormInput
+						placeholder="Water cycle"
+						keyboardType="number-pad"
+						onChangeText={this.handleWaterCycleChange}
 					/>
 					<View>
 						<Text style={styles.healthOfPlantText}> Health of plant(s) </Text>
@@ -166,7 +188,7 @@ class AddNewSpotScreen extends React.Component {
 						success
 						onPress={this.handleAddSpot}
 					>
-						<Text> ADD </Text>
+						<Text> Add Plant(s) </Text>
 					</Button>
 				</View>
 			</Container>

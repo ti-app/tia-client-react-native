@@ -154,7 +154,7 @@ class AddPlantionSiteScreen extends React.Component {
 						success
 						onPress={this.handleAddSpot}
 					>
-						<Text> ADD </Text>
+						<Text> Add site </Text>
 					</Button>
 				</View>
 			</Container>
