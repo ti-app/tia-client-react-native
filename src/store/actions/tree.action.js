@@ -65,7 +65,6 @@ export const fetchTreeGroups = (
 			headers: {
 				'Content-Type': 'application/json',
 			},
-
 			noloading: true,
 		});
 		dispatch(fetchTreeGroupsSuccess(response.data));

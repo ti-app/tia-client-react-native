@@ -17,7 +17,7 @@ export default class AddActionButton extends Component {
 	handleOnAddPlantationPress = () => {
 		const { navigation } = this.props;
 
-		navigation.navigate('AddPlantionSite');
+		navigation.navigate('AddPlantationSite');
 	};
 
 	render() {
