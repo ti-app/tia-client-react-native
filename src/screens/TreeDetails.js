@@ -114,9 +114,7 @@ class TreeDetails extends React.Component {
 		);
 	};
 
-	getFormattedDate = (date) => {
-		return new Date(date).toDateString().substr(4, 12);
-	};
+	getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
 
 	render() {
 		const { waterButton, centerBias } = this.state;
@@ -137,8 +135,9 @@ class TreeDetails extends React.Component {
 		} = selectedTreeDetails;
 		const { coordinates } = location;
 		const [longitude, latitude] = coordinates;
-		const formattedLastActivityDate = this.getFormattedDate(lastActivityDate);
-		const formattedUploadedDate = this.getFormattedDate(uploadedDate);
+		const formattedLastActivityDate = lastActivityDate && this.getFormattedDate(lastActivityDate);
+		const formattedUploadedDate = uploadedDate && this.getFormattedDate(uploadedDate);
+		// TODO: Change following with the proper implementation.
 		const wateredPlant = Math.floor(Math.random() * 20);
 
 		return (
@@ -163,9 +162,13 @@ class TreeDetails extends React.Component {
 				<View style={styles.treeDetails}>
 					<View style={styles.heading}>
 						<View style={styles.plantHeading}>
-							<Text style={styles.addressLabel}>{plantType}</Text>
-							<Text style={styles.distanceLabel}>Uploaded by : {lastActedUser}</Text>
-							<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>
+							<Text style={styles.addressLabel}>{plantType || 'Plant type not available'}</Text>
+							{lastActedUser && (
+								<Text style={styles.distanceLabel}>Uploaded by : {lastActedUser}</Text>
+							)}
+							{formattedUploadedDate && (
+								<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>
+							)}
 						</View>
 						{this.getDeleteButton()}
 					</View>
