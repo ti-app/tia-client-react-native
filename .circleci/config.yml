@@ -47,7 +47,7 @@ jobs:
   android:
     working_directory: ~/tia-client-react-native/android
     docker:
-      - image: circleci/android:api-27-node8-alpha
+      - image: circleci/android:api-29-ndk
     steps:
       - checkout:
           path: ~/tia-client-react-native
