@@ -4,22 +4,22 @@ import { View } from 'native-base';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import HomeDrawer from '../components/Home/Drawer';
 import HomeMap from '../components/Home/HomeMap';
 import HomeNavigationBar from '../components/Navigation/HomeNavigationBar';
 import AddActionButton from '../components/shared/AddActionButton';
 import FilterTree from '../components/Home/FilterTree';
 import { fetchUserLocation } from '../store/actions/location.action';
 import { toggleFilter } from '../store/actions/ui-interactions.action';
+import * as colors from '../styles/colors';
 
 const defaultHeaderOptions = {
 	headerTitle: <HomeNavigationBar nearbyTreesCount={0} />,
 	headerTransparent: true,
 	headerStyle: {
 		height: 80,
-		borderBottomColor: 'red',
+		borderBottomColor: colors.red,
 		borderBottomWidth: 2,
-		backgroundColor: '#ffff',
+		backgroundColor: colors.white,
 		opacity: 0.8,
 	},
 	headerLeft: null,
@@ -29,6 +29,14 @@ class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.mapRef = React.createRef();
+		this.state = {
+			currentHealthFilter: {
+				healthy: true,
+				weak: true,
+				almostDead: true,
+			},
+			currentRangeFilter: 0.5,
+		};
 	}
 
 	static navigationOptions = ({ navigation }) => {
@@ -42,7 +50,7 @@ class HomeScreen extends React.Component {
 		navigation.setParams({
 			header: {
 				...defaultHeaderOptions,
-				headerTitle: <HomeNavigationBar nearbyTreesCount={nearbyTreesCount} />,
+				headerTitle: <HomeNavigationBar {...this.props} nearbyTreesCount={nearbyTreesCount} />,
 			},
 		});
 	}
@@ -66,7 +74,6 @@ class HomeScreen extends React.Component {
 			if (isFilterOpen) {
 				navigation.setParams({ header: { header: null } });
 			} else {
-				console.log('here');
 				this.setDefaultNavigationBar(nearbyTreesCount);
 			}
 		}
@@ -85,18 +92,35 @@ class HomeScreen extends React.Component {
 		this.mapRef = ref;
 	};
 
+	handleFilterChange = ({ range, selectedStatus }) => {
+		this.setState({
+			currentRangeFilter: range,
+			currentHealthFilter: selectedStatus,
+		});
+	};
+
 	render() {
 		const { isFilterOpen } = this.props;
+		const { currentHealthFilter, currentRangeFilter } = this.state;
 
 		return (
-			<HomeDrawer {...this.props}>
+			<>
 				{isFilterOpen ? (
 					<View style={styles.filterContainer}>
-						<FilterTree />
+						<FilterTree
+							currentHealthFilter={currentHealthFilter}
+							onFilterChanged={this.handleFilterChange}
+							currentRangeFilter={currentRangeFilter}
+						/>
 					</View>
 				) : null}
 
-				<HomeMap onMapLoad={this.handleOnMapLoad} {...this.props} />
+				<HomeMap
+					currentRangeFilter={currentRangeFilter}
+					currentHealthFilter={currentHealthFilter}
+					onMapLoad={this.handleOnMapLoad}
+					{...this.props}
+				/>
 
 				<React.Fragment>
 					<AddActionButton {...this.props} mapRef={this.mapRef} />
@@ -104,10 +128,10 @@ class HomeScreen extends React.Component {
 						style={styles.myLocationIcon}
 						onPress={() => this.handleMyLocationClick()}
 					>
-						<MaterialIcons name="my-location" size={40} />
+						<MaterialIcons color={colors.black.toString()} name="my-location" size={40} />
 					</TouchableOpacity>
 				</React.Fragment>
-			</HomeDrawer>
+			</>
 		);
 	}
 }
@@ -115,7 +139,7 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
 	filterContainer: {
 		height: 300,
-		backgroundColor: 'white',
+		backgroundColor: colors.white,
 	},
 	myLocationIcon: {
 		position: 'absolute',

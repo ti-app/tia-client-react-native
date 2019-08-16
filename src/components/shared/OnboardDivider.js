@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import ProductText from './ProductText';
 
 import { space } from '../../styles/variables';
 import { darkGray } from '../../styles/colors';
 
-const OnboardDivider = (props) => (
-	<View style={[styles.container, props.style]}>
+const OnboardDivider = ({ style }) => (
+	<View style={[styles.container, style]}>
 		<View style={[styles.line, styles.left]} />
 		<ProductText style={styles.text}>OR</ProductText>
 		<View style={[styles.line, styles.right]} />

@@ -2,9 +2,16 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { getColorByTreeStatus } from '../../utils/ColorMapping';
 
+import * as colors from '../../styles/colors';
+
 export default ({ pointCount, status }) => {
 	return (
-		<View style={{ ...styles.clusterContainer, backgroundColor: getColorByTreeStatus(status) }}>
+		<View
+			style={{
+				...styles.clusterContainer,
+				backgroundColor: getColorByTreeStatus(status),
+			}}
+		>
 			<Text style={styles.clusterText}>{pointCount}</Text>
 		</View>
 	);
@@ -22,7 +29,7 @@ const styles = StyleSheet.create({
 	},
 	clusterText: {
 		fontSize: 15,
-		color: '#ffffff',
+		color: colors.white,
 		fontWeight: '500',
 		textAlign: 'center',
 	},

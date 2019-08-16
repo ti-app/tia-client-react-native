@@ -49,7 +49,7 @@ export const addGroup = (treeGroup) => async (dispatch, getState) => {
 export const fetchTreeGroups = (
 	location,
 	radius = 500,
-	health = 'healthy,weak,almostDead'
+	health = 'healthy,adequate,average,weak,almostDead'
 ) => async (dispatch) => {
 	try {
 		const { latitude: lat, longitude: lng } = location;
@@ -65,7 +65,6 @@ export const fetchTreeGroups = (
 			headers: {
 				'Content-Type': 'application/json',
 			},
-
 			noloading: true,
 		});
 		dispatch(fetchTreeGroupsSuccess(response.data));
@@ -76,7 +75,6 @@ export const fetchTreeGroups = (
 				textAlign: 'center',
 			},
 		});
-		console.log('Getting Nearby Trees.');
 	} catch (err) {
 		showErrorToast('Error fetching nearby trees.', err, dispatch);
 	}

@@ -3,10 +3,12 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text } from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import * as colors from '../../styles/colors';
+
 export default ({ leftOption }) => (
 	<View style={styles.container}>
 		<TouchableOpacity style={styles.leftButton} onPress={() => leftOption.action()}>
-			<AntDesign name="arrowleft" size={20} />
+			<AntDesign name="arrowleft" color={colors.black.toString()} size={20} />
 		</TouchableOpacity>
 		<View style={styles.titleContainer}>
 			<Text style={styles.title}> Tree Details </Text>
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'center',
 	},
-	leftIcon: { color: '#fff' },
+	leftIcon: { color: colors.white },
 	placeholder: {
 		flex: 1,
 	},

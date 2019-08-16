@@ -95,6 +95,11 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+// Load keystore
+def releaseKeystorePropertiesFile = rootProject.file("release.keystore.properties");
+def releaseKeystoreProperties = new Properties()
+releaseKeystoreProperties.load(new FileInputStream(releaseKeystorePropertiesFile))
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -114,10 +119,22 @@ android {
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
+    signingConfigs {
+        release{
+            if (releaseKeystoreProperties['TIA_UPLOAD_STORE_FILE']) {
+                    storeFile file(releaseKeystoreProperties['TIA_UPLOAD_STORE_FILE'])
+                    storePassword releaseKeystoreProperties['TIA_UPLOAD_STORE_PASSWORD']
+                    keyAlias releaseKeystoreProperties['TIA_UPLOAD_KEY_ALIAS']
+                    keyPassword releaseKeystoreProperties['TIA_UPLOAD_KEY_PASSWORD']
+                }
+        }
+ 
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release

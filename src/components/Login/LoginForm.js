@@ -11,6 +11,9 @@ import ProductButton from '../shared/ProductButton';
 import FormInput from '../shared/FormInput';
 import ProductText from '../shared/ProductText';
 import { setLoading } from '../../store/actions/ui-interactions.action';
+import { showWelcomeLoginToast } from '../../utils/PreDefinedToasts';
+
+import * as colors from '../../styles/colors';
 
 class LoginForm extends React.Component {
 	state = {
@@ -36,11 +39,7 @@ class LoginForm extends React.Component {
 			.then(async (firebaseUser) => {
 				try {
 					setLoading(false);
-					Toast.show({
-						text: `Welcome! Successfully logged in`,
-						buttonText: 'Okay',
-						type: 'success',
-					});
+					showWelcomeLoginToast();
 					navigation.navigate('Home');
 					await AsyncStorage.setItem('USER', JSON.stringify(firebaseUser));
 				} catch (error) {
@@ -69,13 +68,13 @@ class LoginForm extends React.Component {
 		return (
 			<View style={style}>
 				<FormInput
-					icon={<Entypo name="user" />}
+					icon={<Entypo color={colors.black.toString()} name="user" />}
 					placeholder="Email Address"
 					textContentType="emailAddress"
 					onChangeText={this.onEmailChange}
 				/>
 				<FormInput
-					icon={<Entypo name="lock" />}
+					icon={<Entypo color={colors.black.toString()} name="lock" />}
 					placeholder="Password"
 					textContentType="password"
 					onChangeText={this.onPasswordChange}

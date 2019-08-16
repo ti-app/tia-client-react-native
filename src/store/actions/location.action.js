@@ -17,13 +17,12 @@ export const fetchUserLocation = () => {
 			}
 
 			// I don't really understand why we need to use setTimeout()
-			// Help yourself with the link below. And do tell me if you know why we need to use this.
+			// Help yourself with the link below. And do tell me if you understand why we need to use this.
 			// https://github.com/expo/expo/issues/946#issuecomment-453181014
 			setTimeout(async () => {
 				try {
 					const locationData = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
 					dispatch(fetchUserLocationSuccess(locationData));
-					console.log(locationData);
 				} catch (err) {
 					console.log('Error while getting USER position', err);
 				}

@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInput, View, TouchableOpacity } from 'react-native';
 
 import { space } from '../../styles/variables';
-import { gray, lightGray, black } from '../../styles/colors';
+import * as colors from '../../styles/colors';
 
 const FormInput = (props) => {
 	const { icon, secondaryIcon, secondaryIconPress } = props;
@@ -10,7 +10,7 @@ const FormInput = (props) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.icon}>{icon}</View>
-			<TextInput {...props} placeholderTextColor={gray} style={styles.input} />
+			<TextInput {...props} placeholderTextColor={colors.gray} style={styles.input} />
 			<TouchableOpacity style={styles.secondaryIcon} onPress={secondaryIconPress}>
 				{secondaryIcon}
 			</TouchableOpacity>
@@ -22,7 +22,7 @@ const styles = {
 	container: {
 		display: 'flex',
 		flexDirection: 'row',
-		backgroundColor: lightGray,
+		backgroundColor: colors.lightGray,
 		marginBottom: space.small,
 		paddingLeft: space.small,
 		paddingRight: space.small,
@@ -43,7 +43,7 @@ const styles = {
 	input: {
 		flex: 1,
 		fontFamily: 'product-sans',
-		color: black,
+		color: colors.black,
 		height: 40,
 	},
 };

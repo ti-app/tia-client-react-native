@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 import Map from '../Map/Map';
 import Tree from '../Map/Tree';
 import Spot from '../Map/Spot';
+import PlantationSite from '../Map/PlantationSite';
 import { fetchTreeGroups, setSelectedTreeDetails } from '../../store/actions/tree.action';
+import { fetchPlanatationSites } from '../../store/actions/plantation-site.action';
 
 class HomeMap extends React.Component {
 	constructor(props) {
@@ -22,11 +24,37 @@ class HomeMap extends React.Component {
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		const {
+			currentHealthFilter: prevCurrentHealthFilter,
+			currentRangeFilter: prevCurrentRangeFilter,
+		} = prevProps;
 		const { latitude: prevUserLat, longitude: prevUserLng } = prevProps.userLocation;
-		const { userLocation, fetchTreeGroups } = this.props;
+
+		const {
+			userLocation,
+			fetchTreeGroups,
+			fetchPlanatationSites,
+			currentRangeFilter,
+			currentHealthFilter,
+		} = this.props;
+
 		const { latitude: userLatitude, longitude: userLongitude } = userLocation;
 
-		if ((userLatitude !== prevUserLat || userLongitude !== prevUserLng) && this.mapRef) {
+		const {
+			healthy: prevHealthy,
+			weak: prevWeak,
+			almostDead: prevAlmostDead,
+		} = prevCurrentHealthFilter;
+
+		const { healthy, weak, almostDead } = currentHealthFilter;
+
+		// prettier-ignore
+		const healthFilterChanged = healthy !== prevHealthy ||weak !== prevWeak ||almostDead !== prevAlmostDead;
+		// prettier-ignore
+		const locationChanged = userLatitude !== prevUserLat || userLongitude !== prevUserLng;
+		const rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
+
+		if ((locationChanged || rangeChanged || healthFilterChanged) && this.mapRef) {
 			const mapLocation = {
 				latitude: userLatitude,
 				longitude: userLongitude,
@@ -34,8 +62,35 @@ class HomeMap extends React.Component {
 				longitudeDelta: 0.010652057826519012,
 			};
 			this.mapRef.animateToRegion(mapLocation, 2000);
-			fetchTreeGroups(userLocation);
+			fetchTreeGroups(userLocation, currentRangeFilter * 1000, this.getAPIParamForHealth());
+
+			// TODO: This is probably not the right place to fetch plantation site as it doesn't depend on the location as of now. We are fething all the plantation site details.
+			fetchPlanatationSites();
 		}
+	}
+
+	getAPIParamForHealth() {
+		const { currentHealthFilter } = this.props;
+		const { healthy, weak, almostDead } = currentHealthFilter;
+		if (healthy && weak && almostDead) {
+			return 'healthy,weak,almostDead';
+		}
+		if (healthy && almostDead) {
+			return 'healthy,almostDead';
+		}
+		if (healthy && weak) {
+			return 'healthy,weak';
+		}
+		if (weak && almostDead) {
+			return 'weak,almostDead';
+		}
+		if (healthy) {
+			return 'healthy';
+		}
+		if (weak) {
+			return 'weak';
+		}
+		return 'almostDead';
 	}
 
 	selectTree(tree) {
@@ -44,7 +99,7 @@ class HomeMap extends React.Component {
 		navigation.navigate('TreeDetails');
 	}
 
-	renderMarker = (data) => {
+	renderTrees = (data) => {
 		const { splittedTreeGroup } = this.state;
 
 		if (data.trees.length === 1) {
@@ -100,18 +155,39 @@ class HomeMap extends React.Component {
 		);
 	};
 
+	renderPlantationSites = (data) => (
+		<PlantationSite
+			key={data.id}
+			coordinate={data.location}
+			onPress={() => {
+				console.log('Plantation Site Clicked');
+				// this.selectPlantationSite(data);
+			}}
+		/>
+	);
+
 	render() {
-		const { userLocation, treeGroups } = this.props;
+		const { userLocation, treeGroups, plantationSites } = this.props;
 
 		const { latitude, longitude } = userLocation;
 		const { onMapLoad } = this.props;
 
-		const mapData = treeGroups.map((treeGroup) => {
+		const treeData = treeGroups.map((treeGroup) => {
 			const { _id, health, location, ...rest } = treeGroup;
 			const { coordinates } = location;
 			return {
 				id: _id,
 				health,
+				location: { longitude: coordinates[0], latitude: coordinates[1] },
+				...rest,
+			};
+		});
+
+		const plantationSiteData = plantationSites.map((site) => {
+			const { _id, location, ...rest } = site;
+			const { coordinates } = location;
+			return {
+				id: _id,
 				location: { longitude: coordinates[0], latitude: coordinates[1] },
 				...rest,
 			};
@@ -136,7 +212,8 @@ class HomeMap extends React.Component {
 					showsMyLocationButton={false}
 					showsCompass={false}
 				>
-					{mapData.map((treeGroup) => this.renderMarker(treeGroup))}
+					{treeData.map((treeGroup) => this.renderTrees(treeGroup))}
+					{plantationSiteData.map((site) => this.renderPlantationSites(site))}
 				</Map>
 			</Container>
 		);
@@ -162,12 +239,14 @@ HomeMap.defaultProps = {};
 const mapStateToProps = (state) => ({
 	userLocation: state.location.userLocation,
 	treeGroups: state.tree.treeGroups,
+	plantationSites: state.plantationSite.plantationSites,
 	isTreeDetailsOpen: state.ui.isTreeDetailsOpen,
 });
 
 const mapDispatchToProps = (dispatch) => ({
 	setSelectedTreeDetails: (spot) => dispatch(setSelectedTreeDetails(spot)),
 	fetchTreeGroups: (...param) => dispatch(fetchTreeGroups(...param)),
+	fetchPlanatationSites: (...param) => dispatch(fetchPlanatationSites(...param)),
 });
 
 export default connect(

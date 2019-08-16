@@ -5,12 +5,13 @@ import { View, Text } from 'native-base';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { toggleDrawer, toggleFilter } from '../../store/actions/ui-interactions.action';
+import { toggleFilter } from '../../store/actions/ui-interactions.action';
+import * as colors from '../../styles/colors';
 
-const HomeNavigationBar = ({ nearbyTreesCount, toggleDrawer, toggleFilter }) => (
+const HomeNavigationBar = ({ nearbyTreesCount, navigation, toggleFilter }) => (
 	<View style={styles.container}>
-		<TouchableOpacity style={styles.menuButton} onPress={() => toggleDrawer()}>
-			<Ionicons size={20} name="md-menu" />
+		<TouchableOpacity style={styles.menuButton} onPress={() => navigation.toggleDrawer()}>
+			<Ionicons size={20} color={colors.black.toString()} name="md-menu" />
 		</TouchableOpacity>
 		<View style={styles.textContainer}>
 			<Text style={styles.title}> Nearby </Text>
@@ -19,7 +20,7 @@ const HomeNavigationBar = ({ nearbyTreesCount, toggleDrawer, toggleFilter }) => 
 			</Text>
 		</View>
 		<TouchableOpacity style={styles.filterButton} onPress={() => toggleFilter()}>
-			<Foundation size={20} name="filter" />
+			<Foundation size={20} color={colors.black.toString()} name="filter" />
 		</TouchableOpacity>
 	</View>
 );
@@ -47,18 +48,19 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		padding: 20,
 		paddingLeft: 10,
 	},
 	filterButton: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',
+		padding: 20,
 		paddingRight: 10,
 	},
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	toggleDrawer: () => dispatch(toggleDrawer()),
 	toggleFilter: () => dispatch(toggleFilter()),
 });
 

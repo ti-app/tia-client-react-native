@@ -6,18 +6,29 @@ import { toggleFilter } from '../../store/actions/ui-interactions.action';
 import SelectTreeHealth from '../shared/SelectTreeHealth';
 import OptionsBar from '../Navigation/OptionsBar';
 
+import * as colors from '../../styles/colors';
+
 class FilterTree extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			distance: 2,
-			selectedStatus: {},
-		};
+	state = {
+		range: 0.5,
+		selectedStatus: { healthy: true, weak: true, almostDead: true },
+	};
+
+	componentDidMount() {
+		const { currentRangeFilter, currentHealthFilter } = this.props;
+
+		if (currentRangeFilter) {
+			this.setState({ range: currentRangeFilter });
+		}
+
+		if (currentHealthFilter) {
+			this.setState({ selectedStatus: { ...currentHealthFilter } });
+		}
 	}
 
 	render() {
-		const { distance, selectedStatus } = this.state;
-		const { onFilterChanged, toggleFilter } = this.props;
+		const { range, selectedStatus } = this.state;
+		const { toggleFilter, onFilterChanged, currentRangeFilter } = this.props;
 
 		return (
 			<Container style={styles.container}>
@@ -30,7 +41,7 @@ class FilterTree extends React.Component {
 					rightOption={{
 						label: 'Save',
 						action: () => {
-							console.log('Save filter option and do something with it');
+							onFilterChanged({ range, selectedStatus });
 						},
 					}}
 				/>
@@ -39,21 +50,20 @@ class FilterTree extends React.Component {
 					<View style={styles.view}>
 						<Slider
 							style={styles.slider}
-							step={1}
-							minimumValue={1}
-							maximumValue={5}
-							value={distance}
+							step={0.5}
+							minimumValue={0.5}
+							maximumValue={2.5}
+							value={currentRangeFilter}
 							onValueChange={(val) => {
-								this.setState({ distance: val });
-								onFilterChanged({ distance, selectedStatus });
+								this.setState({ range: val });
 							}}
-							thumbTintColor="rgb(252, 228, 149)"
+							thumbTintColor={colors.blue}
 							maximumTrackTintColor="#000"
 							minimumTrackTintColor="#2f2f2f"
 						/>
 					</View>
-					<View style={styles.currentDistanceView}>
-						<Text style={styles.currentDistance}>{`${distance}km`}</Text>
+					<View style={styles.currentRangeView}>
+						<Text style={styles.currentRange}>{`${range}km`}</Text>
 					</View>
 					{/* <Text style={styles.textStyle}>How much water you can carry?</Text>
           <View style={styles.view}>
@@ -71,8 +81,8 @@ class FilterTree extends React.Component {
 					<SelectTreeHealth
 						onSelectedStatusChange={(selectedStatus) => {
 							this.setState({ selectedStatus });
-							onFilterChanged({ distance, selectedStatus });
 						}}
+						presetHealthStatus={selectedStatus}
 						type="multiple"
 					/>
 				</Content>
@@ -124,12 +134,12 @@ const styles = StyleSheet.create({
 		padding: 10,
 		width: '100%',
 	},
-	currentDistanceView: {
+	currentRangeView: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
 	},
-	currentDistance: {
+	currentRange: {
 		color: '#000',
 	},
 });

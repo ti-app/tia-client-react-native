@@ -10,6 +10,7 @@ import material from './native-base-theme/variables/material';
 import store from './src/store';
 import AppContent from './src';
 import loadResourcesAsync from './src/utils/LoadResources';
+import * as colors from './src/styles/colors';
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -33,7 +34,7 @@ export default class App extends React.Component {
 		try {
 			await AsyncStorage.setItem('LAUNCH_STATUS', 'NOT_INITIAL');
 		} catch (error) {
-			console.log(error);
+			console.log('Error setting launch status', error);
 		}
 	};
 
@@ -42,7 +43,7 @@ export default class App extends React.Component {
 			const value = await AsyncStorage.getItem('LAUNCH_STATUS');
 			return value || 'INITIAL';
 		} catch (error) {
-			console.log(error);
+			console.log('Error gettings launch status', error);
 			throw error;
 		}
 	};
@@ -68,8 +69,9 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		backgroundColor: colors.white,
 	},
+
 	loading: {
 		position: 'absolute',
 		left: 0,
@@ -92,7 +94,7 @@ const slides = [
 		text: 'Description.\nSay something cool',
 		image: require('./assets/images/tia_intro_1.png'),
 		imageStyle: styles.introImage,
-		backgroundColor: '#59b2ab',
+		backgroundColor: colors.green,
 	},
 	{
 		key: 'intro_2',
@@ -100,7 +102,7 @@ const slides = [
 		text: 'Other cool stuff',
 		image: require('./assets/images/tia_intro_1.png'),
 		imageStyle: styles.introImage,
-		backgroundColor: '#febe29',
+		backgroundColor: colors.yellow,
 	},
 	{
 		key: 'intro_3',
@@ -108,7 +110,7 @@ const slides = [
 		text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
 		image: require('./assets/images/tia_intro_1.png'),
 		imageStyle: styles.introImage,
-		backgroundColor: '#22bcb5',
+		backgroundColor: colors.orange,
 	},
 ];
 /* eslint-enable */

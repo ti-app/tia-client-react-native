@@ -3,8 +3,9 @@ import { StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Toast, Text, List, ListItem, View } from 'native-base';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { LinearGradient } from 'expo-linear-gradient';
 import firebase from 'firebase';
+
+import * as colors from '../../styles/colors';
 
 class SideDrawerContent extends React.Component {
 	componentWillUnmount() {}
@@ -34,65 +35,63 @@ class SideDrawerContent extends React.Component {
 	render() {
 		const { user } = this.props;
 		return (
-			<LinearGradient
-				colors={['#00dbb0', '#77ffe4']}
-				start={[0, 1]}
-				end={[1, 0]}
-				location={[0.59, 0.79]}
-			>
-				<View style={styles.container}>
-					{user && (
-						<View>
-							<View style={styles.userContainer}>
-								{user.photoURL ? (
-									<Image
-										square
-										style={styles.userPhoto}
-										source={{
-											uri: user.photoURL,
-										}}
-										onPress={() => this.navigateTo('UserProfile')}
-									/>
-								) : (
-									<FontAwesome style={styles.userIcon} name="user-circle" size={60} />
-								)}
-							</View>
-							<Text style={styles.displayName} onPress={() => this.navigateTo('UserProfile')}>
-								{user.displayName}
-							</Text>
-							<List>
-								<ListItem button onPress={() => this.navigateTo('AddNewSpot')}>
-									<Text style={styles.text}>Add a Plant</Text>
-								</ListItem>
-								<ListItem button>
-									<Text style={styles.text}>Settings</Text>
-								</ListItem>
-								<ListItem button>
-									<Text style={styles.text}>History</Text>
-								</ListItem>
-								<ListItem button onPress={() => this.navigateTo('Faq')}>
-									<Text style={styles.text}>FAQ</Text>
-								</ListItem>
-								<ListItem button onPress={this.logout}>
-									<Text style={styles.text}>Log out</Text>
-								</ListItem>
-							</List>
+			<View style={styles.container}>
+				{user && (
+					<View>
+						<View style={styles.userContainer}>
+							{user.photoURL ? (
+								<Image
+									square
+									style={styles.userPhoto}
+									source={{
+										uri: user.photoURL,
+									}}
+									onPress={() => this.navigateTo('UserProfile')}
+								/>
+							) : (
+								<FontAwesome
+									style={styles.userIcon}
+									color={colors.black.toString()}
+									name="user-circle"
+									size={60}
+								/>
+							)}
 						</View>
-					)}
-				</View>
-			</LinearGradient>
+						<Text style={styles.displayName} onPress={() => this.navigateTo('UserProfile')}>
+							{user.displayName}
+						</Text>
+						<List>
+							<ListItem button onPress={() => this.navigateTo('AddNewSpot')}>
+								<Text style={styles.text}>Add a Plant</Text>
+							</ListItem>
+							<ListItem button>
+								<Text style={styles.text}>Settings</Text>
+							</ListItem>
+							<ListItem button>
+								<Text style={styles.text}>History</Text>
+							</ListItem>
+							<ListItem button onPress={() => this.navigateTo('Faq')}>
+								<Text style={styles.text}>FAQ</Text>
+							</ListItem>
+							<ListItem button onPress={this.logout}>
+								<Text style={styles.text}>Log out</Text>
+							</ListItem>
+						</List>
+					</View>
+				)}
+			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-		top: 30,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-around',
 		height: '100%',
 		width: '100%',
+		backgroundColor: colors.green,
 	},
 	userContainer: {
 		height: 80,
