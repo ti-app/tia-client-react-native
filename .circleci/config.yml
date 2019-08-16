@@ -14,7 +14,7 @@ jobs:
           key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
       - run: yarn install
-
+      - run: npx jetify
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
@@ -56,7 +56,7 @@ jobs:
 
       - restore_cache:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-      - run: npx jetify
+
       - run: bundle install
 
       - save_cache:
