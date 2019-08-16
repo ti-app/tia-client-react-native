@@ -65,6 +65,14 @@ jobs:
             - vendor/bundle
 
       - run:
+          name: Setup keystore properties
+          command: |
+            echo $RELEASE_KEYSTORE_PROPERTIES > ${HOME}/android/release.keystore.properties.json
+      - run:
+          name: Setup keystore
+          command: |
+            echo $KEYSTORE | base64 -d  > ${HOME}/android/app/tiarelease.keystore
+      - run:
           name: fastlane tests
           command: |
             mkdir -p test-results/fastlane
