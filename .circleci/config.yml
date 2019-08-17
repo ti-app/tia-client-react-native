@@ -72,12 +72,16 @@ jobs:
           name: Setup keystore
           command: |
             echo $KEYSTORE | base64 -d  > ${HOME}/tia-client-react-native/android/app/tiarelease.keystore
+      # - run:
+      #     name: fastlane tests
+      #     command: |
+      #       mkdir -p test-results/fastlane
+      #       bundle exec fastlane test
+      #       mv fastlane/report.xml test-results/fastlane
       - run:
-          name: fastlane tests
+          name: Build debug APK and release APK
           command: |
-            mkdir -p test-results/fastlane
-            bundle exec fastlane test
-            mv fastlane/report.xml test-results/fastlane
+            ./gradlew assembleDebug
       - store_test_results:
           path: test-results
 
