@@ -147,6 +147,14 @@ class HomeMap extends React.Component {
 				key={data.id}
 				coordinate={data.location}
 				onPress={() => {
+					const { longitude, latitude } = data.location;
+					const mapLocation = {
+						latitude,
+						longitude,
+						latitudeDelta: 0.001582007226706992,
+						longitudeDelta: 0.000652057826519012,
+					};
+					this.mapRef.animateToRegion(mapLocation, 2000);
 					this.setState({ splittedTreeGroup: data });
 				}}
 				health={data.health}
