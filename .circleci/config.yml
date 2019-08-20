@@ -81,12 +81,9 @@ jobs:
       - run:
           name: Build debug APK and release APK
           command: |
-            ./gradlew assembleDebug
+            ./gradlew assembleRelease
       - store_test_results:
-          path: test-results
-
-      - store_artifacts:
-          path: test-results
+          path: ${HOME}/tia-client-react-native/android/app/build/outputs/apk/release/app-release.apk
 
 workflows:
   version: 2
