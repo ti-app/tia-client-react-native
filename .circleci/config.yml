@@ -54,7 +54,7 @@ jobs:
           name: Build debug APK and release APK
           command: |
             cd android
-            ./gradlew assembleRelease --stacktrace
+            ./gradlew assembleRelease -x bundleReleaseJsAndAssets --stacktrace
       - store_test_results:
           path: android/app/build/outputs/apk/
           destination: apks/
