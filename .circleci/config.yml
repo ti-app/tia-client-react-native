@@ -17,8 +17,7 @@ jobs:
       - run: npx jetify
       - run:
           name: Generate android bundle
-          command: |
-            react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          command: yarn bundle-android
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:

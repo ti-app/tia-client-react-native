@@ -1,10 +1,10 @@
 {
 	"scripts": {
-		"bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
 		"android": "react-native run-android",
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"test": "jest",
+		"bundle-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
 		"release-gradle-fix": "node ./scripts/android-release-gradle-fix.js",
 		"postinstall": "npm run release-gradle-fix"
 	},
