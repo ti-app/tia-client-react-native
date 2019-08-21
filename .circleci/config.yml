@@ -93,7 +93,7 @@ jobs:
       - run:
           name: Build debug APK and release APK
           command: |
-            ./gradlew assembleRelease -x bundleReleaseJsAndAssets --stacktrace
+            ./gradlew assembleRelease --stacktrace
       - store_test_results:
           path: app/build/outputs/apk/
           destination: apks/
