@@ -32,13 +32,13 @@ react-native run-android
 
 ## Debug Build:
 
-Step 1:
+1:
 
 ```
 react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
 ```
 
-Step 2:
+2:
 
 ```
 cd android/
@@ -55,7 +55,13 @@ You can find the build here: `app/build/outputs/apk/`
 
 2: Get `tiarelase.keystore` from `https://ti-app.slack.com/files/UE5JTSF4Z/FLXHA0YUT/tiarelease.keystore` and put it in `./android/app` directory.
 
-3: Generate a release build.
+3: Generate android bundle.
+
+```
+react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+```
+
+4: Generate a release build.
 
 ```
 cd android

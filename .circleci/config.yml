@@ -15,6 +15,10 @@ jobs:
 
       - run: yarn install
       - run: npx jetify
+      - run:
+          name: Generate android bundle
+          command: |
+            react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
@@ -25,21 +29,21 @@ jobs:
           paths:
             - node_modules
 
-    #   - run:
-    #       name: jest tests
-    #       command: |
-    #         mkdir -p test-results/jest
-    #         yarn run test
-    #       environment:
-    #         JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+      #   - run:
+      #       name: jest tests
+      #       command: |
+      #         mkdir -p test-results/jest
+      #         yarn run test
+      #       environment:
+      #         JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
 
       - persist_to_workspace:
           root: ~/tia-client-react-native
           paths:
             - node_modules
 
-    #   - store_test_results:
-    #       path: test-results
+      #   - store_test_results:
+      #       path: test-results
 
       - store_artifacts:
           path: test-results
@@ -86,6 +90,7 @@ jobs:
       #       mkdir -p test-results/fastlane
       #       bundle exec fastlane test
       #       mv fastlane/report.xml test-results/fastlane
+
       - run:
           name: Build debug APK and release APK
           command: |
@@ -95,10 +100,10 @@ jobs:
           destination: apks/
 
       - run:
-            name: Upload to Slack
-            command: |
-              export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
-              curl -F file=@app/build/outputs/apk/release/app-release.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA build"  https://slack.com/api/files.upload
+          name: Upload to Slack
+          command: |
+            export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
+            curl -F file=@app/build/outputs/apk/release/app-release.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA build"  https://slack.com/api/files.upload
 
 workflows:
   version: 2
