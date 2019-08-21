@@ -48,6 +48,9 @@ jobs:
     working_directory: ~/tia-client-react-native/android
     docker:
       - image: circleci/android:api-29-ndk
+    # dependencies:
+    #   pre:
+    #     - source environmentSetup.sh && copyEnvVarsToKeyStoreProperties
     steps:
       - checkout:
           path: ~/tia-client-react-native
@@ -67,7 +70,12 @@ jobs:
       - run:
           name: Setup keystore properties
           command: |
-            echo $RELEASE_KEYSTORE_PROPERTIES > ${HOME}/tia-client-react-native/android/release.keystore.properties
+            touch ${HOME}/tia-client-react-native/android/release.keystore.properties
+            echo "TIA_UPLOAD_STORE_FILE=$TIA_UPLOAD_STORE_FILE" >> ${HOME}/tia-client-react-native/android/release.keystore.properties
+            echo "TIA_UPLOAD_KEY_ALIAS=$TIA_UPLOAD_KEY_ALIAS" >> ${HOME}/tia-client-react-native/android/release.keystore.properties
+            echo "TIA_UPLOAD_STORE_PASSWORD=$TIA_UPLOAD_STORE_PASSWORD" >> ${HOME}/tia-client-react-native/android/release.keystore.properties
+            echo "TIA_UPLOAD_KEY_PASSWORD=$TIA_UPLOAD_KEY_PASSWORD" >> ${HOME}/tia-client-react-native/android/release.keystore.properties
+
       - run:
           name: Setup keystore
           command: |
@@ -81,12 +89,16 @@ jobs:
       - run:
           name: Build debug APK and release APK
           command: |
-            ./gradlew assembleDebug
+            ./gradlew assembleDebug  --stacktrace
       - store_test_results:
-          path: test-results
+          path: app/build/outputs/apk/
+          destination: apks/
 
-      - store_artifacts:
-          path: test-results
+      - run:
+            name: Upload to Slack
+            command: |
+              export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
+              curl -F file=@app/build/outputs/apk/debug/app-debug.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA build"  https://slack.com/api/files.upload
 
 workflows:
   version: 2
