@@ -19,6 +19,19 @@ jobs:
       - run: yarn install
       - run: npx jetify
       - run:
+          name: Setup environment file
+          command: |
+            touch ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_API_KEY=$FIREBASE_CONFIG_API_KEY" >> ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_AUTH_DOMAIN=$FIREBASE_CONFIG_AUTH_DOMAIN" >> ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_DATABASE_URL=$FIREBASE_CONFIG_DATABASE_URL" >> ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_PROJECT_ID=$FIREBASE_CONFIG_PROJECT_ID" >> ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_STORAGE_BUCKET=$FIREBASE_CONFIG_STORAGE_BUCKET" >> ${HOME}/tia-client-react-native/.env
+            echo "FIREBASE_CONFIG_MESSAGING_SENDER_ID=$FIREBASE_CONFIG_MESSAGING_SENDER_ID" >> ${HOME}/tia-client-react-native/.env
+            echo "FB_APP_ID=$FB_APP_ID" >> ${HOME}/tia-client-react-native/.env
+            echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> ${HOME}/tia-client-react-native/.env
+
+      - run:
           name: Generate android bundle
           command: yarn bundle-android
       - save_cache:
@@ -33,7 +46,6 @@ jobs:
 
       - restore_cache:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-
 
       - save_cache:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
