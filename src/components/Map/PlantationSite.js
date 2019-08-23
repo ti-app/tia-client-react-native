@@ -46,9 +46,9 @@ export default class PlantationSite extends Component {
 
 const styles = StyleSheet.create({
 	plantationSite: {
-		width: 30,
-		height: 30,
-		borderRadius: 15,
+		width: 20,
+		height: 20,
+		borderRadius: 10,
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',

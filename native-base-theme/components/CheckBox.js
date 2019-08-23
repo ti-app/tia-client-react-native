@@ -29,9 +29,8 @@ export default (variables /*: * */ = variable) => {
 		width: variables.checkboxSize,
 		height: variables.checkboxSize,
 		borderWidth: variables.CheckboxBorderWidth,
-		paddingLeft: variables.CheckboxPaddingLeft - 1,
+		paddingLeft: variables.CheckboxPaddingLeft,
 		paddingBottom: variables.CheckboxPaddingBottom,
-		left: 10,
 	};
 
 	return checkBoxTheme;

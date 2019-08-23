@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Platform, ScrollView, Keyboard } from 'react-native';
 import { View, Text, Button, Container } from 'native-base';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -21,6 +21,7 @@ class AddNewSpotScreen extends React.Component {
 		plantType: '',
 		waterCycle: 0,
 		centerBias: 0.00015,
+		isKeyboardOpen: false,
 	};
 
 	static navigationOptions = ({ navigation }) => {
@@ -49,6 +50,30 @@ class AddNewSpotScreen extends React.Component {
 	componentWillMount() {
 		const { fetchUserLocation } = this.props;
 		fetchUserLocation();
+	}
+
+	componentDidMount() {
+		this.keyboardDidShowListener = Keyboard.addListener(
+			'keyboardDidShow',
+			this._keyboardDidShow.bind(this)
+		);
+		this.keyboardDidHideListener = Keyboard.addListener(
+			'keyboardDidHide',
+			this._keyboardDidHide.bind(this)
+		);
+	}
+
+	componentWillUnmount() {
+		this.keyboardDidShowListener.remove();
+		this.keyboardDidHideListener.remove();
+	}
+
+	_keyboardDidShow() {
+		this.setState({ isKeyboardOpen: true });
+	}
+
+	_keyboardDidHide() {
+		this.setState({ isKeyboardOpen: false });
 	}
 
 	handleNumberOfPlantsChange = (numberOfPlants) => {
@@ -123,7 +148,7 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	render() {
-		const { photo, health, centerBias } = this.state;
+		const { photo, health, centerBias, isKeyboardOpen } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 
@@ -148,49 +173,53 @@ class AddNewSpotScreen extends React.Component {
 				</View>
 
 				<Text style={styles.whereIsItText}> Where is it?</Text>
-				<View style={styles.form}>
-					<FormInput
-						placeholder="Number of plants?"
-						keyboardType="number-pad"
-						onChangeText={this.handleNumberOfPlantsChange}
-					/>
-					<FormInput
-						placeholder="Plant type"
-						keyboardType="default"
-						onChangeText={this.handlePlantType}
-					/>
-					<FormInput
-						placeholder="Water cycle"
-						keyboardType="number-pad"
-						onChangeText={this.handleWaterCycleChange}
-					/>
-					<View>
-						<Text style={styles.healthOfPlantText}> Health of plant(s) </Text>
-						<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
-					</View>
-					{photo ? (
-						<Image
-							source={{ uri: photo }}
-							resizeMode="contain"
-							style={{ width: '100%', height: 150 }}
+				<View style={styles.formContainer}>
+					<ScrollView contentContainerStyle={styles.form}>
+						<FormInput
+							placeholder="Number of plants?"
+							keyboardType="number-pad"
+							onChangeText={this.handleNumberOfPlantsChange}
 						/>
-					) : (
-						<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
-							<Text> Take a photo</Text>
-						</TouchableOpacity>
-					)}
-					<Button
-						style={[
-							styles.addButton,
-							this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
-						]}
-						disabled={this.isAddButtonDisabled()}
-						success
-						onPress={this.handleAddSpot}
-					>
-						<Text> Add Plant(s) </Text>
-					</Button>
+						<FormInput
+							placeholder="Plant type"
+							keyboardType="default"
+							onChangeText={this.handlePlantType}
+						/>
+						<FormInput
+							placeholder="Water cycle"
+							keyboardType="number-pad"
+							onChangeText={this.handleWaterCycleChange}
+						/>
+						<View>
+							<Text style={styles.healthOfPlantText}> Health of plant(s) </Text>
+							<View style={styles.selectTreeHealthContainer}>
+								<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
+							</View>
+						</View>
+						{photo ? (
+							<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
+						) : (
+							<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
+								<Text> Take a photo</Text>
+							</TouchableOpacity>
+						)}
+					</ScrollView>
 				</View>
+				{!isKeyboardOpen ? (
+					<View style={styles.addButtonContainer}>
+						<Button
+							style={[
+								styles.addButton,
+								this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
+							]}
+							disabled={this.isAddButtonDisabled()}
+							success
+							onPress={this.handleAddSpot}
+						>
+							<Text> Add Plant(s) </Text>
+						</Button>
+					</View>
+				) : null}
 			</Container>
 		);
 	}
@@ -204,14 +233,18 @@ const styles = StyleSheet.create({
 	whereIsItText: {
 		fontSize: 25,
 	},
-	form: {
+	formContainer: {
 		flex: 2,
+	},
+	form: {
 		display: 'flex',
 		flexDirection: 'column',
 		padding: 20,
-		justifyContent: 'space-between',
 	},
 	healthOfPlantText: {
+		paddingBottom: 10,
+	},
+	selectTreeHealthContainer: {
 		paddingBottom: 10,
 	},
 	imageUploadContainer: {
@@ -221,13 +254,19 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: 150,
 		backgroundColor: 'lightgray',
-	},
-	imageContainer: {
-		width: '100%',
-		height: 150,
+		marginBottom: 40,
 	},
 	image: {
 		width: '100%',
+		height: 150,
+		marginBottom: 40,
+	},
+	addButtonContainer: {
+		position: 'absolute',
+		left: 10,
+		right: 10,
+		bottom: 10,
+		backgroundColor: 'white',
 	},
 	addButton: { justifyContent: 'center', width: '100%' },
 	addButtonDisabled: { opacity: 0.4 },

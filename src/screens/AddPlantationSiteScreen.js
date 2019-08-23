@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet /* ,TouchableOpacity, Image,  Platform */ } from 'react-native';
+import { StyleSheet, Keyboard, ScrollView, TouchableOpacity } from 'react-native';
 import { Container, View, Text, Button, CheckBox } from 'native-base';
 import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
-// import { Permissions } from 'react-native-unimodules';
-// import * as ImagePicker from 'expo-image-picker';
 
 import OptionsBar from '../components/Navigation/OptionsBar';
 import PlantationSite from '../components/Map/PlantationSite';
@@ -23,6 +21,7 @@ class AddPlantationSiteScreen extends React.Component {
 		soilQuality: null,
 		plants: 0,
 		centerBias: 0.00015,
+		isKeyboardOpen: false,
 	};
 
 	static navigationOptions = ({ navigation }) => {
@@ -52,22 +51,30 @@ class AddPlantationSiteScreen extends React.Component {
 		fetchUserLocation();
 	}
 
+	componentDidMount() {
+		this.keyboardDidShowListener = Keyboard.addListener(
+			'keyboardDidShow',
+			this._keyboardDidShow.bind(this)
+		);
+		this.keyboardDidHideListener = Keyboard.addListener(
+			'keyboardDidHide',
+			this._keyboardDidHide.bind(this)
+		);
+	}
+
+	_keyboardDidShow() {
+		this.setState({ isKeyboardOpen: true });
+	}
+
+	_keyboardDidHide() {
+		this.setState({ isKeyboardOpen: false });
+	}
+
 	handleNumberOfPlantsChange = (numberOfPlants) => {
 		this.setState({ plants: numberOfPlants });
 	};
 
-	// takePhoto = async () => {
-	// 	const { status: cameraPerm } = await Permissions.askAsync(Permissions.CAMERA);
-
-	// 	const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-	// 	if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-	// 		const pickerResult = await ImagePicker.launchCameraAsync({});
-	// 		this.setState({ photo: pickerResult.uri });
-	// 	}
-	// };
-
-	handleAddSpot = () => {
+	handleAddSite = () => {
 		const { addPlantationSite } = this.props;
 		const {
 			/* type, wateringNearBy, soilQuality, photo, */ plants,
@@ -148,7 +155,7 @@ class AddPlantationSiteScreen extends React.Component {
 	};
 
 	render() {
-		const { centerBias, wateringNearBy } = this.state;
+		const { centerBias, wateringNearBy, isKeyboardOpen } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 
@@ -173,56 +180,49 @@ class AddPlantationSiteScreen extends React.Component {
 				</View>
 
 				<Text style={styles.whereIsItText}> Where is it?</Text>
-				<View style={styles.form}>
-					<FormInput
-						placeholder="No. of plants in site?"
-						keyboardType="number-pad"
-						onChangeText={this.handleNumberOfPlantsChange}
-					/>
-					<View style={styles.wateringNearBy}>
-						<View style={styles.wateringNearByCheckBox}>
-							<CheckBox
-								checked={wateringNearBy}
-								color={colors.green}
-								onPress={this.handleOnWateringNearbyChange}
-							/>
-						</View>
-						<Text> Watering Nearby </Text>
-					</View>
-					<View>
-						<Text style={styles.healthOfPlantText}> Soil Quality </Text>
-						<SelectSoilQuality onSelectedSoilQualityChange={this.handleSoilQualityChange} />
-					</View>
-
-					<View>
-						<Text style={styles.healthOfPlantText}> Property Type </Text>
-						<SelectPropertyType onSelectedPropertyTypeChange={this.handlePropertyTypeChange} />
-					</View>
-
-					{/* {photo ? (
-						<Image
-							source={{ uri: photo }}
-							resizeMode="contain"
-							style={{ width: '100%', height: 150 }}
+				<View style={styles.formContainer}>
+					<ScrollView contentContainerStyle={styles.form}>
+						<FormInput
+							placeholder="No. of plants in site?"
+							keyboardType="number-pad"
+							onChangeText={this.handleNumberOfPlantsChange}
 						/>
-					) : (
-						<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
-							<Text> Take a photo</Text>
+						<TouchableOpacity
+							style={[styles.wateringNearBy, styles.paddingBottomTen]}
+							onPress={this.handleOnWateringNearbyChange}
+						>
+							<View style={styles.wateringNearByCheckBox}>
+								<CheckBox checked={wateringNearBy} color={colors.green} />
+							</View>
+							<Text> Watering Nearby </Text>
 						</TouchableOpacity>
-					)} */}
+						<View style={styles.paddingBottomTen}>
+							<Text style={styles.paddingBottomTen}> Soil Quality </Text>
+							<SelectSoilQuality onSelectedSoilQualityChange={this.handleSoilQualityChange} />
+						</View>
 
-					<Button
-						style={[
-							styles.addButton,
-							this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
-						]}
-						disabled={this.isAddButtonDisabled()}
-						success
-						onPress={this.handleAddSpot}
-					>
-						<Text> ADD </Text>
-					</Button>
+						<View style={styles.paddingBottomTen}>
+							<Text style={styles.paddingBottomTen}> Property Type </Text>
+							<SelectPropertyType onSelectedPropertyTypeChange={this.handlePropertyTypeChange} />
+						</View>
+					</ScrollView>
 				</View>
+
+				{!isKeyboardOpen ? (
+					<View style={styles.addButtonContainer}>
+						<Button
+							style={[
+								styles.addButton,
+								this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
+							]}
+							disabled={this.isAddButtonDisabled()}
+							success
+							onPress={this.handleAddSite}
+						>
+							<Text> ADD </Text>
+						</Button>
+					</View>
+				) : null}
 			</Container>
 		);
 	}
@@ -236,35 +236,32 @@ const styles = StyleSheet.create({
 	whereIsItText: {
 		fontSize: 25,
 	},
+	formContainer: {
+		flex: 2,
+	},
 	form: {
-		flex: 1.4,
 		display: 'flex',
 		flexDirection: 'column',
 		padding: 20,
 		justifyContent: 'space-between',
-		height: '100%',
-	},
-	imageUploadContainer: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		width: '100%',
-		height: 150,
-		backgroundColor: 'lightgray',
 	},
 	wateringNearBy: {
 		display: 'flex',
 		flexDirection: 'row',
+		paddingTop: 10,
 	},
 	wateringNearByCheckBox: {
-		paddingRight: 16,
+		paddingRight: 10,
 	},
-	imageContainer: {
-		width: '100%',
-		height: 150,
+	paddingBottomTen: {
+		paddingBottom: 10,
 	},
-	image: {
-		width: '100%',
+	addButtonContainer: {
+		position: 'absolute',
+		left: 10,
+		right: 10,
+		bottom: 10,
+		backgroundColor: 'white',
 	},
 	addButton: { justifyContent: 'center', width: '100%' },
 	addButtonDisabled: { opacity: 0.4 },

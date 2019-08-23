@@ -151,8 +151,8 @@ class HomeMap extends React.Component {
 					const mapLocation = {
 						latitude,
 						longitude,
-						latitudeDelta: 0.001582007226706992,
-						longitudeDelta: 0.000652057826519012,
+						latitudeDelta: 0.000582007226706992,
+						longitudeDelta: 0.000252057826519012,
 					};
 					this.mapRef.animateToRegion(mapLocation, 2000);
 					this.setState({ splittedTreeGroup: data });

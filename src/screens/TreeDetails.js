@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { View, Text, Container, Button } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView from 'react-native-maps';
@@ -159,58 +159,56 @@ class TreeDetails extends React.Component {
 						<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
 					</MapView>
 				</View>
-				<View style={styles.treeDetails}>
-					<View style={styles.heading}>
-						<View style={styles.plantHeading}>
-							<Text style={styles.addressLabel}>{plantType || 'Plant type not available'}</Text>
-							{lastActedUser && (
-								<Text style={styles.distanceLabel}>Uploaded by : {lastActedUser}</Text>
-							)}
-							{formattedUploadedDate && (
-								<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>
-							)}
+
+				<View style={styles.heading}>
+					<Text style={styles.plantType}>{plantType || 'Plant type not available'}</Text>
+					{this.getDeleteButton()}
+				</View>
+
+				<View style={styles.treeDetailsContainer}>
+					<ScrollView contentContainerStyle={styles.treeDetails}>
+						{lastActedUser && (
+							<Text style={styles.distanceLabel}>Uploaded by : {lastActedUser}</Text>
+						)}
+						{formattedUploadedDate && (
+							<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>
+						)}
+						<View>
+							{this.renderWeekStatus([
+								{ key: 1, status: 'healthy' },
+								{ key: 2, status: 'weak' },
+								{ key: 3, status: 'weak' },
+								{ key: 4, status: 'healthy' },
+								{ key: 5, status: 'healthy' },
+								{ key: 6, status: 'weak' },
+								{ key: 7, status: 'weak' },
+							])}
+							<Text style={styles.lastWateredText}>
+								Last watered on {formattedLastActivityDate}. Please don&apos;t forget to water me.
+							</Text>
 						</View>
-						{this.getDeleteButton()}
-					</View>
-					<View>
-						{this.renderWeekStatus([
-							{ key: 1, status: 'healthy' },
-							{ key: 2, status: 'weak' },
-							{ key: 3, status: 'weak' },
-							{ key: 4, status: 'healthy' },
-							{ key: 5, status: 'healthy' },
-							{ key: 6, status: 'weak' },
-							{ key: 7, status: 'weak' },
-						])}
-						<Text style={styles.lastWateredText}>
-							Last watered on {formattedLastActivityDate}. Please don&apos;t forget to water me.
-						</Text>
-					</View>
-					{photo && photo.length > 0 ? (
-						<Image
-							source={{
-								uri: photo,
-							}}
-							resizeMode="contain"
-							style={styles.image}
-						/>
-					) : (
-						<View style={styles.imageNotFound}>
-							<Text style={styles.imageNotFoundText}>No Image.</Text>
-						</View>
-					)}
-					<Text>{wateredPlant} more have watered here</Text>
+						{photo && photo.length > 0 ? (
+							<Image
+								source={{
+									uri: photo,
+								}}
+								resizeMode="contain"
+								style={styles.image}
+							/>
+						) : (
+							<View style={styles.imageNotFound}>
+								<Text style={styles.imageNotFoundText}>No Image.</Text>
+							</View>
+						)}
+						<Text style={styles.moreWateredHereText}>{wateredPlant} more have watered here</Text>
+					</ScrollView>
+				</View>
+				<View style={styles.wateredButtonContainer}>
 					<Button
 						style={{
 							...styles.wateredButton,
 							opacity: waterButton.disabled ? 0.4 : 1,
 						}}
-						/**
-						 * Anand: For some reason, the button does not look 'disabled'
-						 * even if waterButton.disabled is true :/
-						 * Akshay: Yeah, apparently that's the case with native-base or react-native component.
-						 * So I've added opacity to make it look disabled.
-						 */
 						disabled={waterButton.disabled}
 						success
 						onPress={this.waterTree}
@@ -228,6 +226,9 @@ const styles = StyleSheet.create({
 		display: 'flex',
 	},
 	mapView: { flex: 1.0, height: '100%' },
+	treeDetailsContainer: {
+		flex: 1.4,
+	},
 	treeDetails: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -236,12 +237,17 @@ const styles = StyleSheet.create({
 		paddingLeft: 16,
 		paddingTop: 8,
 		paddingBottom: 16,
-		flex: 1.4,
 	},
 	heading: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		paddingRight: 16,
+		paddingLeft: 16,
+	},
+	plantType: {
+		textAlignVertical: 'center',
+		fontSize: 20,
 	},
 	addressLabel: { fontSize: 20, paddingRight: 8 },
 	distanceLabel: {
@@ -256,18 +262,16 @@ const styles = StyleSheet.create({
 	weak: { backgroundColor: colors.orange },
 	almostDead: { backgroundColor: colors.red },
 	lastWateredText: { fontSize: 12, color: colors.gray },
-	wateredButton: {
-		width: '100%',
-		paddingRight: 8,
-		paddingLeft: 8,
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'center',
+	wateredButtonContainer: {
+		position: 'absolute',
+		left: 10,
+		right: 10,
+		bottom: 10,
+		backgroundColor: 'white',
 	},
-	plantHeading: {
-		flex: 1,
-		display: 'flex',
-		flexDirection: 'column',
+	wateredButton: {
+		justifyContent: 'center',
+		width: '100%',
 	},
 	deleteButton: {
 		padding: 8,
@@ -284,6 +288,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.lightGray,
 	},
 	imageNotFoundText: { textAlign: 'center' },
+	moreWateredHereText: { marginBottom: 40 },
 });
 
 const mapStateToProps = (state) => ({
