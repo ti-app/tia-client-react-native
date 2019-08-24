@@ -68,6 +68,11 @@ class TreeDetails extends React.Component {
 		deleteTree(treeToDelete);
 	};
 
+	editTree = () => {
+		const { navigation } = this.props;
+		navigation.navigate('EditTree');
+	};
+
 	showConfirmDeleteAlert = () => {
 		// Works on both iOS and Android
 		Alert.alert(
@@ -101,6 +106,12 @@ class TreeDetails extends React.Component {
 	getDeleteButton = () => (
 		<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
 			<MaterialIcons name="delete" size={24} color={colors.red.toString()} />
+		</TouchableOpacity>
+	);
+
+	getEditButton = () => (
+		<TouchableOpacity style={styles.editButton} onPress={this.editTree}>
+			<MaterialIcons name="edit" size={24} color={colors.black.toString()} />
 		</TouchableOpacity>
 	);
 
@@ -162,7 +173,10 @@ class TreeDetails extends React.Component {
 
 				<View style={styles.heading}>
 					<Text style={styles.plantType}>{plantType || 'Plant type not available'}</Text>
-					{this.getDeleteButton()}
+					<View style={styles.actionButtonContainer}>
+						{this.getEditButton()}
+						{this.getDeleteButton()}
+					</View>
 				</View>
 
 				<View style={styles.treeDetailsContainer}>
@@ -245,6 +259,10 @@ const styles = StyleSheet.create({
 		paddingRight: 16,
 		paddingLeft: 16,
 	},
+	actionButtonContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+	},
 	plantType: {
 		textAlignVertical: 'center',
 		fontSize: 20,
@@ -274,6 +292,10 @@ const styles = StyleSheet.create({
 		width: '100%',
 	},
 	deleteButton: {
+		padding: 8,
+		borderColor: 'black',
+	},
+	editButton: {
 		padding: 8,
 		borderColor: 'black',
 	},

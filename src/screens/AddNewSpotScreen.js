@@ -101,7 +101,7 @@ class AddNewSpotScreen extends React.Component {
 		const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
 		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-			const pickerResult = await ImagePicker.launchCameraAsync({});
+			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.5 });
 			this.setState({ photo: pickerResult.uri });
 		}
 	};
@@ -191,8 +191,8 @@ class AddNewSpotScreen extends React.Component {
 							onChangeText={this.handleWaterCycleChange}
 						/>
 						<View>
-							<Text style={styles.healthOfPlantText}> Health of plant(s) </Text>
-							<View style={styles.selectTreeHealthContainer}>
+							<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>
+							<View style={styles.paddingBottomTen}>
 								<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
 							</View>
 						</View>
@@ -241,10 +241,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		padding: 20,
 	},
-	healthOfPlantText: {
-		paddingBottom: 10,
-	},
-	selectTreeHealthContainer: {
+	paddingBottomTen: {
 		paddingBottom: 10,
 	},
 	imageUploadContainer: {

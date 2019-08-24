@@ -5,7 +5,6 @@ import apiClient from '../../utils/ApiClient';
 import showErrorToast from '../../utils/ErrorToast';
 import NavigationUtil from '../../utils/Navigation';
 
-export const ADD_GROUP = 'ADD_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
 export const FETCH_TREE_GROUP_SUCCESS = 'FETCH_TREE_GROUP_SUCCESS';
 export const SET_SELECTED_TREE_DETAILS = 'SET_SELECTED_TREE_DETAILS';
@@ -77,6 +76,37 @@ export const fetchTreeGroups = (
 		});
 	} catch (err) {
 		showErrorToast('Error fetching nearby trees.', err, dispatch);
+	}
+};
+
+export const updateTree = (treeId, updatedTree) => async (dispatch, getState) => {
+	console.log(treeId);
+	console.log(updatedTree);
+
+	const state = getState();
+	const {
+		location: { userLocation },
+	} = state;
+
+	try {
+		await apiClient({
+			method: 'post',
+			url: `/tree/update/${treeId}`,
+			data: updatedTree,
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+
+		NavigationUtil.navigate('Home');
+		dispatch(
+			fetchTreeGroups({
+				...userLocation,
+			})
+		);
+	} catch (err) {
+		showErrorToast('Error updating a tree.', err, dispatch);
 	}
 };
 

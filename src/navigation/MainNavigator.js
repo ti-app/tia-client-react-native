@@ -6,6 +6,7 @@ import UserProfileScreen from '../screens/UserProfileScreen';
 import FaqScreen from '../screens/FaqScreen';
 import TreeDetails from '../screens/TreeDetails';
 import SideDrawerContent from '../components/Home/SideDrawerContent';
+import EditTreeDetails from '../screens/EditTreeDetails';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -20,6 +21,9 @@ const MainNavigator = createStackNavigator(
 		},
 		TreeDetails: {
 			screen: TreeDetails,
+		},
+		EditTree: {
+			screen: EditTreeDetails,
 		},
 		UserProfile: {
 			screen: UserProfileScreen,

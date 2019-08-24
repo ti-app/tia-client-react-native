@@ -139,3 +139,6 @@ buck-out/
 
 # Keystore related
 release.keystore.properties
+
+# Bin directory
+android/app/bin
