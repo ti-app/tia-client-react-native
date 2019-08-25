@@ -32,13 +32,13 @@ export default class Spot extends Component {
 	}
 
 	render() {
-		const { coordinate, onPress, health, trees } = this.props;
+		const { coordinate, onPress, health, treeCount } = this.props;
 		const { tracksViewChanges } = this.state;
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
 				<View style={{ ...styles.treeGroup, backgroundColor: getColorByTreeStatus(health) }}>
-					<Text style={styles.treeCountText}>{trees.length}</Text>
+					<Text style={styles.treeCountText}>{treeCount}</Text>
 				</View>
 			</Marker>
 		);

@@ -12,6 +12,7 @@ import FormInput from '../components/shared/FormInput';
 import SelectTreeHealth from '../components/shared/SelectTreeHealth';
 import { addGroup } from '../store/actions/tree.action';
 import { fetchUserLocation } from '../store/actions/location.action';
+import Spot from '../components/Map/Spot';
 
 class AddNewSpotScreen extends React.Component {
 	state = {
@@ -148,7 +149,7 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	render() {
-		const { photo, health, centerBias, isKeyboardOpen } = this.state;
+		const { photo, health, centerBias, isKeyboardOpen, plants } = this.state;
 		const { userLocation } = this.props;
 		const { latitude, longitude } = userLocation;
 
@@ -168,7 +169,15 @@ class AddNewSpotScreen extends React.Component {
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+						{plants > 1 ? (
+							<Spot
+								coordinate={{ latitude, longitude }}
+								health={health || 'healthy'}
+								treeCount={plants}
+							/>
+						) : (
+							<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+						)}
 					</MapView>
 				</View>
 

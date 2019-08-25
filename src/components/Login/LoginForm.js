@@ -3,15 +3,18 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
-
-import { Toast } from 'native-base';
 import * as firebase from 'firebase';
+
 import { space } from '../../styles/variables';
 import ProductButton from '../shared/ProductButton';
 import FormInput from '../shared/FormInput';
 import ProductText from '../shared/ProductText';
 import { setLoading } from '../../store/actions/ui-interactions.action';
-import { showWelcomeLoginToast } from '../../utils/PreDefinedToasts';
+import {
+	showWelcomeLoginToast,
+	showSomethingBadToast,
+	showLoginFailed,
+} from '../../utils/PreDefinedToasts';
 
 import * as colors from '../../styles/colors';
 
@@ -44,22 +47,14 @@ class LoginForm extends React.Component {
 					await AsyncStorage.setItem('USER', JSON.stringify(firebaseUser));
 				} catch (error) {
 					setLoading(false);
-					Toast.show({
-						text: error,
-						buttonText: 'Okay',
-						type: 'warning',
-					});
-					console.log('Error', error);
+					showSomethingBadToast();
+					console.log('Error while saving user in async storage.', error);
 				}
 			})
 			.catch((error) => {
 				setLoading(false);
-				Toast.show({
-					text: error,
-					buttonText: 'Okay',
-					type: 'warning',
-				});
-				console.log('Error', error);
+				showLoginFailed();
+				console.log('Error while login.', error);
 			});
 	};
 

@@ -1,6 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ImageBackground, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import {
+	StyleSheet,
+	ImageBackground,
+	ScrollView,
+	TouchableOpacity,
+	Platform,
+	Keyboard,
+} from 'react-native';
 import { View, Text, Container, Button, CheckBox } from 'native-base';
 import MapView from 'react-native-maps';
 import { Permissions } from 'react-native-unimodules';
@@ -32,6 +39,7 @@ class TreeDetails extends React.Component {
 			updatedLocation: location,
 			plantType,
 			healthCycle,
+			isKeyboardOpen: false,
 		};
 	}
 
@@ -57,6 +65,30 @@ class TreeDetails extends React.Component {
 
 		return header;
 	};
+
+	componentDidMount() {
+		this.keyboardDidShowListener = Keyboard.addListener(
+			'keyboardDidShow',
+			this._keyboardDidShow.bind(this)
+		);
+		this.keyboardDidHideListener = Keyboard.addListener(
+			'keyboardDidHide',
+			this._keyboardDidHide.bind(this)
+		);
+	}
+
+	componentWillUnmount() {
+		this.keyboardDidShowListener.remove();
+		this.keyboardDidHideListener.remove();
+	}
+
+	_keyboardDidShow() {
+		this.setState({ isKeyboardOpen: true });
+	}
+
+	_keyboardDidHide() {
+		this.setState({ isKeyboardOpen: false });
+	}
 
 	takePhoto = async () => {
 		const { status: cameraPerm } = await Permissions.askAsync(Permissions.CAMERA);
@@ -139,7 +171,15 @@ class TreeDetails extends React.Component {
 			return <Text>Loading...</Text>;
 		}
 
-		const { photoURL, health, updatedLocation, plantType, healthCycle, updatedPhoto } = this.state;
+		const {
+			photoURL,
+			health,
+			updatedLocation,
+			plantType,
+			healthCycle,
+			updatedPhoto,
+			isKeyboardOpen,
+		} = this.state;
 
 		const { coordinates } = updatedLocation;
 		const [longitude, latitude] = coordinates;
@@ -221,11 +261,13 @@ class TreeDetails extends React.Component {
 						)}
 					</ScrollView>
 				</View>
-				<View style={styles.updateButtonContainer}>
-					<Button style={styles.updateButton} success onPress={this.handleUpdateTree}>
-						<Text> UPDATE </Text>
-					</Button>
-				</View>
+				{!isKeyboardOpen ? (
+					<View style={styles.updateButtonContainer}>
+						<Button style={styles.updateButton} success onPress={this.handleUpdateTree}>
+							<Text> UPDATE </Text>
+						</Button>
+					</View>
+				) : null}
 			</Container>
 		);
 	}

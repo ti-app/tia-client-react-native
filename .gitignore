@@ -104,6 +104,16 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
+# ios/Pods,
+ios/Pods/
+
+# user personal info,for example debug info
+ios/tiapp.xcodeproj/project.xcworkspace/
+ios/tiapp.xcodeproj/xcuserdata
+
+# Podfile versions
+ios/Podfile.lock
+
 # Android/IntelliJ
 #
 build/

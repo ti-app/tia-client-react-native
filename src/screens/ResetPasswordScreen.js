@@ -45,7 +45,7 @@ export default class ResetPassword extends React.Component {
 					</View>
 					<View style={styles.formContainer}>
 						<View style={styles.form}>
-							<ResetPasswordForm />
+							<ResetPasswordForm {...this.props} />
 						</View>
 					</View>
 				</KeyboardAvoidingView>

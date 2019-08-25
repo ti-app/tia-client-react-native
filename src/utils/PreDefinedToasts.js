@@ -9,6 +9,14 @@ export const showWelcomeLoginToast = () => {
 	});
 };
 
+export const showLoginFailed = () => {
+	Toast.show({
+		text: `Login failed! Please heck your credentials.`,
+		buttonText: 'Okay',
+		style: { backgroundColor: colors.red },
+	});
+};
+
 export const showEmailSuccessfullToast = () => {
 	Toast.show({
 		text: `Email has been sent! `,
@@ -21,7 +29,7 @@ export const showPasswordResetIssueToast = () => {
 	Toast.show({
 		text: `Issue while reseting password`,
 		buttonText: 'Okay',
-		type: 'error',
+		style: { backgroundColor: colors.red },
 	});
 };
 

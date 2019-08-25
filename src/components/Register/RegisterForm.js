@@ -45,10 +45,11 @@ class RegisterPasswordForm extends React.Component {
 	};
 
 	registerWithFirebase() {
-		setLoading(true);
-
 		const { setLoading, navigation } = this.props;
 		const { email, password, location } = this.state;
+
+		setLoading(true);
+
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
@@ -71,6 +72,7 @@ class RegisterPasswordForm extends React.Component {
 								});
 								showSuccessfulRegisterToast();
 							} catch (error) {
+								setLoading(false);
 								showSomethingBadToast();
 								console.log('Error while registering', error);
 							}

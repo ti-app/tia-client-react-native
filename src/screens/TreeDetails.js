@@ -140,7 +140,7 @@ class TreeDetails extends React.Component {
 			health,
 			location,
 			lastActivityDate,
-			lastActedUser,
+			owner,
 			uploadedDate,
 			plantType,
 		} = selectedTreeDetails;
@@ -181,8 +181,8 @@ class TreeDetails extends React.Component {
 
 				<View style={styles.treeDetailsContainer}>
 					<ScrollView contentContainerStyle={styles.treeDetails}>
-						{lastActedUser && (
-							<Text style={styles.distanceLabel}>Uploaded by : {lastActedUser}</Text>
+						{owner && owner.displayName && (
+							<Text style={styles.distanceLabel}>Uploaded by : {owner.displayName}</Text>
 						)}
 						{formattedUploadedDate && (
 							<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>

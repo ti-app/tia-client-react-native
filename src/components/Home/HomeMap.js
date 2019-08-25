@@ -49,7 +49,7 @@ class HomeMap extends React.Component {
 		const { healthy, weak, almostDead } = currentHealthFilter;
 
 		// prettier-ignore
-		const healthFilterChanged = healthy !== prevHealthy ||weak !== prevWeak ||almostDead !== prevAlmostDead;
+		const healthFilterChanged = healthy !== prevHealthy || weak !== prevWeak || almostDead !== prevAlmostDead;
 		// prettier-ignore
 		const locationChanged = userLatitude !== prevUserLat || userLongitude !== prevUserLng;
 		const rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
@@ -61,10 +61,12 @@ class HomeMap extends React.Component {
 				latitudeDelta: 0.011582007226706992,
 				longitudeDelta: 0.010652057826519012,
 			};
+
 			this.mapRef.animateToRegion(mapLocation, 2000);
+
 			fetchTreeGroups(userLocation, currentRangeFilter * 1000, this.getAPIParamForHealth());
 
-			// TODO: This is probably not the right place to fetch plantation site as it doesn't depend on the location as of now. We are fething all the plantation site details.
+			// TODO: This is probably not the right place to fetch plantation site as api doesn't consider the location as of now. We are fetching all the plantation site details.
 			fetchPlanatationSites();
 		}
 	}
@@ -158,7 +160,7 @@ class HomeMap extends React.Component {
 					this.setState({ splittedTreeGroup: data });
 				}}
 				health={data.health}
-				trees={data.trees}
+				treeCount={data.trees.length}
 			/>
 		);
 	};

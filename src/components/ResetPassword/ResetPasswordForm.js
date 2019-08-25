@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import * as firebase from 'firebase';
+import { connect } from 'react-redux';
 
 import FormInput from '../shared/FormInput';
 import { space } from '../../styles/variables';
@@ -10,10 +11,10 @@ import {
 	showEmailSuccessfullToast,
 	showPasswordResetIssueToast,
 } from '../../utils/PreDefinedToasts';
-
 import * as colors from '../../styles/colors';
+import { setLoading } from '../../store/actions/ui-interactions.action';
 
-export default class ResetPasswordForm extends React.Component {
+class ResetPasswordForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -25,19 +26,26 @@ export default class ResetPasswordForm extends React.Component {
 		this.setState({ email });
 	};
 
-	onResetClick() {
+	onResetClick = () => {
 		const { email } = this.state;
 		const auth = firebase.auth();
+
+		const { setLoading, navigation } = this.props;
+		setLoading(true);
 
 		auth
 			.sendPasswordResetEmail(email)
 			.then(() => {
 				showEmailSuccessfullToast();
+				setLoading(false);
+				navigation.navigate('Home');
 			})
-			.catch(() => {
+			.catch((error) => {
+				console.log(error);
 				showPasswordResetIssueToast();
+				setLoading(false);
 			});
-	}
+	};
 
 	render() {
 		return (
@@ -62,3 +70,12 @@ const styles = StyleSheet.create({
 		paddingRight: space.base,
 	},
 });
+
+const mapDispatchToProps = (dispatch) => ({
+	setLoading: (flag) => dispatch(setLoading(flag)),
+});
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(ResetPasswordForm);
