@@ -113,6 +113,7 @@ class HomeMap extends React.Component {
 						this.selectTree(data.trees[0]);
 					}}
 					status={data.trees[0].health}
+					blink={!data.trees[0].moderatorApproved}
 				/>
 			);
 		}
@@ -139,6 +140,7 @@ class HomeMap extends React.Component {
 							this.selectTree(tree);
 						}}
 						status={tree.health}
+						blink={!tree.moderatorApproved}
 					/>
 				);
 			});
@@ -161,6 +163,7 @@ class HomeMap extends React.Component {
 				}}
 				health={data.health}
 				treeCount={data.trees.length}
+				blink={!data.moderatorApproved}
 			/>
 		);
 	};

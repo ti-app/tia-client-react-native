@@ -52,10 +52,10 @@ class AppContent extends React.Component {
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
 				console.log('Access Token:', accessToken);
 
+				this.initializeAxiosInterceptors(accessToken);
+
 				const { role } = parseJwt(accessToken);
 				updateUserRole(role);
-
-				this.initializeAxiosInterceptors(accessToken);
 			}
 		});
 	}
