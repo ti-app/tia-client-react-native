@@ -11,7 +11,7 @@ import AppNavigator from './navigation/AppNavigator';
 import MainTabNavigator from './navigation/MainNavigator';
 import NavigationUtil from './utils/Navigation';
 import { setLoading } from './store/actions/ui-interactions.action';
-import { updateUserStatus } from './store/actions/auth.action';
+import { updateUserStatus, updateUserRole } from './store/actions/auth.action';
 import { showWelcomeLoginToast } from './utils/PreDefinedToasts';
 import { initializeFirebase } from './utils/Firebase';
 import { parseJwt } from './utils/JWT';
@@ -33,34 +33,30 @@ class AppContent extends React.Component {
 
 	setupFirebaseAuthChange() {
 		firebase.auth().onAuthStateChanged(async (user) => {
-			const { updateUser, setLoading } = this.props;
+			const { updateUser, setLoading, updateUserRole } = this.props;
 
 			this.setState({
 				authenticationStatus: user ? 'authenticated' : 'unauthenticated',
 			});
 
+			updateUser(!!user, user);
+
 			await AsyncStorage.setItem('USER', JSON.stringify(user));
 
 			setLoading(false);
-
-			const modifiedUser = JSON.parse(JSON.stringify(user));
 
 			if (user) {
 				showWelcomeLoginToast();
 
 				// prettier-ignore
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
+				console.log('Access Token:', accessToken);
 
 				const { role } = parseJwt(accessToken);
-
-				modifiedUser.role = role;
-
-				console.log('Access Token:', accessToken);
+				updateUserRole(role);
 
 				this.initializeAxiosInterceptors(accessToken);
 			}
-
-			updateUser(!!user, modifiedUser);
 		});
 	}
 
@@ -151,6 +147,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 	setLoading: (flag) => dispatch(setLoading(flag)),
 	updateUser: (isLoggedIn, user) => dispatch(updateUserStatus(isLoggedIn, user)),
+	updateUserRole: (role) => dispatch(updateUserRole(role)),
 });
 
 export default connect(
