@@ -102,7 +102,7 @@ class AddNewSpotScreen extends React.Component {
 		const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
 		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.5 });
+			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.75 });
 			this.setState({ photo: pickerResult.uri });
 		}
 	};

@@ -14,6 +14,7 @@ import { setLoading } from './store/actions/ui-interactions.action';
 import { updateUserStatus } from './store/actions/auth.action';
 import { showWelcomeLoginToast } from './utils/PreDefinedToasts';
 import { initializeFirebase } from './utils/Firebase';
+import { parseJwt } from './utils/JWT';
 import * as colors from './styles/colors';
 
 class AppContent extends React.Component {
@@ -38,11 +39,11 @@ class AppContent extends React.Component {
 				authenticationStatus: user ? 'authenticated' : 'unauthenticated',
 			});
 
-			updateUser(!!user, user);
-
 			await AsyncStorage.setItem('USER', JSON.stringify(user));
 
 			setLoading(false);
+
+			const modifiedUser = JSON.parse(JSON.stringify(user));
 
 			if (user) {
 				showWelcomeLoginToast();
@@ -50,10 +51,16 @@ class AppContent extends React.Component {
 				// prettier-ignore
 				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
 
+				const { role } = parseJwt(accessToken);
+
+				modifiedUser.role = role;
+
 				console.log('Access Token:', accessToken);
 
 				this.initializeAxiosInterceptors(accessToken);
 			}
+
+			updateUser(!!user, modifiedUser);
 		});
 	}
 

@@ -90,8 +90,8 @@ export const updateTree = (treeId, updatedTree) => async (dispatch, getState) =>
 
 	try {
 		await apiClient({
-			method: 'post',
-			url: `/tree/update/${treeId}`,
+			method: 'put',
+			url: `/tree/${treeId}`,
 			data: updatedTree,
 			headers: {
 				Accept: 'application/json',
@@ -118,7 +118,7 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 
 	try {
 		const { _id } = tree;
-		const url = `/tree/water/${_id}`;
+		const url = `/tree/${_id}/water`;
 		const response = await apiClient({
 			url,
 			headers: {
