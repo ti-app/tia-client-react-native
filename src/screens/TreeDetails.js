@@ -9,15 +9,12 @@ import { waterTree, deleteTree } from '../store/actions/tree.action';
 import Tree from '../components/Map/Tree';
 import TreeDetailsNavBar from '../components/Navigation/TreeDetailsNavBar';
 import * as colors from '../styles/colors';
+import config from '../config/common';
 
 class TreeDetails extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			waterButton: {
-				disabled: false,
-				text: 'WATERED',
-			},
 			centerBias: 0.00015,
 		};
 	}
@@ -51,20 +48,15 @@ class TreeDetails extends React.Component {
 		</View>
 	);
 
-	updateWaterButton = (props) => {
-		this.setState({ waterButton: { ...props } });
-	};
-
-	waterTree = () => {
-		this.updateWaterButton({ disabled: true, text: 'please wait...' });
-		const { selectedTreeDetails, waterTree } = this.props;
-		const treeWatered = selectedTreeDetails;
+	handleWaterTree = () => {
+		const { selectedTree, waterTree } = this.props;
+		const treeWatered = selectedTree;
 		waterTree(treeWatered);
 	};
 
 	deletePlantConfirmed = () => {
-		const { deleteTree, selectedTreeDetails } = this.props;
-		const treeToDelete = selectedTreeDetails;
+		const { deleteTree, selectedTree } = this.props;
+		const treeToDelete = selectedTree;
 		deleteTree(treeToDelete);
 	};
 
@@ -96,13 +88,6 @@ class TreeDetails extends React.Component {
 		);
 	};
 
-	/**
-	 * TODO:
-	 * Rather than just rendering the delete button for all the users,
-	 * First check if the user logged in has enough authorization to delete the plant
-	 * If he is the OWNER or MODERATOR, he should be able to delete it.
-	 * Other wise, do not render the delete button
-	 */
 	getDeleteButton = () => (
 		<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
 			<MaterialIcons name="delete" size={24} color={colors.red.toString()} />
@@ -113,6 +98,13 @@ class TreeDetails extends React.Component {
 		<TouchableOpacity style={styles.editButton} onPress={this.editTree}>
 			<MaterialIcons name="edit" size={24} color={colors.black.toString()} />
 		</TouchableOpacity>
+	);
+
+	getModifyButtons = () => (
+		<>
+			{this.getEditButton()}
+			{this.getDeleteButton()}
+		</>
 	);
 
 	getDeletionBackdrop = () => {
@@ -127,23 +119,21 @@ class TreeDetails extends React.Component {
 
 	getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
 
-	render() {
-		const { waterButton, centerBias } = this.state;
-		const { selectedTreeDetails } = this.props;
+	isModerator = () => {
+		const { userRole } = this.props;
+		return userRole === config.roles.MODERATOR;
+	};
 
-		if (!selectedTreeDetails) {
+	render() {
+		const { centerBias } = this.state;
+		const { selectedTree } = this.props;
+
+		if (!selectedTree) {
 			return <Text>Loading...</Text>;
 		}
 
-		const photo = selectedTreeDetails ? selectedTreeDetails.photo : null;
-		const {
-			health,
-			location,
-			lastActivityDate,
-			owner,
-			uploadedDate,
-			plantType,
-		} = selectedTreeDetails;
+		const photo = selectedTree ? selectedTree.photo : null;
+		const { health, location, lastActivityDate, owner, uploadedDate, plantType } = selectedTree;
 		const { coordinates } = location;
 		const [longitude, latitude] = coordinates;
 		const formattedLastActivityDate = lastActivityDate && this.getFormattedDate(lastActivityDate);
@@ -172,10 +162,10 @@ class TreeDetails extends React.Component {
 				</View>
 
 				<View style={styles.heading}>
-					<Text style={styles.plantType}>{plantType || 'Plant type not available'}</Text>
-					<View style={styles.actionButtonContainer}>
-						{this.getEditButton()}
-						{this.getDeleteButton()}
+					<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+
+					<View style={styles.modifyButtonContainer}>
+						{this.isModerator() && this.getModifyButtons()}
 					</View>
 				</View>
 
@@ -217,17 +207,15 @@ class TreeDetails extends React.Component {
 						<Text style={styles.moreWateredHereText}>{wateredPlant} more have watered here</Text>
 					</ScrollView>
 				</View>
-				<View style={styles.wateredButtonContainer}>
+				<View style={styles.waterButtonContainer}>
 					<Button
 						style={{
-							...styles.wateredButton,
-							opacity: waterButton.disabled ? 0.4 : 1,
+							...styles.waterButton,
 						}}
-						disabled={waterButton.disabled}
 						success
-						onPress={this.waterTree}
+						onPress={this.handleWaterTree}
 					>
-						<Text style={styles.wateredButtonText}> {waterButton.text} </Text>
+						<Text style={styles.waterButtonText}>WATERED</Text>
 					</Button>
 				</View>
 			</Container>
@@ -259,7 +247,7 @@ const styles = StyleSheet.create({
 		paddingRight: 16,
 		paddingLeft: 16,
 	},
-	actionButtonContainer: {
+	modifyButtonContainer: {
 		display: 'flex',
 		flexDirection: 'row',
 	},
@@ -280,14 +268,14 @@ const styles = StyleSheet.create({
 	weak: { backgroundColor: colors.orange },
 	almostDead: { backgroundColor: colors.red },
 	lastWateredText: { fontSize: 12, color: colors.gray },
-	wateredButtonContainer: {
+	waterButtonContainer: {
 		position: 'absolute',
 		left: 10,
 		right: 10,
 		bottom: 10,
 		backgroundColor: 'white',
 	},
-	wateredButton: {
+	waterButton: {
 		justifyContent: 'center',
 		width: '100%',
 	},
@@ -299,7 +287,7 @@ const styles = StyleSheet.create({
 		padding: 8,
 		borderColor: 'black',
 	},
-	wateredButtonText: { textAlign: 'center' },
+	waterButtonText: { textAlign: 'center' },
 	image: { width: '100%', height: 200 },
 	imageNotFound: {
 		width: '100%',
@@ -314,8 +302,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-	selectedTreeDetails: state.tree.selectedTreeDetails,
-	user: state.user,
+	selectedTree: state.tree.selectedTree,
+	userRole: state.auth.role,
 });
 
 const mapDispatchToProps = (dispatch) => ({

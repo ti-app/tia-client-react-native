@@ -8,8 +8,15 @@ import Map from '../Map/Map';
 import Tree from '../Map/Tree';
 import Spot from '../Map/Spot';
 import PlantationSite from '../Map/PlantationSite';
-import { fetchTreeGroups, setSelectedTreeDetails } from '../../store/actions/tree.action';
+import {
+	fetchTreeGroups,
+	setSelectedTree,
+	setSelectedTreeGroup,
+} from '../../store/actions/tree.action';
 import { fetchPlanatationSites } from '../../store/actions/plantation-site.action';
+import ApproveTreeModal from '../../screens/ApproveTreeModal';
+import config from '../../config/common';
+import { showNeedApproval } from '../../utils/PreDefinedToasts';
 
 class HomeMap extends React.Component {
 	constructor(props) {
@@ -18,6 +25,7 @@ class HomeMap extends React.Component {
 		this.mapRef = React.createRef();
 		this.state = {
 			splittedTreeGroup: null,
+			showApproveTreeModal: false,
 		};
 	}
 
@@ -96,13 +104,47 @@ class HomeMap extends React.Component {
 	}
 
 	selectTree(tree) {
-		const { navigation, setSelectedTreeDetails } = this.props;
-		setSelectedTreeDetails(tree);
+		const { navigation, setSelectedTree } = this.props;
+		setSelectedTree(tree);
 		navigation.navigate('TreeDetails');
 	}
 
+	selectTreeGroup(treeGroup) {
+		if (this.isModerator()) {
+			const { setSelectedTreeGroup } = this.props;
+			setSelectedTreeGroup(treeGroup);
+			this.setState({ showApproveTreeModal: true });
+		} else {
+			showNeedApproval();
+		}
+	}
+
+	isModerator = () => {
+		const { userRole } = this.props;
+		return userRole === config.roles.MODERATOR;
+	};
+
+	closeApproveTreeModal = () => {
+		this.setState({ showApproveTreeModal: false });
+	};
+
 	renderTrees = (data) => {
 		const { splittedTreeGroup } = this.state;
+
+		if (!data.moderatorApproved) {
+			return (
+				<Spot
+					key={data.id}
+					coordinate={data.location}
+					onPress={() => {
+						this.selectTreeGroup(data);
+					}}
+					health={data.health}
+					treeCount={data.trees.length}
+					blink
+				/>
+			);
+		}
 
 		if (data.trees.length === 1) {
 			return (
@@ -113,7 +155,6 @@ class HomeMap extends React.Component {
 						this.selectTree(data.trees[0]);
 					}}
 					status={data.trees[0].health}
-					blink={!data.trees[0].moderatorApproved}
 				/>
 			);
 		}
@@ -140,7 +181,6 @@ class HomeMap extends React.Component {
 							this.selectTree(tree);
 						}}
 						status={tree.health}
-						blink={!tree.moderatorApproved}
 					/>
 				);
 			});
@@ -163,7 +203,6 @@ class HomeMap extends React.Component {
 				}}
 				health={data.health}
 				treeCount={data.trees.length}
-				blink={!data.moderatorApproved}
 			/>
 		);
 	};
@@ -181,6 +220,7 @@ class HomeMap extends React.Component {
 
 	render() {
 		const { userLocation, treeGroups, plantationSites } = this.props;
+		const { showApproveTreeModal } = this.state;
 
 		const { latitude, longitude } = userLocation;
 		const { onMapLoad } = this.props;
@@ -228,6 +268,9 @@ class HomeMap extends React.Component {
 					{treeData.map((treeGroup) => this.renderTrees(treeGroup))}
 					{plantationSiteData.map((site) => this.renderPlantationSites(site))}
 				</Map>
+				{showApproveTreeModal && (
+					<ApproveTreeModal visible={showApproveTreeModal} onClose={this.closeApproveTreeModal} />
+				)}
 			</Container>
 		);
 	}
@@ -254,10 +297,12 @@ const mapStateToProps = (state) => ({
 	treeGroups: state.tree.treeGroups,
 	plantationSites: state.plantationSite.plantationSites,
 	isTreeDetailsOpen: state.ui.isTreeDetailsOpen,
+	userRole: state.auth.role,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setSelectedTreeDetails: (spot) => dispatch(setSelectedTreeDetails(spot)),
+	setSelectedTree: (tree) => dispatch(setSelectedTree(tree)),
+	setSelectedTreeGroup: (spot) => dispatch(setSelectedTreeGroup(spot)),
 	fetchTreeGroups: (...param) => dispatch(fetchTreeGroups(...param)),
 	fetchPlanatationSites: (...param) => dispatch(fetchPlanatationSites(...param)),
 });

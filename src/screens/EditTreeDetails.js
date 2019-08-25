@@ -23,10 +23,10 @@ import { updateTree } from '../store/actions/tree.action';
 class TreeDetails extends React.Component {
 	constructor(props) {
 		super(props);
-		const { selectedTreeDetails } = props;
+		const { selectedTree } = props;
 
-		const photoURL = selectedTreeDetails ? selectedTreeDetails.photo : null;
-		const { health, location, plantType, healthCycle, _id } = selectedTreeDetails;
+		const photoURL = selectedTree ? selectedTree.photo : null;
+		const { health, location, plantType, healthCycle, _id } = selectedTree;
 
 		this.state = {
 			id: _id,
@@ -165,9 +165,9 @@ class TreeDetails extends React.Component {
 
 	render() {
 		const { centerBias, changePlantLocation } = this.state;
-		const { selectedTreeDetails } = this.props;
+		const { selectedTree } = this.props;
 
-		if (!selectedTreeDetails) {
+		if (!selectedTree) {
 			return <Text>Loading...</Text>;
 		}
 
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-	selectedTreeDetails: state.tree.selectedTreeDetails,
+	selectedTree: state.tree.selectedTree,
 	userLocation: state.location.userLocation,
 });
 

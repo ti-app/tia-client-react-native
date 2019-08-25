@@ -24,7 +24,10 @@ export default class Spot extends Component {
 	}
 
 	componentDidMount() {
-		this.startBlinking();
+		const { blink } = this.props;
+		if (blink) {
+			this.startBlinking();
+		}
 	}
 
 	startBlinking = () => {
@@ -44,10 +47,11 @@ export default class Spot extends Component {
 	};
 
 	componentDidUpdate() {
-		const { tracksViewChanges } = this.state;
 		const { blink } = this.props;
+		if (blink) return;
 
-		if (tracksViewChanges && !blink) {
+		const { tracksViewChanges } = this.state;
+		if (tracksViewChanges) {
 			// eslint-disable-next-line react/no-did-update-set-state
 			this.setState(() => ({
 				tracksViewChanges: false,

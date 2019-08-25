@@ -1,8 +1,14 @@
-import { FETCH_TREE_GROUP_SUCCESS, SET_SELECTED_TREE_DETAILS } from '../actions/tree.action';
+import {
+	FETCH_TREE_GROUP_SUCCESS,
+	SET_SELECTED_TREE_DETAILS,
+	SET_SELECTED_TREE_GROUP,
+	RESET_SELECTED_TREE_GROUP,
+} from '../actions/tree.action';
 
 const initialState = {
 	treeGroups: [],
-	selectedTreeDetails: null,
+	selectedTree: null,
+	selectedTreeGroup: null,
 };
 
 const treeReducer = (state = initialState, action) => {
@@ -14,7 +20,21 @@ const treeReducer = (state = initialState, action) => {
 		case SET_SELECTED_TREE_DETAILS: {
 			return {
 				...state,
-				selectedTreeDetails: { ...action.payload },
+				selectedTree: { ...action.payload },
+			};
+		}
+
+		case SET_SELECTED_TREE_GROUP: {
+			return {
+				...state,
+				selectedTreeGroup: { ...action.payload },
+			};
+		}
+
+		case RESET_SELECTED_TREE_GROUP: {
+			return {
+				...state,
+				selectedTreeGroup: null,
 			};
 		}
 

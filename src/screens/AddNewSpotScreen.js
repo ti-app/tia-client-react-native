@@ -174,9 +174,14 @@ class AddNewSpotScreen extends React.Component {
 								coordinate={{ latitude, longitude }}
 								health={health || 'healthy'}
 								treeCount={plants}
+								blink={false}
 							/>
 						) : (
-							<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+							<Tree
+								coordinate={{ latitude, longitude }}
+								status={health || 'healthy'}
+								blink={false}
+							/>
 						)}
 					</MapView>
 				</View>

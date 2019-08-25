@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { getColorByTreeStatus } from '../../utils/ColorMapping';
 import * as colors from '../../styles/colors';
@@ -7,7 +7,6 @@ import * as colors from '../../styles/colors';
 export default class Tree extends PureComponent {
 	state = {
 		tracksViewChanges: true,
-		blinkOpacity: new Animated.Value(0.01),
 	};
 
 	componentWillReceiveProps(nextProps) {
@@ -22,31 +21,10 @@ export default class Tree extends PureComponent {
 		}
 	}
 
-	componentDidMount() {
-		this.startBlinking();
-	}
-
-	startBlinking = () => {
-		const { blinkOpacity } = this.state;
-		Animated.loop(
-			Animated.sequence([
-				Animated.timing(blinkOpacity, {
-					toValue: 1,
-					duration: 200,
-				}),
-				Animated.timing(blinkOpacity, {
-					toValue: 0.01,
-					duration: 200,
-				}),
-			])
-		).start();
-	};
-
 	componentDidUpdate() {
 		const { tracksViewChanges } = this.state;
-		const { blink } = this.props;
 
-		if (tracksViewChanges && !blink) {
+		if (tracksViewChanges) {
 			// eslint-disable-next-line react/no-did-update-set-state
 			this.setState(() => ({
 				tracksViewChanges: false,
@@ -56,7 +34,7 @@ export default class Tree extends PureComponent {
 
 	render() {
 		const { coordinate, onPress, status } = this.props;
-		const { tracksViewChanges, blinkOpacity } = this.state;
+		const { tracksViewChanges } = this.state;
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
@@ -68,7 +46,6 @@ export default class Tree extends PureComponent {
 				>
 					<View style={styles.innerCircle} />
 				</View>
-				<Animated.View style={{ ...styles.blinkingOverlay, opacity: blinkOpacity }} />
 			</Marker>
 		);
 	}

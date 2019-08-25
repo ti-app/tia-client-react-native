@@ -14,7 +14,9 @@ export default class PlantationSite extends Component {
 		const {
 			coordinate: { latitude: prevLatitude, longitude: prevLongitude },
 		} = this.props;
+
 		const { latitude, longitude } = nextProps;
+
 		if (latitude !== prevLatitude || longitude !== prevLongitude) {
 			this.setState(() => ({
 				tracksViewChanges: true,
