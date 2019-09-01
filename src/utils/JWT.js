@@ -1,3 +1,5 @@
+import { decode as atob } from 'base-64';
+
 // eslint-disable-next-line import/prefer-default-export
 export const parseJwt = (token) => {
 	const base64Url = token.split('.')[1];
