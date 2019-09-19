@@ -190,7 +190,7 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 	}
 };
 
-export const takeModAction = (treeGroupId, approval) => async (dispatch, getState) => {
+export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispatch, getState) => {
 	const state = getState();
 
 	const {
@@ -205,7 +205,46 @@ export const takeModAction = (treeGroupId, approval) => async (dispatch, getStat
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			data: { approve: approval },
+			data: approval,
+			noloading: true,
+		});
+		Toast.show({
+			text: 'Successfully taken action',
+			duration: 1000,
+			textStyle: {
+				textAlign: 'center',
+			},
+		});
+
+		NavigationUtil.navigate('Home');
+
+		dispatch(
+			fetchTreeGroups({
+				...userLocation,
+			})
+		);
+	} catch (err) {
+		showErrorToast('Error taking action', err, dispatch);
+		dispatch(waterTreeFailure(err));
+	}
+};
+
+export const takeModActionForTree = (treeId, approval) => async (dispatch, getState) => {
+	const state = getState();
+
+	const {
+		location: { userLocation },
+	} = state;
+
+	try {
+		const url = `/tree/${treeId}/mod-action`;
+		await apiClient({
+			url,
+			method: 'patch',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			data: approval,
 			noloading: true,
 		});
 		Toast.show({

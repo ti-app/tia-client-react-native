@@ -24,8 +24,8 @@ export default class Spot extends Component {
 	}
 
 	componentDidMount() {
-		const { blink } = this.props;
-		if (blink) {
+		const { notApproved, deletedNotApproved } = this.props;
+		if (notApproved || deletedNotApproved) {
 			this.startBlinking();
 		}
 	}
@@ -47,8 +47,8 @@ export default class Spot extends Component {
 	};
 
 	componentDidUpdate() {
-		const { blink } = this.props;
-		if (blink) return;
+		const { notApproved, deletedNotApproved } = this.props;
+		if (notApproved || deletedNotApproved) return;
 
 		const { tracksViewChanges } = this.state;
 		if (tracksViewChanges) {
@@ -59,16 +59,44 @@ export default class Spot extends Component {
 		}
 	}
 
+	renderMarker = () => {
+		const { notApproved, deletedNotApproved, health, treeCount } = this.props;
+		const { blinkOpacity } = this.state;
+
+		if (notApproved) {
+			return (
+				<Animated.View
+					style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+				>
+					<Text style={styles.treeCountText}>{treeCount}</Text>
+				</Animated.View>
+			);
+		}
+
+		if (deletedNotApproved) {
+			return (
+				<Animated.View
+					style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
+				>
+					<Text style={styles.treeCountText}>{treeCount}</Text>
+				</Animated.View>
+			);
+		}
+
+		return (
+			<View style={{ ...styles.treeGroup, backgroundColor: getColorByTreeStatus(health) }}>
+				<Text style={styles.treeCountText}>{treeCount}</Text>
+			</View>
+		);
+	};
+
 	render() {
-		const { coordinate, onPress, health, treeCount } = this.props;
-		const { tracksViewChanges, blinkOpacity } = this.state;
+		const { coordinate, onPress } = this.props;
+		const { tracksViewChanges } = this.state;
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
-				<View style={{ ...styles.treeGroup, backgroundColor: getColorByTreeStatus(health) }}>
-					<Text style={styles.treeCountText}>{treeCount}</Text>
-				</View>
-				<Animated.View style={{ ...styles.blinkingOverlay, opacity: blinkOpacity }} />
+				{this.renderMarker()}
 			</Marker>
 		);
 	}
@@ -81,6 +109,10 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: colors.gray,
 		position: 'absolute',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	treeGroup: {
 		width: 20,

@@ -14,7 +14,9 @@ import {
 	setSelectedTreeGroup,
 } from '../../store/actions/tree.action';
 import { fetchPlanatationSites } from '../../store/actions/plantation-site.action';
-import ApproveTreeModal from '../../screens/ApproveTreeModal';
+import ApproveTreeGroupModal from '../../screens/ApproveTreeGroupModal';
+import DeleteApproveTreeModal from '../../screens/DeleteApproveTreeModal';
+
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/PreDefinedToasts';
 
@@ -25,7 +27,8 @@ class HomeMap extends React.Component {
 		this.mapRef = React.createRef();
 		this.state = {
 			splittedTreeGroup: null,
-			showApproveTreeModal: false,
+			showApproveTreeGroupModal: false,
+			showDeleteApproveTreepModal: false,
 		};
 	}
 
@@ -104,16 +107,31 @@ class HomeMap extends React.Component {
 	}
 
 	selectTree(tree) {
+		const deleteObject = tree.delete;
+		const deleteNotApproved =
+			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+
 		const { navigation, setSelectedTree } = this.props;
-		setSelectedTree(tree);
-		navigation.navigate('TreeDetails');
+
+		switch (true) {
+			case deleteNotApproved && !this.isModerator():
+				showNeedApproval();
+				break;
+			case deleteNotApproved && this.isModerator():
+				setSelectedTree(tree);
+				this.setState({ showDeleteApproveTreepModal: true });
+				break;
+			default:
+				setSelectedTree(tree);
+				navigation.navigate('TreeDetails');
+		}
 	}
 
 	selectTreeGroup(treeGroup) {
 		if (this.isModerator()) {
 			const { setSelectedTreeGroup } = this.props;
 			setSelectedTreeGroup(treeGroup);
-			this.setState({ showApproveTreeModal: true });
+			this.setState({ showApproveTreeGroupModal: true });
 		} else {
 			showNeedApproval();
 		}
@@ -124,8 +142,12 @@ class HomeMap extends React.Component {
 		return userRole === config.roles.MODERATOR;
 	};
 
-	closeApproveTreeModal = () => {
-		this.setState({ showApproveTreeModal: false });
+	closeApproveTreeGroupModal = () => {
+		this.setState({ showApproveTreeGroupModal: false });
+	};
+
+	closeDeleteApproveTreeModal = () => {
+		this.setState({ showDeleteApproveTreepModal: false });
 	};
 
 	renderTrees = (data) => {
@@ -141,12 +163,14 @@ class HomeMap extends React.Component {
 					}}
 					health={data.health}
 					treeCount={data.trees.length}
-					blink
+					notApproved
 				/>
 			);
 		}
 
 		if (data.trees.length === 1) {
+			const deleteObject = data.trees[0].delete;
+
 			return (
 				<Tree
 					key={data.trees[0]._id}
@@ -155,6 +179,9 @@ class HomeMap extends React.Component {
 						this.selectTree(data.trees[0]);
 					}}
 					status={data.trees[0].health}
+					deleteNotApproved={
+						deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved
+					}
 				/>
 			);
 		}
@@ -172,6 +199,7 @@ class HomeMap extends React.Component {
 			return trees.map((tree, i) => {
 				const modifiedLng = centerLng + Math.cos(division * (i + 1) * (Math.PI / 180)) * radius;
 				const modifiedLat = centerLat + Math.sin(division * (i + 1) * (Math.PI / 180)) * radius;
+				const deleteObject = tree.delete;
 
 				return (
 					<Tree
@@ -181,6 +209,9 @@ class HomeMap extends React.Component {
 							this.selectTree(tree);
 						}}
 						status={tree.health}
+						deleteNotApproved={
+							deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved
+						}
 					/>
 				);
 			});
@@ -220,7 +251,7 @@ class HomeMap extends React.Component {
 
 	render() {
 		const { userLocation, treeGroups, plantationSites } = this.props;
-		const { showApproveTreeModal } = this.state;
+		const { showApproveTreeGroupModal, showDeleteApproveTreepModal } = this.state;
 
 		const { latitude, longitude } = userLocation;
 		const { onMapLoad } = this.props;
@@ -268,8 +299,17 @@ class HomeMap extends React.Component {
 					{treeData.map((treeGroup) => this.renderTrees(treeGroup))}
 					{plantationSiteData.map((site) => this.renderPlantationSites(site))}
 				</Map>
-				{showApproveTreeModal && (
-					<ApproveTreeModal visible={showApproveTreeModal} onClose={this.closeApproveTreeModal} />
+				{showApproveTreeGroupModal && (
+					<ApproveTreeGroupModal
+						visible={showApproveTreeGroupModal}
+						onClose={this.closeApproveTreeGroupModal}
+					/>
+				)}
+				{showDeleteApproveTreepModal && (
+					<DeleteApproveTreeModal
+						visible={showDeleteApproveTreepModal}
+						onClose={this.closeDeleteApproveTreeModal}
+					/>
 				)}
 			</Container>
 		);

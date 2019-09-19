@@ -19,7 +19,7 @@ export const showLoginFailed = () => {
 
 export const showNeedApproval = () => {
 	Toast.show({
-		text: `Need approval from moderator.`,
+		text: `Awaiting approval from moderator.`,
 		buttonText: 'Okay',
 		style: { backgroundColor: colors.red },
 	});

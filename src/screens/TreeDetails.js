@@ -165,7 +165,8 @@ class TreeDetails extends React.Component {
 					<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
 
 					<View style={styles.modifyButtonContainer}>
-						{this.isModerator() && this.getModifyButtons()}
+						{this.isModerator() && this.getEditButton()}
+						{this.getDeleteButton()}
 					</View>
 				</View>
 

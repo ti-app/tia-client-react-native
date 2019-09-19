@@ -11,13 +11,13 @@ import {
 import { View, Text, Button } from 'native-base';
 
 import * as colors from '../styles/colors';
-import { takeModAction } from '../store/actions/tree.action';
+import { takeModActionForTreeGroup } from '../store/actions/tree.action';
 
 class ApproveTreeModal extends React.Component {
 	handleModeratorAction = (approval) => {
-		const { takeModAction, selectedTreeGroup, onClose } = this.props;
+		const { takeModActionForTreeGroup, selectedTreeGroup, onClose } = this.props;
 		const { id } = selectedTreeGroup;
-		takeModAction(id, approval);
+		takeModActionForTreeGroup(id, approval);
 		onClose();
 	};
 
@@ -177,7 +177,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	takeModAction: (...param) => dispatch(takeModAction(...param)),
+	takeModActionForTreeGroup: (...param) => dispatch(takeModActionForTreeGroup(...param)),
 });
 
 export default connect(

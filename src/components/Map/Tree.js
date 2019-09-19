@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Animated } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { getColorByTreeStatus } from '../../utils/ColorMapping';
 import * as colors from '../../styles/colors';
@@ -7,6 +7,7 @@ import * as colors from '../../styles/colors';
 export default class Tree extends PureComponent {
 	state = {
 		tracksViewChanges: true,
+		blinkOpacity: new Animated.Value(0.01),
 	};
 
 	componentWillReceiveProps(nextProps) {
@@ -21,7 +22,33 @@ export default class Tree extends PureComponent {
 		}
 	}
 
+	componentDidMount() {
+		const { notApproved, deleteNotApproved } = this.props;
+		if (notApproved || deleteNotApproved) {
+			this.startBlinking();
+		}
+	}
+
+	startBlinking = () => {
+		const { blinkOpacity } = this.state;
+		Animated.loop(
+			Animated.sequence([
+				Animated.timing(blinkOpacity, {
+					toValue: 1,
+					duration: 200,
+				}),
+				Animated.timing(blinkOpacity, {
+					toValue: 0.01,
+					duration: 200,
+				}),
+			])
+		).start();
+	};
+
 	componentDidUpdate() {
+		const { notApproved, deleteNotApproved } = this.props;
+		if (notApproved || deleteNotApproved) return;
+
 		const { tracksViewChanges } = this.state;
 
 		if (tracksViewChanges) {
@@ -32,20 +59,45 @@ export default class Tree extends PureComponent {
 		}
 	}
 
+	renderMarker = () => {
+		const { notApproved, deleteNotApproved, status } = this.props;
+		const { blinkOpacity } = this.state;
+
+		if (notApproved) {
+			return (
+				<Animated.View
+					style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+				/>
+			);
+		}
+
+		if (deleteNotApproved) {
+			return (
+				<Animated.View
+					style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
+				/>
+			);
+		}
+
+		return (
+			<View
+				style={{
+					...styles.outerCircle,
+					backgroundColor: getColorByTreeStatus(status),
+				}}
+			>
+				<View style={styles.innerCircle} />
+			</View>
+		);
+	};
+
 	render() {
-		const { coordinate, onPress, status } = this.props;
+		const { coordinate, onPress } = this.props;
 		const { tracksViewChanges } = this.state;
 
 		return (
 			<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
-				<View
-					style={{
-						...styles.outerCircle,
-						backgroundColor: getColorByTreeStatus(status),
-					}}
-				>
-					<View style={styles.innerCircle} />
-				</View>
+				{this.renderMarker()}
 			</Marker>
 		);
 	}
@@ -53,11 +105,10 @@ export default class Tree extends PureComponent {
 
 const styles = StyleSheet.create({
 	blinkingOverlay: {
-		borderRadius: 7.5,
 		width: 15,
 		height: 15,
+		borderRadius: 7.5,
 		backgroundColor: colors.gray,
-		position: 'absolute',
 	},
 	outerCircle: {
 		backgroundColor: colors.green,
