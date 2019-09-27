@@ -1,10 +1,10 @@
-# Setup (Currently for Android Only)
+# 💻 Setup (Currently for Android Only)
 
 1: Clone the repo and `cd` to root directory.
 
-2: Install `react-native` globally.
+2: ⚛ Install `react-native` globally.
 
-```bash
+```
 yarn global add react-native
 ```
 
@@ -32,7 +32,7 @@ npx jetify
 react-native run-android
 ```
 
-9: Now get your headphones on and spill out pure fire. TIA.
+9: Now get your 🎧 on and spill out pure 🔥. TIA 🙏.
 
 # Build
 
