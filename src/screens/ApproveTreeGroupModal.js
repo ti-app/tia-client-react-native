@@ -17,7 +17,7 @@ class ApproveTreeModal extends React.Component {
 	handleModeratorAction = (approval) => {
 		const { takeModActionForTreeGroup, selectedTreeGroup, onClose } = this.props;
 		const { id } = selectedTreeGroup;
-		takeModActionForTreeGroup(id, approval);
+		takeModActionForTreeGroup(id, { approve: approval });
 		onClose();
 	};
 
