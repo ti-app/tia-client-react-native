@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, Image, ScrollView } from 'react-native';
+import { StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { View, Text, Container, Button } from 'native-base';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView from 'react-native-maps';
 
 import OptionsBar from '../components/Navigation/OptionsBar';
@@ -9,7 +10,7 @@ import * as colors from '../styles/colors';
 import config from '../config/common';
 import Tree from '../components/Map/Tree';
 import { showNeedApproval } from '../utils/PreDefinedToasts';
-import { setSelectedTree } from '../store/actions/tree.action';
+import { setSelectedTree, deleteTreeGroup, waterTreeGroup } from '../store/actions/tree.action';
 
 class TreeGroupDetails extends React.Component {
 	constructor(props) {
@@ -42,11 +43,51 @@ class TreeGroupDetails extends React.Component {
 	};
 
 	handleWaterTreeGroup = () => {
-		// const { selectedTreeGroup, waterTreeGroup } = this.props;
-		// waterTreeGroup(selectedTreeGroup);
+		const { selectedTreeGroup, waterTreeGroup } = this.props;
+		waterTreeGroup(selectedTreeGroup);
 	};
 
 	getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
+
+	getDeleteButton = () => (
+		<TouchableOpacity style={styles.deleteButton} onPress={this.showConfirmDeleteAlert}>
+			<MaterialIcons name="delete" size={24} color={colors.red.toString()} />
+		</TouchableOpacity>
+	);
+
+	// getEditButton = () => (
+	// 	<TouchableOpacity style={styles.editButton} onPress={this.editTree}>
+	// 		<MaterialIcons name="edit" size={24} color={colors.black.toString()} />
+	// 	</TouchableOpacity>
+	// );
+
+	showConfirmDeleteAlert = () => {
+		// Works on both iOS and Android
+		Alert.alert(
+			'Delete Tree Group',
+			'Are you sure? All the data associated this tree group will be lost. You will not be able to undo this operation.',
+			[
+				{
+					text: 'Yes, Delete',
+					onPress: this.deletePlantConfirmed,
+					style: 'destructive',
+				},
+				{
+					text: 'Cancel',
+					onPress: () => {
+						/** NOOP */
+					},
+					style: 'cancel',
+				},
+			],
+			{ cancelable: false }
+		);
+	};
+
+	deletePlantConfirmed = () => {
+		const { deleteTreeGroup, selectedTreeGroup } = this.props;
+		deleteTreeGroup(selectedTreeGroup);
+	};
 
 	isModerator = () => {
 		const { userRole } = this.props;
@@ -146,6 +187,10 @@ class TreeGroupDetails extends React.Component {
 
 				<View style={styles.heading}>
 					<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+					<View style={styles.modifyButtonContainer}>
+						{/* {this.isModerator() && this.getEditButton()} */}
+						{this.getDeleteButton()}
+					</View>
 				</View>
 
 				<View style={styles.treeDetailsGroupContainer}>
@@ -267,7 +312,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setSelectedTree: (tree) => dispatch(setSelectedTree(tree)),
+	setSelectedTree: (...param) => dispatch(setSelectedTree(...param)),
+	deleteTreeGroup: (...param) => dispatch(deleteTreeGroup(...param)),
+	waterTreeGroup: (...param) => dispatch(waterTreeGroup(...param)),
 });
 
 export default connect(

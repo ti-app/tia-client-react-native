@@ -133,15 +133,23 @@ class HomeMap extends React.Component {
 
 	selectTreeGroup(treeGroup) {
 		const { moderatorApproved } = treeGroup;
+		const deleteObject = treeGroup.delete;
+		const deleteNotApproved =
+			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+
 		const { navigation, setSelectedTreeGroup } = this.props;
 
 		switch (true) {
-			case !moderatorApproved && !this.isModerator():
+			case (!moderatorApproved || deleteNotApproved) && !this.isModerator():
 				showNeedApproval();
 				break;
 			case !moderatorApproved && this.isModerator():
 				setSelectedTreeGroup(treeGroup);
 				this.setState({ approveTreeGroupModal: { show: true, type: 'ADD' } });
+				break;
+			case deleteNotApproved && this.isModerator():
+				setSelectedTreeGroup(treeGroup);
+				this.setState({ approveTreeGroupModal: { show: true, type: 'DELETE' } });
 				break;
 			default:
 				console.log(
@@ -203,24 +211,14 @@ class HomeMap extends React.Component {
 		}));
 	};
 
-	renderTrees = (data) => {
-		if (!data.moderatorApproved) {
-			return (
-				<Spot
-					key={data.id}
-					coordinate={data.location}
-					onPress={() => {
-						this.selectTreeGroup(data);
-					}}
-					health={data.health}
-					treeCount={data.trees.length}
-					notApproved
-				/>
-			);
-		}
+	getDeleteStatus = (data) => {
+		const deleteObject = data.delete;
+		return deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+	};
 
+	renderTrees = (data) => {
 		if (data.trees.length === 1) {
-			const deleteObject = data.trees[0].delete;
+			const deleteNotApproved = this.getDeleteStatus(data);
 
 			return (
 				<Tree
@@ -230,12 +228,12 @@ class HomeMap extends React.Component {
 						this.selectTree(data.trees[0]);
 					}}
 					status={data.trees[0].health}
-					deleteNotApproved={
-						deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved
-					}
+					deleteNotApproved={deleteNotApproved}
 				/>
 			);
 		}
+
+		const deleteNotApproved = this.getDeleteStatus(data);
 
 		return (
 			<Spot
@@ -246,14 +244,15 @@ class HomeMap extends React.Component {
 				}}
 				health={data.health}
 				treeCount={data.trees.length}
+				notApproved={!data.moderatorApproved}
+				deleteNotApproved={deleteNotApproved}
 			/>
 		);
 	};
 
 	renderPlantationSites = (site) => {
-		const deleteObject = site.delete;
-		const deleteNotApproved =
-			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+		const deleteNotApproved = this.getDeleteStatus(site);
+
 		return (
 			<PlantationSite
 				key={site.id}
@@ -320,6 +319,7 @@ class HomeMap extends React.Component {
 				{approveTreeGroupModal.show && (
 					<ApproveTreeGroupModal
 						visible={approveTreeGroupModal.show}
+						approveType={approveTreeGroupModal.type}
 						onClose={this.closeApproveTreeGroupModal}
 					/>
 				)}

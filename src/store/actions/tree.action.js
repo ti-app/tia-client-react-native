@@ -147,6 +147,43 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 	}
 };
 
+export const waterTreeGroup = (tree) => async (dispatch, getState) => {
+	const state = getState();
+	const {
+		location: { userLocation },
+	} = state;
+
+	try {
+		const { id } = tree;
+		const url = `/tree_group/${id}/water`;
+		await apiClient({
+			url,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			noloading: true,
+		});
+		Toast.show({
+			text: 'Successfully updated watered tree group',
+			duration: 1000,
+			textStyle: {
+				textAlign: 'center',
+			},
+		});
+
+		NavigationUtil.navigate('Home');
+
+		dispatch(
+			fetchTreeGroups({
+				...userLocation,
+			})
+		);
+	} catch (err) {
+		showErrorToast('Error watering the trees', err, dispatch);
+		dispatch(waterTreeFailure(err));
+	}
+};
+
 export const deleteTree = (tree) => async (dispatch, getState) => {
 	const state = getState();
 	const {
@@ -168,6 +205,44 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 		console.log(`[tree-action::deleteTree] request to "${url}" was successful`);
 		Toast.show({
 			text: 'Tree was successfully deleted',
+			duration: 1000,
+			textStyle: {
+				textAlign: 'center',
+			},
+		});
+
+		NavigationUtil.navigate('Home');
+
+		dispatch(
+			fetchTreeGroups({
+				...userLocation,
+			})
+		);
+	} catch (err) {
+		showErrorToast('Error deleting the tree.', err, dispatch);
+		dispatch(waterTreeFailure(err));
+	}
+};
+
+export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
+	const state = getState();
+	const {
+		location: { userLocation },
+	} = state;
+
+	try {
+		const { id } = treeGroup;
+		const url = `/tree_group/${id}`;
+		await apiClient({
+			url,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'DELETE',
+			noloading: true,
+		});
+		Toast.show({
+			text: 'Tree group was successfully deleted',
 			duration: 1000,
 			textStyle: {
 				textAlign: 'center',

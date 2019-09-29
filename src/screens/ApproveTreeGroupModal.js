@@ -15,13 +15,31 @@ import { takeModActionForTreeGroup } from '../store/actions/tree.action';
 
 class ApproveTreeModal extends React.Component {
 	handleModeratorAction = (approval) => {
-		const { takeModActionForTreeGroup, selectedTreeGroup, onClose } = this.props;
+		const { takeModActionForTreeGroup, selectedTreeGroup, onClose, approveType } = this.props;
 		const { id } = selectedTreeGroup;
-		takeModActionForTreeGroup(id, { approve: approval });
+		if (approveType === 'ADD') {
+			takeModActionForTreeGroup(id, { approve: approval });
+		} else if (approveType === 'DELETE') {
+			takeModActionForTreeGroup(id, { deleteApprove: approval });
+		} else {
+			console.warn("Pass 'approveType' as a prop.");
+		}
 		onClose();
 	};
 
 	getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
+
+	getApproveText = () => {
+		const { approveType } = this.props;
+		if (approveType === 'ADD') {
+			return 'APPROVE';
+		}
+		if (approveType === 'DELETE') {
+			return 'DELETE';
+		}
+		console.warn("Pass 'approveType' as a prop.");
+		return '';
+	};
 
 	render() {
 		const { selectedTreeGroup, visible, onClose } = this.props;
@@ -79,7 +97,7 @@ class ApproveTreeModal extends React.Component {
 									success
 									onPress={() => this.handleModeratorAction(true)}
 								>
-									<Text style={styles.actionButtonText}>APPROVE</Text>
+									<Text style={styles.actionButtonText}>{this.getApproveText()}</Text>
 								</Button>
 								<Button
 									style={{

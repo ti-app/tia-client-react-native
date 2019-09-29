@@ -78,7 +78,7 @@ export default class Spot extends Component {
 
 		return (
 			<Animated.View
-				style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+				style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
 			>
 				<Text style={styles.treeCountText}>{treeCount}</Text>
 			</Animated.View>
