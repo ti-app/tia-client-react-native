@@ -13,6 +13,31 @@ export default class SelectSoilQualty extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		const { presetSoilQuality } = this.props;
+
+		if (presetSoilQuality) {
+			this.setState({ selectedSoilQuality: { ...presetSoilQuality } });
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		const { presetSoilQuality } = this.props;
+
+		if (presetSoilQuality) {
+			const { good: prevGood, bad: prevBad } = prevProps.presetSoilQuality;
+
+			const { good, bad } = presetSoilQuality;
+
+			const presetSoilQualityChanged = good !== prevGood || bad !== prevBad;
+
+			if (presetSoilQualityChanged) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({ selectedSoilQuality: { ...presetSoilQuality } });
+			}
+		}
+	}
+
 	handleSelection = (field) => {
 		const { onSelectedSoilQualityChange } = this.props;
 

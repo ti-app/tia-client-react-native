@@ -11,26 +11,52 @@ import {
 import { View, Text, Button } from 'native-base';
 
 import * as colors from '../styles/colors';
-import { takeModActionForTree } from '../store/actions/tree.action';
+import { takeModActionForSite } from '../store/actions/plantation-site.action';
 
-class DeleteApproveTreeModal extends React.Component {
+class ApprovePlantataionSiteModal extends React.Component {
 	handleModeratorAction = (approval) => {
-		const { takeModActionForTree, selectedTree, onClose } = this.props;
-		const { _id } = selectedTree;
-		takeModActionForTree(_id, { deleteApprove: approval });
+		const { takeModActionForSite, selectedPlantationSite, onClose, approveType } = this.props;
+		const { id } = selectedPlantationSite;
+		if (approveType === 'ADD') {
+			takeModActionForSite(id, { approve: approval });
+		} else if (approveType === 'DELETE') {
+			takeModActionForSite(id, { deleteApprove: approval });
+		} else {
+			console.warn("Pass 'approveType' as a prop.");
+		}
 		onClose();
 	};
 
 	getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
 
+	getApproveText = () => {
+		const { approveType } = this.props;
+		if (approveType === 'ADD') {
+			return 'APPROVE';
+		}
+		if (approveType === 'DELETE') {
+			return 'DELETE';
+		}
+		console.warn("Pass 'approveType' as a prop.");
+		return '';
+	};
+
 	render() {
-		const { selectedTree, visible, onClose } = this.props;
+		const { selectedPlantationSite, visible, onClose } = this.props;
 
-		if (!selectedTree) return null;
+		if (!selectedPlantationSite) return null;
 
-		const photo = selectedTree ? selectedTree.photo : null;
-		const { health, owner, uploadedDate, plantType } = selectedTree;
-		const formattedUploadedDate = uploadedDate && this.getFormattedDate(uploadedDate);
+		const {
+			owner,
+			createdAt,
+			siteDisplayName,
+			numberOfPlants,
+			photo,
+			wateringNearBy,
+			type,
+			soilQuality,
+		} = selectedPlantationSite;
+		const formattedUploadedDate = createdAt && this.getFormattedDate(createdAt);
 
 		return (
 			<Modal animationType="slide" transparent visible={visible} onRequestClose={() => onClose()}>
@@ -43,28 +69,38 @@ class DeleteApproveTreeModal extends React.Component {
 					<TouchableWithoutFeedback>
 						<View style={styles.content}>
 							<View style={styles.heading}>
-								<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+								<Text style={styles.siteName}>{siteDisplayName || 'Site name not specified'}</Text>
 							</View>
 
-							<View style={styles.treeDetailsContainer}>
-								<ScrollView contentContainerStyle={styles.treeDetails}>
+							<View style={styles.siteDetailsContainer}>
+								<ScrollView contentContainerStyle={styles.siteDetails}>
+									<Text style={styles.siteInfoText}>
+										Number of plants in site: {numberOfPlants}
+									</Text>
 									{owner && owner.displayName && (
 										<Text style={styles.plantInfo}>Uploaded by : {owner.displayName}</Text>
 									)}
 									{formattedUploadedDate && (
 										<Text style={styles.plantInfo}>Created on {formattedUploadedDate}</Text>
 									)}
-									<Text style={styles.plantInfo}>Health: {health}</Text>
+									<Text style={styles.plantInfo}>Site Type: {type}</Text>
+
+									<Text style={styles.plantInfo}>Soil Quality: {soilQuality}</Text>
+									<Text style={[styles.plantInfo, styles.paddingBottomTen]}>
+										{wateringNearBy
+											? 'Watering is available nearby.'
+											: 'Watering is not available nearby.'}
+									</Text>
 									{photo && photo.length > 0 ? (
 										<Image
 											source={{
 												uri: photo,
 											}}
 											resizeMode="contain"
-											style={styles.image}
+											style={[styles.image, styles.paddingBottomTen]}
 										/>
 									) : (
-										<View style={styles.imageNotFound}>
+										<View style={[styles.imageNotFound, styles.paddingBottomTen]}>
 											<Text style={styles.imageNotFoundText}>No Image.</Text>
 										</View>
 									)}
@@ -78,7 +114,7 @@ class DeleteApproveTreeModal extends React.Component {
 									success
 									onPress={() => this.handleModeratorAction(true)}
 								>
-									<Text style={styles.actionButtonText}>DELETE</Text>
+									<Text style={styles.actionButtonText}>{this.getApproveText()}</Text>
 								</Button>
 								<Button
 									style={{
@@ -114,7 +150,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 	},
-	treeDetails: {
+	siteDetails: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-around',
@@ -129,7 +165,7 @@ const styles = StyleSheet.create({
 		paddingRight: 16,
 		paddingLeft: 16,
 	},
-	plantType: {
+	siteName: {
 		textAlignVertical: 'center',
 		fontSize: 20,
 	},
@@ -137,11 +173,7 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: colors.gray,
 	},
-	healthy: { color: colors.green },
-	adequate: { color: colors.linkBlue },
-	average: { color: colors.yellow },
-	weak: { color: colors.orange },
-	almostDead: { color: colors.red },
+	paddingBottomTen: { paddingBottom: 10 },
 	actionButtonContainer: {
 		position: 'absolute',
 		left: 10,
@@ -172,14 +204,14 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-	selectedTree: state.tree.selectedTree,
+	selectedPlantationSite: state.plantationSite.selectedPlantationSite,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	takeModActionForTree: (...param) => dispatch(takeModActionForTree(...param)),
+	takeModActionForSite: (...param) => dispatch(takeModActionForSite(...param)),
 });
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(DeleteApproveTreeModal);
+)(ApprovePlantataionSiteModal);

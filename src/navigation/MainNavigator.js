@@ -7,6 +7,9 @@ import FaqScreen from '../screens/FaqScreen';
 import TreeDetails from '../screens/TreeDetails';
 import SideDrawerContent from '../components/Home/SideDrawerContent';
 import EditTreeDetails from '../screens/EditTreeDetails';
+import PlantationSiteDetails from '../screens/PlantationSiteDetails';
+import EditPlantationSiteDetails from '../screens/EditPlantationSiteDetails';
+import TreeGroupDetails from '../screens/TreeGroupDetails';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -19,8 +22,17 @@ const MainNavigator = createStackNavigator(
 		AddPlantationSite: {
 			screen: AddPlantationSiteScreen,
 		},
+		PlantationSiteDetails: {
+			screen: PlantationSiteDetails,
+		},
+		EditPlantationSiteDetails: {
+			screen: EditPlantationSiteDetails,
+		},
 		TreeDetails: {
 			screen: TreeDetails,
+		},
+		TreeGroupDetails: {
+			screen: TreeGroupDetails,
 		},
 		EditTree: {
 			screen: EditTreeDetails,

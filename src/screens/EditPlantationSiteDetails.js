@@ -5,8 +5,8 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	CheckBox,
-	Image,
 	Platform,
+	ImageBackground,
 } from 'react-native';
 import { Container, View, Text, Button } from 'native-base';
 import { connect } from 'react-redux';
@@ -19,27 +19,47 @@ import PlantationSite from '../components/Map/PlantationSite';
 import FormInput from '../components/shared/FormInput';
 import SelectSoilQuality from '../components/shared/SelectSoilQuality';
 import SelectPropertyType from '../components/shared/SelectPropertyType';
-import { addPlantationSite } from '../store/actions/plantation-site.action';
-import { fetchUserLocation } from '../store/actions/location.action';
+import { updatePlantationSite } from '../store/actions/plantation-site.action';
 import * as colors from '../styles/colors';
 
 class AddPlantationSiteScreen extends React.Component {
-	state = {
-		photo: null,
-		siteDisplayName: '',
-		type: null,
-		wateringNearBy: false,
-		soilQuality: null,
-		plants: 0,
-		centerBias: 0.00015,
-		isKeyboardOpen: false,
-	};
+	constructor(props) {
+		super(props);
+		const { selectedPlantationSite } = props;
+
+		const {
+			wateringNearBy,
+			soilQuality,
+			numberOfPlants,
+			location,
+			type,
+			siteDisplayName,
+			id,
+			photo: photoURL,
+		} = selectedPlantationSite;
+
+		this.state = {
+			id,
+			siteDisplayName,
+			type,
+			wateringNearBy: wateringNearBy === 'true',
+			soilQuality,
+			numberOfPlants,
+			centerBias: 0.00015,
+			isKeyboardOpen: false,
+			currentLocation: location,
+			updatedLocation: location,
+			changePlantLocation: false,
+			updatedPhoto: null,
+			photoURL,
+		};
+	}
 
 	static navigationOptions = ({ navigation }) => {
 		const header = navigation.getParam('header', {
 			headerTitle: (
 				<OptionsBar
-					title="Add a site"
+					title="Edit a site"
 					leftOption={{
 						label: 'Cancel',
 						action: () => navigation.navigate('Home'),
@@ -56,11 +76,6 @@ class AddPlantationSiteScreen extends React.Component {
 		});
 		return header;
 	};
-
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
-	}
 
 	componentDidMount() {
 		this.keyboardDidShowListener = Keyboard.addListener(
@@ -79,10 +94,8 @@ class AddPlantationSiteScreen extends React.Component {
 		const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
 		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-			console.log('here');
 			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.75 });
-			console.log('now here', pickerResult);
-			this.setState({ photo: pickerResult.uri });
+			this.setState({ updatedPhoto: pickerResult.uri });
 		}
 	};
 
@@ -94,42 +107,54 @@ class AddPlantationSiteScreen extends React.Component {
 		this.setState({ isKeyboardOpen: false });
 	}
 
+	handlePlantLocationChange = () => {
+		const { changePlantLocation } = this.state;
+		if (!changePlantLocation) {
+			// Change plant location
+			const { userLocation } = this.props;
+			const { latitude, longitude } = userLocation;
+			this.setState({ updatedLocation: { longitude, latitude } });
+		} else {
+			// Reset plant location
+			const { currentLocation } = this.state;
+			this.setState({ updatedLocation: currentLocation });
+		}
+		this.setState({ changePlantLocation: !changePlantLocation });
+	};
+
 	handleSiteNameChange = (siteDisplayName) => {
 		this.setState({ siteDisplayName });
 	};
 
 	handleNumberOfPlantsChange = (numberOfPlants) => {
-		this.setState({ plants: numberOfPlants });
+		this.setState({ numberOfPlants });
 	};
 
-	handleAddSite = () => {
-		const { addPlantationSite } = this.props;
-		const { type, wateringNearBy, soilQuality, photo, plants, siteDisplayName } = this.state;
-		const { userLocation } = this.props;
-		const { latitude, longitude } = userLocation;
-
-		console.log(
-			siteDisplayName,
-			plants,
-			latitude,
-			longitude,
+	// TODO: Check Api for location and update following method to support updated location
+	handleUpdateSite = () => {
+		const {
 			type,
 			wateringNearBy,
 			soilQuality,
-			photo
-		);
-
-		const formData = this.createFormData(photo, {
+			updatedPhoto,
+			numberOfPlants,
 			siteDisplayName,
-			numberOfPlants: plants,
-			lat: latitude,
-			lng: longitude,
+			id,
+		} = this.state;
+
+		const { updatePlantationSite } = this.props;
+
+		console.log(siteDisplayName, numberOfPlants, type, wateringNearBy, soilQuality);
+
+		const formData = this.createFormData(updatedPhoto, {
+			siteDisplayName,
+			numberOfPlants,
 			type,
 			wateringNearBy,
 			soilQuality,
 		});
 
-		addPlantationSite(formData);
+		updatePlantationSite(id, formData);
 	};
 
 	createFormData = (uri, body) => {
@@ -175,15 +200,28 @@ class AddPlantationSiteScreen extends React.Component {
 		}
 	};
 
-	isAddButtonDisabled = () => {
-		const { plants, soilQuality, type, siteDisplayName } = this.state;
-		return !(plants && soilQuality && type && siteDisplayName);
-	};
-
 	render() {
-		const { centerBias, wateringNearBy, isKeyboardOpen, photo } = this.state;
-		const { userLocation } = this.props;
-		const { latitude, longitude } = userLocation;
+		const {
+			centerBias,
+			wateringNearBy,
+			isKeyboardOpen,
+			siteDisplayName,
+			numberOfPlants,
+			soilQuality,
+			changePlantLocation,
+			updatedPhoto,
+			photoURL,
+			updatedLocation,
+			type,
+		} = this.state;
+
+		const { longitude, latitude } = updatedLocation;
+
+		const presetSoilQuality = { good: false, bad: false };
+		presetSoilQuality[soilQuality] = true;
+
+		const presetType = { publicProperty: false, privateProppublicProperty: false };
+		presetType[type === 'public' ? 'publicProperty' : 'privateProperty'] = true;
 
 		return (
 			<Container style={styles.container}>
@@ -208,12 +246,31 @@ class AddPlantationSiteScreen extends React.Component {
 				<Text style={styles.whereIsItText}> Where is it?</Text>
 				<View style={styles.formContainer}>
 					<ScrollView contentContainerStyle={styles.form}>
-						<FormInput placeholder="Site name" onChangeText={this.handleSiteNameChange} />
+						<TouchableOpacity
+							style={[styles.updatePlantLocation, styles.paddingBottomTen]}
+							onPress={this.handlePlantLocationChange}
+						>
+							<View style={styles.updatePlantLocationCheckBox}>
+								<CheckBox value={changePlantLocation} />
+							</View>
+							<Text style={styles.updatePlantLocationText}>
+								Update site location to my current location
+							</Text>
+						</TouchableOpacity>
+
+						<FormInput
+							placeholder="Site name"
+							value={siteDisplayName}
+							onChangeText={this.handleSiteNameChange}
+						/>
+
 						<FormInput
 							placeholder="No. of plants in site?"
 							keyboardType="number-pad"
+							value={numberOfPlants}
 							onChangeText={this.handleNumberOfPlantsChange}
 						/>
+
 						<TouchableOpacity
 							style={[styles.wateringNearBy, styles.paddingBottomTen]}
 							onPress={this.handleOnWateringNearbyChange}
@@ -227,38 +284,47 @@ class AddPlantationSiteScreen extends React.Component {
 							</View>
 							<Text style={styles.wateringNearbyText}> Is Watering Available Nearby? </Text>
 						</TouchableOpacity>
+
 						<View style={styles.paddingBottomTen}>
 							<Text style={styles.paddingBottomTen}> Soil Quality </Text>
-							<SelectSoilQuality onSelectedSoilQualityChange={this.handleSoilQualityChange} />
+							<SelectSoilQuality
+								presetSoilQuality={presetSoilQuality}
+								onSelectedSoilQualityChange={this.handleSoilQualityChange}
+							/>
 						</View>
 
 						<View style={styles.paddingBottomTen}>
 							<Text style={styles.paddingBottomTen}> Property Type </Text>
-							<SelectPropertyType onSelectedPropertyTypeChange={this.handlePropertyTypeChange} />
+							<SelectPropertyType
+								presetType={presetType}
+								onSelectedPropertyTypeChange={this.handlePropertyTypeChange}
+							/>
 						</View>
 
-						{photo ? (
-							<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
+						{(photoURL && photoURL.length > 0) || updatedPhoto ? (
+							<TouchableOpacity onPress={this.takePhoto}>
+								<ImageBackground
+									source={{
+										uri: updatedPhoto || photoURL,
+									}}
+									resizeMode="contain"
+									style={styles.updateImage}
+								>
+									<Text style={styles.updateImageText}> Click to{'\n'}update photo</Text>
+								</ImageBackground>
+							</TouchableOpacity>
 						) : (
-							<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
-								<Text> Take a photo</Text>
+							<TouchableOpacity style={styles.addImage} onPress={this.takePhoto}>
+								<Text style={styles.addImageText}>Add photo</Text>
 							</TouchableOpacity>
 						)}
 					</ScrollView>
 				</View>
 
 				{!isKeyboardOpen ? (
-					<View style={styles.addButtonContainer}>
-						<Button
-							style={[
-								styles.addButton,
-								this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
-							]}
-							disabled={this.isAddButtonDisabled()}
-							success
-							onPress={this.handleAddSite}
-						>
-							<Text> ADD </Text>
+					<View style={styles.updateButtonContainer}>
+						<Button style={[styles.updateButton]} success onPress={this.handleUpdateSite}>
+							<Text> UPDATE </Text>
 						</Button>
 					</View>
 				) : null}
@@ -298,39 +364,58 @@ const styles = StyleSheet.create({
 	paddingBottomTen: {
 		paddingBottom: 10,
 	},
-	imageUploadContainer: {
+	updatePlantLocation: {
 		display: 'flex',
+		flexDirection: 'row',
+		paddingTop: 10,
+	},
+	updatePlantLocationCheckBox: {
+		paddingRight: 10,
+	},
+	updatePlantLocationText: { textAlignVertical: 'center' },
+	updateImage: {
+		width: '100%',
+		height: 150,
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		marginBottom: 40,
+	},
+	addImage: {
+		width: '100%',
+		height: 150,
+		display: 'flex',
+		flexDirection: 'column',
 		justifyContent: 'center',
-		alignItems: 'center',
-		width: '100%',
-		height: 150,
-		backgroundColor: 'lightgray',
+		backgroundColor: colors.lightGray,
 		marginBottom: 40,
 	},
-	image: {
-		width: '100%',
-		height: 150,
-		marginBottom: 40,
+	addImageText: { textAlign: 'center' },
+	updateImageText: {
+		textAlign: 'center',
+		textAlignVertical: 'center',
+		height: '100%',
+		fontSize: 18,
+		color: colors.gray,
 	},
-	addButtonContainer: {
+	updateButtonContainer: {
 		position: 'absolute',
 		left: 10,
 		right: 10,
 		bottom: 10,
 		backgroundColor: 'white',
 	},
-	addButton: { justifyContent: 'center', width: '100%' },
-	addButtonDisabled: { opacity: 0.4 },
-	addButtonEnabled: { opacity: 1 },
+	updateButton: { justifyContent: 'center', width: '100%' },
+	updateButtonDisabled: { opacity: 0.4 },
+	updateButtonEnabled: { opacity: 1 },
 });
 
 const mapStateToProps = (state) => ({
+	selectedPlantationSite: state.plantationSite.selectedPlantationSite,
 	userLocation: state.location.userLocation,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	addPlantationSite: (flag) => dispatch(addPlantationSite(flag)),
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
+	updatePlantationSite: (...param) => dispatch(updatePlantationSite(...param)),
 });
 
 export default connect(

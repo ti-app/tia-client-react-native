@@ -20,7 +20,7 @@ import FormInput from '../components/shared/FormInput';
 import SelectTreeHealth from '../components/shared/SelectTreeHealth';
 import { updateTree } from '../store/actions/tree.action';
 
-class TreeDetails extends React.Component {
+class EditTreeDetails extends React.Component {
 	constructor(props) {
 		super(props);
 		const { selectedTree } = props;
@@ -97,7 +97,6 @@ class TreeDetails extends React.Component {
 
 		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
 			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.75 });
-			console.log(pickerResult.uri);
 			this.setState({ updatedPhoto: pickerResult.uri });
 		}
 	};
@@ -349,4 +348,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(TreeDetails);
+)(EditTreeDetails);

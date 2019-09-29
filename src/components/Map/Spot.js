@@ -24,8 +24,8 @@ export default class Spot extends Component {
 	}
 
 	componentDidMount() {
-		const { notApproved, deletedNotApproved } = this.props;
-		if (notApproved || deletedNotApproved) {
+		const { notApproved, deleteNotApproved } = this.props;
+		if (notApproved || deleteNotApproved) {
 			this.startBlinking();
 		}
 	}
@@ -47,8 +47,8 @@ export default class Spot extends Component {
 	};
 
 	componentDidUpdate() {
-		const { notApproved, deletedNotApproved } = this.props;
-		if (notApproved || deletedNotApproved) return;
+		const { notApproved, deleteNotApproved } = this.props;
+		if (notApproved || deleteNotApproved) return;
 
 		const { tracksViewChanges } = this.state;
 		if (tracksViewChanges) {
@@ -59,35 +59,53 @@ export default class Spot extends Component {
 		}
 	}
 
-	renderMarker = () => {
-		const { notApproved, deletedNotApproved, health, treeCount } = this.props;
+	renderNotApproved = () => {
+		const { treeCount } = this.props;
 		const { blinkOpacity } = this.state;
 
-		if (notApproved) {
-			return (
-				<Animated.View
-					style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
-				>
-					<Text style={styles.treeCountText}>{treeCount}</Text>
-				</Animated.View>
-			);
-		}
+		return (
+			<Animated.View
+				style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+			>
+				<Text style={styles.treeCountText}>{treeCount}</Text>
+			</Animated.View>
+		);
+	};
 
-		if (deletedNotApproved) {
-			return (
-				<Animated.View
-					style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
-				>
-					<Text style={styles.treeCountText}>{treeCount}</Text>
-				</Animated.View>
-			);
-		}
+	renderDeleteNotApproved = () => {
+		const { treeCount } = this.props;
+		const { blinkOpacity } = this.state;
 
+		return (
+			<Animated.View
+				style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+			>
+				<Text style={styles.treeCountText}>{treeCount}</Text>
+			</Animated.View>
+		);
+	};
+
+	renderDefault = () => {
+		const { health, treeCount } = this.props;
 		return (
 			<View style={{ ...styles.treeGroup, backgroundColor: getColorByTreeStatus(health) }}>
 				<Text style={styles.treeCountText}>{treeCount}</Text>
 			</View>
 		);
+	};
+
+	renderMarker = () => {
+		const { notApproved, deleteNotApproved } = this.props;
+
+		if (notApproved) {
+			return this.renderNotApproved();
+		}
+
+		if (deleteNotApproved) {
+			return this.renderDeleteNotApproved();
+		}
+
+		return this.renderDefault();
 	};
 
 	render() {
@@ -108,7 +126,6 @@ const styles = StyleSheet.create({
 		height: 20,
 		borderRadius: 10,
 		backgroundColor: colors.gray,
-		position: 'absolute',
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'center',

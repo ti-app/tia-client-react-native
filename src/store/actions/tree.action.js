@@ -82,9 +82,6 @@ export const fetchTreeGroups = (
 };
 
 export const updateTree = (treeId, updatedTree) => async (dispatch, getState) => {
-	console.log(treeId);
-	console.log(updatedTree);
-
 	const state = getState();
 	const {
 		location: { userLocation },
@@ -206,7 +203,6 @@ export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispa
 				'Content-Type': 'application/json',
 			},
 			data: approval,
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Successfully taken action',
@@ -245,7 +241,6 @@ export const takeModActionForTree = (treeId, approval) => async (dispatch, getSt
 				'Content-Type': 'application/json',
 			},
 			data: approval,
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Successfully taken action',

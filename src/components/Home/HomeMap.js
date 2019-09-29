@@ -13,9 +13,13 @@ import {
 	setSelectedTree,
 	setSelectedTreeGroup,
 } from '../../store/actions/tree.action';
-import { fetchPlanatationSites } from '../../store/actions/plantation-site.action';
+import {
+	fetchPlanatationSites,
+	setSelectedPlantationSite,
+} from '../../store/actions/plantation-site.action';
 import ApproveTreeGroupModal from '../../screens/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../../screens/DeleteApproveTreeModal';
+import ApprovePlantationSiteModal from '../../screens/ApprovePlantationSiteModal';
 
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/PreDefinedToasts';
@@ -26,13 +30,14 @@ class HomeMap extends React.Component {
 
 		this.mapRef = React.createRef();
 		this.state = {
-			splittedTreeGroup: null,
-			showApproveTreeGroupModal: false,
-			showDeleteApproveTreepModal: false,
+			approveTreeGroupModal: { show: false, type: 'ADD' },
+			approveTreeModal: { show: false, type: 'DELETE' },
+			approveSiteModal: {
+				show: false,
+				type: 'ADD',
+			},
 		};
 	}
-
-	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
 		const {
@@ -77,8 +82,7 @@ class HomeMap extends React.Component {
 
 			fetchTreeGroups(userLocation, currentRangeFilter * 1000, this.getAPIParamForHealth());
 
-			// TODO: This is probably not the right place to fetch plantation site as api doesn't consider the location as of now. We are fetching all the plantation site details.
-			fetchPlanatationSites();
+			fetchPlanatationSites(userLocation, currentRangeFilter * 1000);
 		}
 	}
 
@@ -119,7 +123,7 @@ class HomeMap extends React.Component {
 				break;
 			case deleteNotApproved && this.isModerator():
 				setSelectedTree(tree);
-				this.setState({ showDeleteApproveTreepModal: true });
+				this.setState({ approveTreeModal: { show: true, type: 'DELETE' } });
 				break;
 			default:
 				setSelectedTree(tree);
@@ -128,12 +132,48 @@ class HomeMap extends React.Component {
 	}
 
 	selectTreeGroup(treeGroup) {
-		if (this.isModerator()) {
-			const { setSelectedTreeGroup } = this.props;
-			setSelectedTreeGroup(treeGroup);
-			this.setState({ showApproveTreeGroupModal: true });
-		} else {
-			showNeedApproval();
+		const { moderatorApproved } = treeGroup;
+		const { navigation, setSelectedTreeGroup } = this.props;
+
+		switch (true) {
+			case !moderatorApproved && !this.isModerator():
+				showNeedApproval();
+				break;
+			case !moderatorApproved && this.isModerator():
+				setSelectedTreeGroup(treeGroup);
+				this.setState({ approveTreeGroupModal: { show: true, type: 'ADD' } });
+				break;
+			default:
+				console.log(
+					'Do nothing for now and think about following uncommented part in the code later.'
+				);
+				setSelectedTreeGroup(treeGroup);
+				navigation.navigate('TreeGroupDetails');
+		}
+	}
+
+	selectPlantationSite(plantationSite) {
+		const { moderatorApproved } = plantationSite;
+		const deleteObject = plantationSite.delete;
+		const deleteNotApproved =
+			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+		const { navigation, setSelectedPlantationSite } = this.props;
+
+		switch (true) {
+			case (!moderatorApproved || deleteNotApproved) && !this.isModerator():
+				showNeedApproval();
+				break;
+			case !moderatorApproved && this.isModerator():
+				setSelectedPlantationSite(plantationSite);
+				this.setState({ approveSiteModal: { show: true, type: 'ADD' } });
+				break;
+			case deleteNotApproved && this.isModerator():
+				setSelectedPlantationSite(plantationSite);
+				this.setState({ approveSiteModal: { show: true, type: 'DELETE' } });
+				break;
+			default:
+				setSelectedPlantationSite(plantationSite);
+				navigation.navigate('PlantationSiteDetails');
 		}
 	}
 
@@ -143,16 +183,27 @@ class HomeMap extends React.Component {
 	};
 
 	closeApproveTreeGroupModal = () => {
-		this.setState({ showApproveTreeGroupModal: false });
+		this.setState((state) => ({
+			...state,
+			approveTreeGroupModal: { ...state.approveTreeGroupModal, show: false },
+		}));
 	};
 
-	closeDeleteApproveTreeModal = () => {
-		this.setState({ showDeleteApproveTreepModal: false });
+	closeApproveTreeModal = () => {
+		this.setState((state) => ({
+			...state,
+			approveTreeModal: { ...state.approveTreeModal, show: false },
+		}));
+	};
+
+	closeApproveSiteModal = () => {
+		this.setState((state) => ({
+			...state,
+			approveSiteModal: { ...state.approveSiteModal, show: false },
+		}));
 	};
 
 	renderTrees = (data) => {
-		const { splittedTreeGroup } = this.state;
-
 		if (!data.moderatorApproved) {
 			return (
 				<Spot
@@ -186,51 +237,12 @@ class HomeMap extends React.Component {
 			);
 		}
 
-		if (
-			splittedTreeGroup &&
-			splittedTreeGroup.id === data.id &&
-			JSON.stringify(splittedTreeGroup.trees) === JSON.stringify(data.trees) // TODO: This could create some problem. But right now this is the only faster and easier I can think of.
-		) {
-			const { trees } = splittedTreeGroup;
-			const division = 360 / trees.length;
-			const radius = 0.00003;
-			const { longitude: centerLng, latitude: centerLat } = data.location;
-
-			return trees.map((tree, i) => {
-				const modifiedLng = centerLng + Math.cos(division * (i + 1) * (Math.PI / 180)) * radius;
-				const modifiedLat = centerLat + Math.sin(division * (i + 1) * (Math.PI / 180)) * radius;
-				const deleteObject = tree.delete;
-
-				return (
-					<Tree
-						key={tree._id}
-						coordinate={{ longitude: modifiedLng, latitude: modifiedLat }}
-						onPress={() => {
-							this.selectTree(tree);
-						}}
-						status={tree.health}
-						deleteNotApproved={
-							deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved
-						}
-					/>
-				);
-			});
-		}
-
 		return (
 			<Spot
 				key={data.id}
 				coordinate={data.location}
 				onPress={() => {
-					const { longitude, latitude } = data.location;
-					const mapLocation = {
-						latitude,
-						longitude,
-						latitudeDelta: 0.000582007226706992,
-						longitudeDelta: 0.000252057826519012,
-					};
-					this.mapRef.animateToRegion(mapLocation, 2000);
-					this.setState({ splittedTreeGroup: data });
+					this.selectTreeGroup(data);
 				}}
 				health={data.health}
 				treeCount={data.trees.length}
@@ -238,20 +250,26 @@ class HomeMap extends React.Component {
 		);
 	};
 
-	renderPlantationSites = (data) => (
-		<PlantationSite
-			key={data.id}
-			coordinate={data.location}
-			onPress={() => {
-				console.log('Plantation Site Clicked');
-				// this.selectPlantationSite(data);
-			}}
-		/>
-	);
+	renderPlantationSites = (site) => {
+		const deleteObject = site.delete;
+		const deleteNotApproved =
+			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
+		return (
+			<PlantationSite
+				key={site.id}
+				coordinate={site.location}
+				onPress={() => {
+					this.selectPlantationSite(site);
+				}}
+				notApproved={!site.moderatorApproved}
+				deleteNotApproved={deleteNotApproved}
+			/>
+		);
+	};
 
 	render() {
 		const { userLocation, treeGroups, plantationSites } = this.props;
-		const { showApproveTreeGroupModal, showDeleteApproveTreepModal } = this.state;
+		const { approveSiteModal, approveTreeGroupModal, approveTreeModal } = this.state;
 
 		const { latitude, longitude } = userLocation;
 		const { onMapLoad } = this.props;
@@ -290,25 +308,32 @@ class HomeMap extends React.Component {
 						latitudeDelta: 0.011582007226706992,
 						longitudeDelta: 0.010652057826519012,
 					}}
-					x
 					showsUserLocation
 					followsUserLocation
-					showsMyLocationButton={false}
 					showsCompass={false}
+					showsMyLocationButton={false}
 				>
 					{treeData.map((treeGroup) => this.renderTrees(treeGroup))}
 					{plantationSiteData.map((site) => this.renderPlantationSites(site))}
 				</Map>
-				{showApproveTreeGroupModal && (
+
+				{approveTreeGroupModal.show && (
 					<ApproveTreeGroupModal
-						visible={showApproveTreeGroupModal}
+						visible={approveTreeGroupModal.show}
 						onClose={this.closeApproveTreeGroupModal}
 					/>
 				)}
-				{showDeleteApproveTreepModal && (
+				{approveTreeModal.show && (
 					<DeleteApproveTreeModal
-						visible={showDeleteApproveTreepModal}
-						onClose={this.closeDeleteApproveTreeModal}
+						visible={approveTreeModal.show}
+						onClose={this.closeApproveTreeModal}
+					/>
+				)}
+				{approveSiteModal.show && (
+					<ApprovePlantationSiteModal
+						visible={approveSiteModal.show}
+						approveType={approveSiteModal.type}
+						onClose={this.closeApproveSiteModal}
 					/>
 				)}
 			</Container>
@@ -342,6 +367,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	setSelectedTree: (tree) => dispatch(setSelectedTree(tree)),
+	setSelectedPlantationSite: (tree) => dispatch(setSelectedPlantationSite(tree)),
 	setSelectedTreeGroup: (spot) => dispatch(setSelectedTreeGroup(spot)),
 	fetchTreeGroups: (...param) => dispatch(fetchTreeGroups(...param)),
 	fetchPlanatationSites: (...param) => dispatch(fetchPlanatationSites(...param)),

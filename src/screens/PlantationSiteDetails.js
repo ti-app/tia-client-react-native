@@ -1,23 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { View, Text, Container, Button } from 'native-base';
+import { View, Text, Container } from 'native-base';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView from 'react-native-maps';
 
-import { waterTree, deleteTree } from '../store/actions/tree.action';
-import Tree from '../components/Map/Tree';
+import { deletePlantationSite } from '../store/actions/plantation-site.action';
+import PlantationSite from '../components/Map/PlantationSite';
 import OptionsBar from '../components/Navigation/OptionsBar';
 import * as colors from '../styles/colors';
 import config from '../config/common';
 
-class TreeDetails extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			centerBias: 0.00015,
-		};
-	}
+class PlantationSiteDetails extends React.Component {
+	state = {
+		centerBias: 0.00015,
+	};
 
 	static navigationOptions = ({ navigation }) => {
 		const header = {
@@ -25,10 +22,10 @@ class TreeDetails extends React.Component {
 				<OptionsBar
 					leftOption={{
 						action: () => {
-							navigation.goBack();
+							navigation.navigate('Home');
 						},
 					}}
-					title="Tree Details"
+					title="Site Details"
 				/>
 			),
 			headerTransparent: true,
@@ -41,40 +38,25 @@ class TreeDetails extends React.Component {
 		return header;
 	};
 
-	renderWeekStatus = (weekStatus) => (
-		<View style={styles.weekStatus}>
-			{weekStatus.map((aWeek) => (
-				<View key={aWeek.key} style={{ ...styles.weekDot, ...styles[aWeek.status] }} />
-			))}
-		</View>
-	);
-
-	handleWaterTree = () => {
-		const { selectedTree, waterTree } = this.props;
-		const treeWatered = selectedTree;
-		waterTree(treeWatered);
+	deleteSiteConfirmed = () => {
+		const { deletePlantationSite, selectedPlantationSite } = this.props;
+		const siteToDelete = selectedPlantationSite;
+		deletePlantationSite(siteToDelete);
 	};
 
-	deletePlantConfirmed = () => {
-		const { deleteTree, selectedTree } = this.props;
-		const treeToDelete = selectedTree;
-		deleteTree(treeToDelete);
-	};
-
-	editTree = () => {
+	editSite = () => {
 		const { navigation } = this.props;
-		navigation.navigate('EditTree');
+		navigation.navigate('EditPlantationSiteDetails');
 	};
 
 	showConfirmDeleteAlert = () => {
-		// Works on both iOS and Android
 		Alert.alert(
-			'Delete Plant',
-			'Are you sure? All the data associated this plant will be lost. You will not be able to undo this operation.',
+			'Delete Site',
+			'Are you sure? All the data associated this site will be lost. You will not be able to undo this operation.',
 			[
 				{
 					text: 'Yes, Delete',
-					onPress: this.deletePlantConfirmed,
+					onPress: this.deleteSiteConfirmed,
 					style: 'destructive',
 				},
 				{
@@ -96,7 +78,7 @@ class TreeDetails extends React.Component {
 	);
 
 	getEditButton = () => (
-		<TouchableOpacity style={styles.editButton} onPress={this.editTree}>
+		<TouchableOpacity style={styles.editButton} onPress={this.editSite}>
 			<MaterialIcons name="edit" size={24} color={colors.black.toString()} />
 		</TouchableOpacity>
 	);
@@ -106,7 +88,7 @@ class TreeDetails extends React.Component {
 		if (!deleting) return null;
 		return (
 			<View style={styles.deletionBackdrop}>
-				<Text>Deleting Plant...</Text>
+				<Text>Deleting Plantation Site...</Text>
 			</View>
 		);
 	};
@@ -120,27 +102,25 @@ class TreeDetails extends React.Component {
 
 	render() {
 		const { centerBias } = this.state;
-		const { selectedTree } = this.props;
+		const { selectedPlantationSite } = this.props;
 
-		if (!selectedTree) {
+		if (!selectedPlantationSite) {
 			return <Text>Loading...</Text>;
 		}
 
 		const {
-			health,
 			location,
-			lastActivityDate,
 			owner,
-			uploadedDate,
-			plantType,
+			createdAt,
+			siteDisplayName,
+			numberOfPlants,
+			soilQuality,
+			wateringNearBy,
+			type,
 			photo,
-		} = selectedTree;
-		const { coordinates } = location;
-		const [longitude, latitude] = coordinates;
-		const formattedLastActivityDate = lastActivityDate && this.getFormattedDate(lastActivityDate);
-		const formattedUploadedDate = uploadedDate && this.getFormattedDate(uploadedDate);
-		// TODO: Change following with the proper implementation.
-		const wateredPlant = Math.floor(Math.random() * 20);
+		} = selectedPlantationSite;
+		const { longitude, latitude } = location;
+		const formattedUploadedDate = createdAt && this.getFormattedDate(createdAt);
 
 		return (
 			<Container style={styles.container}>
@@ -158,12 +138,12 @@ class TreeDetails extends React.Component {
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+						<PlantationSite coordinate={{ latitude, longitude }} />
 					</MapView>
 				</View>
 
 				<View style={styles.heading}>
-					<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+					<Text style={styles.siteName}>{siteDisplayName || 'Site name not specified'}</Text>
 
 					<View style={styles.modifyButtonContainer}>
 						{this.isModerator() && this.getEditButton()}
@@ -171,28 +151,22 @@ class TreeDetails extends React.Component {
 					</View>
 				</View>
 
-				<View style={styles.treeDetailsContainer}>
-					<ScrollView contentContainerStyle={styles.treeDetails}>
+				<View style={styles.plantationSiteDetailsContainer}>
+					<ScrollView contentContainerStyle={styles.plantationSiteDetails}>
+						<Text style={styles.siteInfoText}>Number of plants in site: {numberOfPlants}</Text>
 						{owner && owner.displayName && (
-							<Text style={styles.distanceLabel}>Uploaded by : {owner.displayName}</Text>
+							<Text style={styles.siteInfoText}>Uploaded by : {owner.displayName}</Text>
 						)}
 						{formattedUploadedDate && (
-							<Text style={styles.distanceLabel}>Created on {formattedUploadedDate}</Text>
+							<Text style={styles.siteInfoText}>Created on {formattedUploadedDate}</Text>
 						)}
-						<View>
-							{this.renderWeekStatus([
-								{ key: 1, status: 'healthy' },
-								{ key: 2, status: 'weak' },
-								{ key: 3, status: 'weak' },
-								{ key: 4, status: 'healthy' },
-								{ key: 5, status: 'healthy' },
-								{ key: 6, status: 'weak' },
-								{ key: 7, status: 'weak' },
-							])}
-							<Text style={styles.lastWateredText}>
-								Last watered on {formattedLastActivityDate}. Please don&apos;t forget to water me.
-							</Text>
-						</View>
+						<Text style={styles.siteInfoText}>Site Type: {type}</Text>
+						<Text style={styles.siteInfoText}>Soil Quality: {soilQuality}</Text>
+						<Text style={[styles.siteInfoText, styles.paddingBottomTen]}>
+							{wateringNearBy
+								? 'Watering is available nearby.'
+								: 'Watering is not available nearby.'}
+						</Text>
 						{photo && photo.length > 0 ? (
 							<Image
 								source={{
@@ -206,19 +180,7 @@ class TreeDetails extends React.Component {
 								<Text style={styles.imageNotFoundText}>No Image.</Text>
 							</View>
 						)}
-						<Text style={styles.moreWateredHereText}>{wateredPlant} more have watered here</Text>
 					</ScrollView>
-				</View>
-				<View style={styles.waterButtonContainer}>
-					<Button
-						style={{
-							...styles.waterButton,
-						}}
-						success
-						onPress={this.handleWaterTree}
-					>
-						<Text style={styles.waterButtonText}>WATERED</Text>
-					</Button>
 				</View>
 			</Container>
 		);
@@ -230,10 +192,10 @@ const styles = StyleSheet.create({
 		display: 'flex',
 	},
 	mapView: { flex: 1.0, height: '100%' },
-	treeDetailsContainer: {
+	plantationSiteDetailsContainer: {
 		flex: 1.4,
 	},
-	treeDetails: {
+	plantationSiteDetails: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-around',
@@ -253,33 +215,16 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 	},
-	plantType: {
+	siteName: {
 		textAlignVertical: 'center',
 		fontSize: 20,
 	},
-	addressLabel: { fontSize: 20, paddingRight: 8 },
-	distanceLabel: {
+	siteInfoText: {
 		fontSize: 12,
 		color: colors.gray,
 	},
-	weekStatus: { display: 'flex', flexDirection: 'row' },
-	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
-	healthy: { backgroundColor: colors.green },
-	adequate: { backgroundColor: colors.linkBlue },
-	average: { backgroundColor: colors.yellow },
-	weak: { backgroundColor: colors.orange },
-	almostDead: { backgroundColor: colors.red },
-	lastWateredText: { fontSize: 12, color: colors.gray },
-	waterButtonContainer: {
-		position: 'absolute',
-		left: 10,
-		right: 10,
-		bottom: 10,
-		backgroundColor: 'white',
-	},
-	waterButton: {
-		justifyContent: 'center',
-		width: '100%',
+	paddingBottomTen: {
+		paddingBottom: 10,
 	},
 	deleteButton: {
 		padding: 8,
@@ -289,7 +234,6 @@ const styles = StyleSheet.create({
 		padding: 8,
 		borderColor: 'black',
 	},
-	waterButtonText: { textAlign: 'center' },
 	image: { width: '100%', height: 200 },
 	imageNotFound: {
 		width: '100%',
@@ -300,20 +244,18 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.lightGray,
 	},
 	imageNotFoundText: { textAlign: 'center' },
-	moreWateredHereText: { marginBottom: 40 },
 });
 
 const mapStateToProps = (state) => ({
-	selectedTree: state.tree.selectedTree,
+	selectedPlantationSite: state.plantationSite.selectedPlantationSite,
 	userRole: state.auth.role,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	waterTree: (tree) => dispatch(waterTree(tree)),
-	deleteTree: (tree) => dispatch(deleteTree(tree)),
+	deletePlantationSite: (tree) => dispatch(deletePlantationSite(tree)),
 });
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(TreeDetails);
+)(PlantationSiteDetails);

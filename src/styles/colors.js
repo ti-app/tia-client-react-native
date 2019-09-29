@@ -19,6 +19,7 @@ export const purple = Color('rgb(165, 110, 190)');
 export const black = Color('rgb(10, 10, 10)');
 export const white = Color('rgb(250, 250, 250)');
 export const gray = Color('rgb(200, 200, 200)');
+export const maroon = Color('#800000');
 export const lightGray = gray.lighten(0.2);
 export const darkGray = gray.darken(0.75);
 

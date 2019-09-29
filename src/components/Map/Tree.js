@@ -59,25 +59,28 @@ export default class Tree extends PureComponent {
 		}
 	}
 
-	renderMarker = () => {
-		const { notApproved, deleteNotApproved, status } = this.props;
+	renderNotApproved = () => {
 		const { blinkOpacity } = this.state;
 
-		if (notApproved) {
-			return (
-				<Animated.View
-					style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
-				/>
-			);
-		}
+		return (
+			<Animated.View
+				style={{ ...styles.blinkingOverlay, backgroundColor: colors.blue, opacity: blinkOpacity }}
+			/>
+		);
+	};
 
-		if (deleteNotApproved) {
-			return (
-				<Animated.View
-					style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
-				/>
-			);
-		}
+	renderDeleteNotApproved = () => {
+		const { blinkOpacity } = this.state;
+
+		return (
+			<Animated.View
+				style={{ ...styles.blinkingOverlay, backgroundColor: colors.red, opacity: blinkOpacity }}
+			/>
+		);
+	};
+
+	renderDefault = () => {
+		const { status } = this.props;
 
 		return (
 			<View
@@ -89,6 +92,20 @@ export default class Tree extends PureComponent {
 				<View style={styles.innerCircle} />
 			</View>
 		);
+	};
+
+	renderMarker = () => {
+		const { notApproved, deleteNotApproved } = this.props;
+
+		if (notApproved) {
+			return this.renderNotApproved();
+		}
+
+		if (deleteNotApproved) {
+			return this.renderDeleteNotApproved();
+		}
+
+		return this.renderDefault();
 	};
 
 	render() {

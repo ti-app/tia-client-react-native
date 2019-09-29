@@ -13,6 +13,31 @@ export default class SelectPropertyType extends React.Component {
 		};
 	}
 
+	componentDidMount() {
+		const { presetType } = this.props;
+
+		if (presetType) {
+			this.setState({ selectedPropertyType: { ...presetType } });
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		const { presetType } = this.props;
+
+		if (presetType) {
+			const { public: prevPublic, private: prevPrivate } = prevProps.presetType;
+
+			const { public: publicProperty, private: privateProperty } = presetType;
+
+			const presetTypeChanged = publicProperty !== prevPublic || privateProperty !== prevPrivate;
+
+			if (presetTypeChanged) {
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({ selectedPropertyType: { ...presetType } });
+			}
+		}
+	}
+
 	handleSelection = (field) => {
 		const { onSelectedPropertyTypeChange } = this.props;
 

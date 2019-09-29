@@ -1,11 +1,11 @@
 import {
 	FETCH_PLANTATION_SITES_SUCCESS,
-	SET_SELECTED_PLANTATION_SITE_DETAILS,
+	SET_SELECTED_PLANTATION_SITE,
 } from '../actions/plantation-site.action';
 
 const initialState = {
 	plantationSites: [],
-	selectedPlantationSiteDetails: null,
+	selectedPlantationSite: null,
 };
 
 const plantationSiteReducer = (state = initialState, action) => {
@@ -14,10 +14,10 @@ const plantationSiteReducer = (state = initialState, action) => {
 			return { plantationSites: action.payload };
 		}
 
-		case SET_SELECTED_PLANTATION_SITE_DETAILS: {
+		case SET_SELECTED_PLANTATION_SITE: {
 			return {
 				...state,
-				selectedPlantationSiteDetails: { ...action.payload },
+				selectedPlantationSite: { ...action.payload },
 			};
 		}
 
