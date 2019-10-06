@@ -5,39 +5,49 @@ import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 
 import Tree from '../../components/Map/Tree';
-import SelectDistribution from '../../components/shared/SelectDistribution';
+import FormInput from '../../components/shared/FormInput';
+import SelectTreeHealth from '../../components/shared/SelectTreeHealth';
 import { setNewTreeGroupData } from '../../store/actions/tree.action';
-import { fetchUserLocation } from '../../store/actions/location.action';
-import Spot from '../../components/Map/Spot';
 
-class SetTreeDistributions extends React.Component {
+class AddNewSpotScreen extends React.Component {
 	state = {
 		centerBias: 0.00015,
 	};
 
 	static navigationOptions = () => ({ header: null });
 
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
-	}
-
-	handleDistributionChange = (distribution) => {
+	handlePlantType = (plantType) => {
 		const { setNewTreeGroupData } = this.props;
-		const distributionEntry = Object.entries(distribution).find((_) => _[1] === true);
-		if (distributionEntry && distributionEntry[0]) {
-			setNewTreeGroupData({ distribution: distributionEntry[0] });
+		setNewTreeGroupData({ plantType });
+	};
+
+	handleWaterCycleChange = (waterCycle) => {
+		const { setNewTreeGroupData } = this.props;
+		setNewTreeGroupData({ waterCycle });
+	};
+
+	handleSelectedStatusChange = (selectedStatus) => {
+		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
+		if (healthEntry && healthEntry[0]) {
+			const { setNewTreeGroupData } = this.props;
+			setNewTreeGroupData({ health: healthEntry[0] });
 		}
+	};
+
+	renderTrees = (health) => {
+		const { newTreeGroup } = this.props;
+		const { trees } = newTreeGroup;
+		return trees.map((aCoord, idx) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<Tree key={idx} coordinate={aCoord} status={health || 'healthy'} />
+		));
 	};
 
 	render() {
 		const { centerBias } = this.state;
 		const { userLocation, newTreeGroup } = this.props;
-		const { distribution } = newTreeGroup;
 		const { latitude, longitude } = userLocation;
-
-		const presetDistribution = { single: false, line: false };
-		presetDistribution[distribution] = true;
+		const { health } = newTreeGroup;
 
 		return (
 			<Container style={styles.container}>
@@ -55,22 +65,28 @@ class SetTreeDistributions extends React.Component {
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						{distribution === 'single' && (
-							<Tree coordinate={{ latitude, longitude }} status="healthy" />
-						)}
-						{distribution === 'line' && (
-							<Spot coordinate={{ latitude, longitude }} health="healthy" treeCount="?" />
-						)}
+						{this.renderTrees(health)}
 					</MapView>
 				</View>
+
+				<Text style={styles.formTitle}> Add Details </Text>
 				<View style={styles.formContainer}>
-					<Text style={styles.formTitle}> Select Distribution</Text>
 					<ScrollView contentContainerStyle={styles.form}>
-						<View style={styles.paddingBottomTen}>
-							<SelectDistribution
-								presetDistribution={presetDistribution}
-								onSelectedDistributionChange={this.handleDistributionChange}
-							/>
+						<FormInput
+							placeholder="Plant type"
+							keyboardType="default"
+							onChangeText={this.handlePlantType}
+						/>
+						<FormInput
+							placeholder="Water cycle"
+							keyboardType="number-pad"
+							onChangeText={this.handleWaterCycleChange}
+						/>
+						<View>
+							<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>
+							<View style={styles.paddingBottomTen}>
+								<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
+							</View>
 						</View>
 					</ScrollView>
 				</View>
@@ -83,13 +99,13 @@ const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
 	},
-	mapViewContainer: { height: '70%' },
+	mapViewContainer: { height: '55%' },
 	mapView: { height: '100%' },
 	formTitle: {
 		fontSize: 25,
 	},
 	formContainer: {
-		height: '30%',
+		height: '45%',
 	},
 	form: {
 		display: 'flex',
@@ -107,11 +123,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
 	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
 });
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(SetTreeDistributions);
+)(AddNewSpotScreen);

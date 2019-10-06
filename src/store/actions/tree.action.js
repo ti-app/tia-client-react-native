@@ -6,6 +6,7 @@ import showErrorToast from '../../utils/ErrorToast';
 import NavigationUtil from '../../utils/Navigation';
 
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
+export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
 export const FETCH_TREE_GROUP_SUCCESS = 'FETCH_TREE_GROUP_SUCCESS';
 export const SET_SELECTED_TREE_DETAILS = 'SET_SELECTED_TREE_DETAILS';
@@ -351,5 +352,10 @@ export const resetSelectedTreeGroup = (payload) => ({
 
 export const setNewTreeGroupData = (payload) => ({
 	type: SET_NEW_TREE_GROUP,
+	payload,
+});
+
+export const resetNewTreeGroupData = (payload) => ({
+	type: RESET_NEW_TREE_GROUP,
 	payload,
 });

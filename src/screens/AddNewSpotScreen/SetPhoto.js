@@ -8,7 +8,6 @@ import * as ImagePicker from 'expo-image-picker';
 
 import Tree from '../../components/Map/Tree';
 import { setNewTreeGroupData } from '../../store/actions/tree.action';
-import { fetchUserLocation } from '../../store/actions/location.action';
 
 class AddNewSpotScreen extends React.Component {
 	state = {
@@ -16,11 +15,6 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	static navigationOptions = () => ({ header: null });
-
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
-	}
 
 	takePhoto = async () => {
 		const { status: cameraPerm } = await Permissions.askAsync(Permissions.CAMERA);
@@ -36,10 +30,10 @@ class AddNewSpotScreen extends React.Component {
 
 	renderTrees = (health) => {
 		const { newTreeGroup } = this.props;
-		const { trees: treeCoordinates } = newTreeGroup;
-		return treeCoordinates.map((aCoord, idx) => (
+		const { trees } = newTreeGroup;
+		return trees.map((aCoord, idx) => (
 			// eslint-disable-next-line react/no-array-index-key
-			<Tree key={idx} coordinate={aCoord} status={health} />
+			<Tree key={idx} coordinate={aCoord} status={health || 'healthy'} />
 		));
 	};
 
@@ -47,7 +41,7 @@ class AddNewSpotScreen extends React.Component {
 		const { centerBias } = this.state;
 		const { userLocation, newTreeGroup } = this.props;
 		const { latitude, longitude } = userLocation;
-		const { photo } = newTreeGroup;
+		const { photo, health } = newTreeGroup;
 
 		return (
 			<Container style={styles.container}>
@@ -65,12 +59,12 @@ class AddNewSpotScreen extends React.Component {
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						{this.renderTrees()}
+						{this.renderTrees(health)}
 					</MapView>
 				</View>
 
-				<Text style={styles.formTitle}>Add Photo</Text>
 				<View style={styles.formContainer}>
+					<Text style={styles.formTitle}>Add Photo</Text>
 					<ScrollView contentContainerStyle={styles.form}>
 						{photo ? (
 							<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
@@ -126,7 +120,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
 	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
 });
 

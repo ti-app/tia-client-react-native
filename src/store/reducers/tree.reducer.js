@@ -4,6 +4,7 @@ import {
 	SET_SELECTED_TREE_GROUP,
 	RESET_SELECTED_TREE_GROUP,
 	SET_NEW_TREE_GROUP,
+	RESET_NEW_TREE_GROUP,
 } from '../actions/tree.action';
 
 const initialState = {
@@ -12,7 +13,7 @@ const initialState = {
 	selectedTreeGroup: null,
 	newTreeGroup: {
 		distribution: 'single',
-		trees: [{ latitude: 52.2946294, longitude: 4.8491652 }],
+		trees: [],
 		health: null,
 		plantType: '',
 		waterCycle: 0,
@@ -23,7 +24,7 @@ const initialState = {
 const treeReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case FETCH_TREE_GROUP_SUCCESS: {
-			return { treeGroups: action.payload };
+			return { ...state, treeGroups: action.payload };
 		}
 
 		case SET_SELECTED_TREE_DETAILS: {
@@ -51,6 +52,20 @@ const treeReducer = (state = initialState, action) => {
 			return {
 				...state,
 				newTreeGroup: { ...state.newTreeGroup, ...action.payload },
+			};
+		}
+
+		case RESET_NEW_TREE_GROUP: {
+			return {
+				...state,
+				newTreeGroup: {
+					distribution: 'single',
+					trees: [],
+					health: null,
+					plantType: '',
+					waterCycle: 0,
+					photo: '',
+				},
 			};
 		}
 

@@ -5,55 +5,49 @@ import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 
 import Tree from '../../components/Map/Tree';
-import FormInput from '../../components/shared/FormInput';
-import SelectTreeHealth from '../../components/shared/SelectTreeHealth';
+import SelectDistribution from '../../components/shared/SelectDistribution';
 import { setNewTreeGroupData } from '../../store/actions/tree.action';
-import { fetchUserLocation } from '../../store/actions/location.action';
+import Spot from '../../components/Map/Spot';
+import constants from '../../config/common';
 
-class AddNewSpotScreen extends React.Component {
+const { distributions } = constants;
+
+class SetTreeDistributions extends React.Component {
 	state = {
 		centerBias: 0.00015,
 	};
 
 	static navigationOptions = () => ({ header: null });
 
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
+	componentDidMount() {
+		const { setNewTreeGroupData, userLocation } = this.props;
+		const { latitude, longitude } = userLocation;
+		setNewTreeGroupData({ trees: [{ latitude, longitude }] });
 	}
 
-	handlePlantType = (plantType) => {
-		const { setNewTreeGroupData } = this.props;
-		setNewTreeGroupData({ plantType });
-	};
+	handleDistributionChange = (distribution) => {
+		const { setNewTreeGroupData, userLocation } = this.props;
+		const distributionEntry = Object.entries(distribution).find((_) => _[1] === true);
+		if (distributionEntry && distributionEntry[0]) {
+			setNewTreeGroupData({ distribution: distributionEntry[0] });
 
-	handleWaterCycleChange = (waterCycle) => {
-		const { setNewTreeGroupData } = this.props;
-		setNewTreeGroupData({ waterCycle });
-	};
-
-	handleSelectedStatusChange = (selectedStatus) => {
-		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (healthEntry && healthEntry[0]) {
-			const { setNewTreeGroupData } = this.props;
-			setNewTreeGroupData({ health: healthEntry[0] });
+			if (distributionEntry[0] === distributions.SINGLE) {
+				const { latitude, longitude } = userLocation;
+				setNewTreeGroupData({ trees: [{ latitude, longitude }] });
+			} else {
+				setNewTreeGroupData({ trees: [] });
+			}
 		}
-	};
-
-	renderTrees = (health) => {
-		const { newTreeGroup } = this.props;
-		const { trees: treeCoordinates } = newTreeGroup;
-		return treeCoordinates.map((aCoord, idx) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<Tree key={idx} coordinate={aCoord} status={health} />
-		));
 	};
 
 	render() {
 		const { centerBias } = this.state;
 		const { userLocation, newTreeGroup } = this.props;
+		const { distribution } = newTreeGroup;
 		const { latitude, longitude } = userLocation;
-		const { health } = newTreeGroup;
+
+		const presetDistribution = { single: false, line: false };
+		presetDistribution[distribution] = true;
 
 		return (
 			<Container style={styles.container}>
@@ -71,28 +65,22 @@ class AddNewSpotScreen extends React.Component {
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						{this.renderTrees(health)}
+						{distribution === 'single' && (
+							<Tree coordinate={{ latitude, longitude }} status="healthy" />
+						)}
+						{distribution === 'line' && (
+							<Spot coordinate={{ latitude, longitude }} health="healthy" treeCount="?" />
+						)}
 					</MapView>
 				</View>
-
-				<Text style={styles.formTitle}> Add Details </Text>
 				<View style={styles.formContainer}>
+					<Text style={styles.formTitle}> Select Distribution</Text>
 					<ScrollView contentContainerStyle={styles.form}>
-						<FormInput
-							placeholder="Plant type"
-							keyboardType="default"
-							onChangeText={this.handlePlantType}
-						/>
-						<FormInput
-							placeholder="Water cycle"
-							keyboardType="number-pad"
-							onChangeText={this.handleWaterCycleChange}
-						/>
-						<View>
-							<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>
-							<View style={styles.paddingBottomTen}>
-								<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
-							</View>
+						<View style={styles.paddingBottomTen}>
+							<SelectDistribution
+								presetDistribution={presetDistribution}
+								onSelectedDistributionChange={this.handleDistributionChange}
+							/>
 						</View>
 					</ScrollView>
 				</View>
@@ -105,13 +93,13 @@ const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
 	},
-	mapViewContainer: { height: '55%' },
+	mapViewContainer: { height: '70%' },
 	mapView: { height: '100%' },
 	formTitle: {
 		fontSize: 25,
 	},
 	formContainer: {
-		height: '45%',
+		height: '30%',
 	},
 	form: {
 		display: 'flex',
@@ -129,11 +117,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
 	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
 });
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(AddNewSpotScreen);
+)(SetTreeDistributions);

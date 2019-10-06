@@ -116,20 +116,20 @@ class TreeGroupDetails extends React.Component {
 	}
 
 	// TODO: For now it will show trees radially with manual calculation, refactor later to show with the exact lat lng of trees.
-	renderTrees = (trees, location) => {
-		const division = 360 / trees.length;
-		const radius = 0.00003;
-		const { longitude: centerLng, latitude: centerLat } = location;
+	renderTrees = (trees) => {
+		return trees.map((tree) => {
+			const { location } = tree;
+			const { coordinates } = location;
 
-		return trees.map((tree, i) => {
-			const modifiedLng = centerLng + Math.cos(division * (i + 1) * (Math.PI / 180)) * radius;
-			const modifiedLat = centerLat + Math.sin(division * (i + 1) * (Math.PI / 180)) * radius;
+			const longitude = coordinates[0];
+			const latitude = coordinates[1];
+
 			const deleteObject = tree.delete;
 
 			return (
 				<Tree
 					key={tree._id}
-					coordinate={{ longitude: modifiedLng, latitude: modifiedLat }}
+					coordinate={{ longitude, latitude }}
 					onPress={() => {
 						this.selectTree(tree);
 					}}
@@ -173,15 +173,15 @@ class TreeGroupDetails extends React.Component {
 						initialRegion={{
 							latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
 							longitude,
-							latitudeDelta: 0.000292007226706992,
-							longitudeDelta: 0.000125057826519012,
+							latitudeDelta: 0.000892007226706992,
+							longitudeDelta: 0.000605057826519012,
 						}}
 						scrollEnabled={false}
 						pitchEnabled={false}
 						rotateEnabled={false}
 						zoomEnabled={false}
 					>
-						{this.renderTrees(trees, location)}
+						{this.renderTrees(trees)}
 					</MapView>
 				</View>
 

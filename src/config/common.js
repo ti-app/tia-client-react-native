@@ -5,4 +5,8 @@ export default {
 	roles: {
 		MODERATOR: 'moderator',
 	},
+	distributions: {
+		SINGLE: 'single',
+		LINE: 'line',
+	},
 };

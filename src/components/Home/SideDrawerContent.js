@@ -73,6 +73,9 @@ class SideDrawerContent extends React.Component {
 							<ListItem button onPress={() => this.navigateTo('Faq')}>
 								<Text style={styles.text}>FAQ</Text>
 							</ListItem>
+							<ListItem button onPress={() => this.navigateTo('Form')}>
+								<Text style={styles.text}>Form</Text>
+							</ListItem>
 							<ListItem button onPress={this.logout}>
 								<Text style={styles.text}>Log out</Text>
 							</ListItem>

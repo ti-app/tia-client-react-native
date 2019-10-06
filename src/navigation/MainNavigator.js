@@ -1,6 +1,5 @@
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen';
-import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
 import AddPlantationSiteScreen from '../screens/AddPlantationSiteScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import FaqScreen from '../screens/FaqScreen';
@@ -10,15 +9,12 @@ import EditTreeDetails from '../screens/EditTreeDetails';
 import PlantationSiteDetails from '../screens/PlantationSiteDetails';
 import EditPlantationSiteDetails from '../screens/EditPlantationSiteDetails';
 import TreeGroupDetails from '../screens/TreeGroupDetails';
-import Step4SetPhoto from '../screens/AddNewSpotScreen/Step4-SetPhoto';
+import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
 
 const MainNavigator = createStackNavigator(
 	{
 		Home: {
 			screen: HomeScreen,
-		},
-		AddNewSpot: {
-			screen: AddNewSpotScreen,
 		},
 		AddPlantationSite: {
 			screen: AddPlantationSiteScreen,
@@ -44,12 +40,12 @@ const MainNavigator = createStackNavigator(
 		Faq: {
 			screen: FaqScreen,
 		},
-		Test: {
-			screen: Step4SetPhoto,
+		AddNewSpot: {
+			screen: AddNewSpotScreen,
 		},
 	},
 	{
-		initialRouteName: 'Test',
+		initialRouteName: 'Home',
 	}
 );
 

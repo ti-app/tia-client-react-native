@@ -9,7 +9,6 @@ import Tree from '../../components/Map/Tree';
 import FormInput from '../../components/shared/FormInput';
 import ProductText from '../../components/shared/ProductText';
 import { setNewTreeGroupData } from '../../store/actions/tree.action';
-import { fetchUserLocation } from '../../store/actions/location.action';
 import { getTreeCoordsByNumberOfTrees, getTreeCoordsBySpacing } from '../../utils/Geo';
 import * as colors from '../../styles/colors';
 
@@ -24,15 +23,9 @@ class AddNewSpotScreen extends React.Component {
 		spacing: 0, // in meters
 		numberOfPlants: 0,
 		endpoints: [],
-		treeCoordinates: [],
 	};
 
 	static navigationOptions = () => ({ header: null });
-
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
-	}
 
 	handleSpacingChange = (spacing) => {
 		this.setState({ spacing }, () => {
@@ -57,6 +50,8 @@ class AddNewSpotScreen extends React.Component {
 
 	calculateTreeCoordinates = () => {
 		const { endpoints, type, spacing, numberOfPlants } = this.state;
+		const { setNewTreeGroupData } = this.props;
+
 		if (endpoints.length === 2) {
 			let modifiedTrees = [];
 
@@ -68,22 +63,22 @@ class AddNewSpotScreen extends React.Component {
 				modifiedTrees = getTreeCoordsByNumberOfTrees(endpoints, numberOfPlants);
 			}
 
-			this.setState({ treeCoordinates: modifiedTrees });
+			setNewTreeGroupData({ trees: [endpoints[0], ...modifiedTrees, endpoints[1]] });
 		}
 	};
 
 	handleMapPress = (e) => {
 		const { coordinate: newCoordinate } = e.nativeEvent;
+		const { setNewTreeGroupData } = this.props;
 		const { endpoints } = this.state;
+
+		if (endpoints.length >= 2) return;
 
 		const modifiedEndpoints = [...endpoints];
 
-		if (modifiedEndpoints.length) {
-			modifiedEndpoints[0] = modifiedEndpoints.pop();
-		}
-
 		modifiedEndpoints.push(newCoordinate);
 
+		setNewTreeGroupData({ trees: [...modifiedEndpoints] });
 		this.setState({ endpoints: modifiedEndpoints });
 	};
 
@@ -91,9 +86,9 @@ class AddNewSpotScreen extends React.Component {
 		const { endpoints, type, spacing, numberOfPlants } = this.state;
 		switch (true) {
 			case !endpoints[0]:
-				return '1. Tap on a map to select start point of line.';
+				return '1. Tap on a map to select starting point of line.';
 			case !endpoints[1]:
-				return '2. Tap on a map to select end point of line.';
+				return '2. Tap on a map to select ending point of line.';
 			case type === 'spacing' && spacing <= 0:
 				return '3. Enter spacing (more than 0) in meters or change map distribution to "Number of plants"';
 			case type === 'numberOfPlants' && numberOfPlants < 2:
@@ -108,13 +103,16 @@ class AddNewSpotScreen extends React.Component {
 	};
 
 	handleClear = () => {
-		this.setState({ endpoints: [], treeCoordinates: [] });
+		const { setNewTreeGroupData } = this.props;
+		this.setState({ endpoints: [] });
+		setNewTreeGroupData({ trees: [] });
 	};
 
 	render() {
-		const { centerBias, type, spacing, numberOfPlants, endpoints, treeCoordinates } = this.state;
-		const { userLocation } = this.props;
+		const { centerBias, type, spacing, numberOfPlants, endpoints } = this.state;
+		const { userLocation, newTreeGroup } = this.props;
 		const { latitude, longitude } = userLocation;
+		const { trees } = newTreeGroup;
 
 		const presetDistParams = { spacing: false, numberOfPlants: false };
 		presetDistParams[type] = true;
@@ -137,8 +135,6 @@ class AddNewSpotScreen extends React.Component {
 						onPress={this.handleMapPress}
 						moveOnMarkerPress={false}
 					>
-						{endpoints[0] && <Tree coordinate={endpoints[0]} status="healthy" />}
-						{endpoints[1] && <Tree coordinate={endpoints[1]} status="healthy" />}
 						{endpoints.length === 2 && (
 							<Polyline
 								coordinates={endpoints}
@@ -146,12 +142,12 @@ class AddNewSpotScreen extends React.Component {
 								strokeWidth={3}
 							/>
 						)}
-						{renderTrees(treeCoordinates)}
+						{renderTrees(trees)}
 					</MapView>
 					<ProductText style={styles.instruction}>{this.getInstruction()}</ProductText>
 					{endpoints[0] && (
-						<Button danger style={styles.clearButton} onPress={this.handleClear}>
-							<Text> Reset </Text>
+						<Button danger style={styles.resetButton} onPress={this.handleClear}>
+							<Text> RESET </Text>
 						</Button>
 					)}
 				</View>
@@ -165,7 +161,7 @@ class AddNewSpotScreen extends React.Component {
 							onSelectedDistParamChange={this.handleDistParamChange}
 						/>
 						<ProductText>
-							{type === 'spacing' && 'Enter spacing'}
+							{type === 'spacing' && 'Enter spacing in meters:'}
 							{type === 'numberOfPlants' && 'Enter number of plants'}
 						</ProductText>
 						{type === 'spacing' && (
@@ -207,9 +203,9 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		color: colors.blue,
 	},
-	clearButton: {
+	resetButton: {
 		position: 'absolute',
-		top: 10,
+		top: 90,
 		right: 10,
 	},
 	mapView: { height: '100%' },
@@ -233,7 +229,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
 	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
 });
 

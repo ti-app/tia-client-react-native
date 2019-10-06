@@ -1,29 +1,113 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Image, Platform, ScrollView, Keyboard } from 'react-native';
-import { View, Text, Button, Container } from 'native-base';
+import { createStackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-import MapView from 'react-native-maps';
-import { Permissions } from 'react-native-unimodules';
-import * as ImagePicker from 'expo-image-picker';
+import { SafeAreaView, View, Animated, Easing, TouchableOpacity, Platform } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Step1SetTreeDistribution from './SetTreeDistribution';
+import Step2SetTreeLocations from './SetTreeLocations';
+import Step3SetTreeDetails from './SetTreeDetails';
+import Step4SetPhoto from './SetPhoto';
 
 import OptionsBar from '../../components/Navigation/OptionsBar';
-import Tree from '../../components/Map/Tree';
-import FormInput from '../../components/shared/FormInput';
-import SelectTreeHealth from '../../components/shared/SelectTreeHealth';
+
+import * as colors from '../../styles/colors';
 import { addGroup } from '../../store/actions/tree.action';
-import { fetchUserLocation } from '../../store/actions/location.action';
-import Spot from '../../components/Map/Spot';
+import constants from '../../config/common';
+
+const { distributions } = constants;
+
+const SlideFromRight = (index, position, width) => {
+	const inputRange = [index - 1, index, index + 1];
+	const translateX = position.interpolate({
+		inputRange,
+		outputRange: [width, 0, 0],
+	});
+	const slideFromRight = { transform: [{ translateX }] };
+	return slideFromRight;
+};
+
+const TransitionConfiguration = () => {
+	return {
+		transitionSpec: {
+			duration: 300,
+			easing: Easing.out(Easing.poly(1)),
+			timing: Animated.timing,
+			useNativeDriver: true,
+		},
+		screenInterpolator: (sceneProps) => {
+			const { layout, position, scene } = sceneProps;
+			const width = layout.initWidth;
+			const { index, route } = scene;
+			const params = route.params || {}; // <- That's new
+			const transition = params.transition || 'default'; // <- That's new
+			return {
+				default: SlideFromRight(index, position, width),
+			}[transition];
+		},
+	};
+};
+
+const Controller = ({ onBack, onNext, onDone }) => {
+	return (
+		<SafeAreaView style={styles.safeAreaView}>
+			{onBack && (
+				<TouchableOpacity style={styles.backButton} onPress={onBack}>
+					<AntDesign name="arrowleft" color={colors.black.toString()} size={32} />
+				</TouchableOpacity>
+			)}
+			{onNext && (
+				<TouchableOpacity style={styles.nextButton} onPress={onNext}>
+					<AntDesign name="arrowright" color={colors.black.toString()} size={32} />
+				</TouchableOpacity>
+			)}
+			{onDone && (
+				<TouchableOpacity onPress={onDone}>
+					<AntDesign name="check" color={colors.green.toString()} size={32} />
+				</TouchableOpacity>
+			)}
+		</SafeAreaView>
+	);
+};
+
+const addSpotSteps = {
+	selectDistribution: 'SelectDistribution',
+	addTrees: 'AddTrees',
+	treeDetails: 'TreeDetails',
+	treePhoto: 'TreePhoto',
+};
+
+const SNavigator = createStackNavigator(
+	{
+		[addSpotSteps.selectDistribution]: {
+			screen: Step1SetTreeDistribution,
+		},
+		[addSpotSteps.addTrees]: {
+			screen: Step2SetTreeLocations,
+		},
+		[addSpotSteps.treeDetails]: {
+			screen: Step3SetTreeDetails,
+		},
+		[addSpotSteps.treePhoto]: {
+			screen: Step4SetPhoto,
+		},
+	},
+	{
+		headerMode: 'none',
+		initialRouteName: addSpotSteps.selectDistribution,
+		transitionConfig: TransitionConfiguration,
+	}
+);
 
 class AddNewSpotScreen extends React.Component {
-	state = {
-		photo: null,
-		plants: 0,
-		health: null,
-		plantType: '',
-		waterCycle: 0,
-		centerBias: 0.00015,
-		isKeyboardOpen: false,
-	};
+	static router = SNavigator.router;
+
+	constructor(props) {
+		super(props);
+		this.stepsArray = Object.keys(addSpotSteps).map((k) => addSpotSteps[k]);
+		this.state = {
+			currentStep: 0,
+		};
+	}
 
 	static navigationOptions = ({ navigation }) => {
 		const header = {
@@ -48,78 +132,56 @@ class AddNewSpotScreen extends React.Component {
 		return header;
 	};
 
-	componentWillMount() {
-		const { fetchUserLocation } = this.props;
-		fetchUserLocation();
-	}
-
-	componentDidMount() {
-		this.keyboardDidShowListener = Keyboard.addListener(
-			'keyboardDidShow',
-			this._keyboardDidShow.bind(this)
+	handleOnBack = () => {
+		const { navigation } = this.props;
+		this.setState(
+			(prevState) => ({
+				...prevState,
+				currentStep: prevState.currentStep - 1,
+			}),
+			() => {
+				navigation.pop();
+			}
 		);
-		this.keyboardDidHideListener = Keyboard.addListener(
-			'keyboardDidHide',
-			this._keyboardDidHide.bind(this)
+	};
+
+	handleOnNext = () => {
+		const { currentStep } = this.state;
+		const { navigation, newTreeGroup } = this.props;
+		const { distribution } = newTreeGroup;
+
+		let nextStep;
+		// If distribution is single skip the add tree detail page
+		if (distribution === distributions.SINGLE && currentStep === 0) {
+			nextStep = currentStep + 2;
+		} else {
+			nextStep = currentStep + 1;
+		}
+
+		this.setState(
+			{
+				currentStep: nextStep,
+			},
+			() => {
+				navigation.navigate(this.stepsArray[nextStep]);
+			}
 		);
-	}
-
-	componentWillUnmount() {
-		this.keyboardDidShowListener.remove();
-		this.keyboardDidHideListener.remove();
-	}
-
-	_keyboardDidShow() {
-		this.setState({ isKeyboardOpen: true });
-	}
-
-	_keyboardDidHide() {
-		this.setState({ isKeyboardOpen: false });
-	}
-
-	handleNumberOfPlantsChange = (numberOfPlants) => {
-		this.setState({ plants: numberOfPlants });
 	};
 
-	handlePlantType = (plantType) => {
-		this.setState({ plantType });
-	};
+	handleOnDone = () => {
+		const { newTreeGroup, addGroup } = this.props;
+		const { distribution, trees, health, plantType, waterCycle, photo } = newTreeGroup;
 
-	handleWaterCycleChange = (waterCycle) => {
-		this.setState({ waterCycle });
-	};
-
-	handleSelectedStatusChange = (selectedStatus) => {
-		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (healthEntry && healthEntry[0]) {
-			this.setState({ health: healthEntry[0] });
-		}
-	};
-
-	takePhoto = async () => {
-		const { status: cameraPerm } = await Permissions.askAsync(Permissions.CAMERA);
-
-		const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.75 });
-			this.setState({ photo: pickerResult.uri });
-		}
-	};
-
-	handleAddSpot = () => {
-		const { addGroup } = this.props;
-		const { photo, plants, health, plantType, waterCycle } = this.state;
-		const { userLocation } = this.props;
-		const { latitude, longitude } = userLocation;
 		const formData = this.createFormData(photo, {
-			plants,
+			distribution,
+			trees: JSON.stringify(
+				trees.map(({ latitude, longitude }) => ({ lat: latitude, lng: longitude }))
+			),
+			health,
 			plantType,
 			waterCycle,
-			health,
-			lat: latitude,
-			lng: longitude,
 		});
+
 		addGroup(formData);
 	};
 
@@ -143,149 +205,61 @@ class AddNewSpotScreen extends React.Component {
 		return data;
 	};
 
-	isAddButtonDisabled = () => {
-		const { plants, health, plantType, waterCycle } = this.state;
-		return !(plants && health && plantType && waterCycle);
-	};
-
 	render() {
-		const { photo, health, centerBias, isKeyboardOpen, plants } = this.state;
-		const { userLocation } = this.props;
-		const { latitude, longitude } = userLocation;
-
+		const maxSteps = 4;
+		const { currentStep } = this.state;
+		const { navigation } = this.props;
 		return (
-			<Container style={styles.container}>
-				<View style={styles.mapView}>
-					<MapView
-						style={styles.mapView}
-						initialRegion={{
-							latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
-							longitude,
-							latitudeDelta: 0.000882007226706992,
-							longitudeDelta: 0.000752057826519012,
-						}}
-						scrollEnabled={false}
-						pitchEnabled={false}
-						rotateEnabled={false}
-						zoomEnabled={false}
-					>
-						{plants > 1 ? (
-							<Spot
-								coordinate={{ latitude, longitude }}
-								health={health || 'healthy'}
-								treeCount={plants}
-							/>
-						) : (
-							<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
-						)}
-					</MapView>
-				</View>
-
-				<Text style={styles.whereIsItText}> Where is it?</Text>
-				<View style={styles.formContainer}>
-					<ScrollView contentContainerStyle={styles.form}>
-						<FormInput
-							placeholder="Number of plants?"
-							keyboardType="number-pad"
-							onChangeText={this.handleNumberOfPlantsChange}
-						/>
-						<FormInput
-							placeholder="Plant type"
-							keyboardType="default"
-							onChangeText={this.handlePlantType}
-						/>
-						<FormInput
-							placeholder="Water cycle"
-							keyboardType="number-pad"
-							onChangeText={this.handleWaterCycleChange}
-						/>
-						<View>
-							<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>
-							<View style={styles.paddingBottomTen}>
-								<SelectTreeHealth onSelectedStatusChange={this.handleSelectedStatusChange} />
-							</View>
-						</View>
-						{photo ? (
-							<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
-						) : (
-							<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
-								<Text> Take a photo</Text>
-							</TouchableOpacity>
-						)}
-					</ScrollView>
-				</View>
-				{!isKeyboardOpen ? (
-					<View style={styles.addButtonContainer}>
-						<Button
-							style={[
-								styles.addButton,
-								this.isAddButtonDisabled() ? styles.addButtonDisabled : styles.addButtonEnabled,
-							]}
-							disabled={this.isAddButtonDisabled()}
-							success
-							onPress={this.handleAddSpot}
-						>
-							<Text> Add Plant(s) </Text>
-						</Button>
-					</View>
-				) : null}
-			</Container>
+			<View style={{ flex: 1 }}>
+				<SNavigator navigation={navigation} />
+				<Controller
+					onNext={currentStep < maxSteps - 1 ? this.handleOnNext : null}
+					onBack={currentStep !== 0 ? this.handleOnBack : null}
+					onDone={currentStep === maxSteps - 1 ? this.handleOnDone : null}
+				/>
+			</View>
 		);
 	}
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	container: {
+		backgroundColor: colors.white,
+		flex: 1,
+		width: '100%',
+	},
+	safeAreaView: {
 		display: 'flex',
-	},
-	mapView: { flex: 1 },
-	whereIsItText: {
-		fontSize: 25,
-	},
-	formContainer: {
-		flex: 2,
-	},
-	form: {
-		display: 'flex',
-		flexDirection: 'column',
-		padding: 20,
-	},
-	paddingBottomTen: {
-		paddingBottom: 10,
-	},
-	imageUploadContainer: {
-		display: 'flex',
-		justifyContent: 'center',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
 		alignItems: 'center',
+		backgroundColor: colors.white,
+		borderColor: colors.lightGray,
+		borderTopWidth: 1,
+		paddingHorizontal: 4,
+		paddingTop: 4,
+		paddingBottom: 4,
+	},
+	touchableHighlight: {
+		alignItems: 'center',
+		backgroundColor: colors.white,
+		justifyContent: 'center',
+		margin: 15,
+		padding: 15,
 		width: '100%',
-		height: 150,
-		backgroundColor: 'lightgray',
-		marginBottom: 40,
 	},
-	image: {
-		width: '100%',
-		height: 150,
-		marginBottom: 40,
+	backButton: {
+		marginRight: 'auto',
 	},
-	addButtonContainer: {
-		position: 'absolute',
-		left: 10,
-		right: 10,
-		bottom: 10,
-		backgroundColor: 'white',
-	},
-	addButton: { justifyContent: 'center', width: '100%' },
-	addButtonDisabled: { opacity: 0.4 },
-	addButtonEnabled: { opacity: 1 },
-});
+	nextButton: {},
+};
 
 const mapStateToProps = (state) => ({
-	userLocation: state.location.userLocation,
+	newTreeGroup: state.tree.newTreeGroup,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	addGroup: (flag) => dispatch(addGroup(flag)),
-	fetchUserLocation: () => dispatch(fetchUserLocation()),
+	addGroup: (...params) => dispatch(addGroup(...params)),
 });
 
 export default connect(
