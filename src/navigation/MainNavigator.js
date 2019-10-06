@@ -7,6 +7,7 @@ import FaqScreen from '../screens/FaqScreen';
 import TreeDetails from '../screens/TreeDetails';
 import SideDrawerContent from '../components/Home/SideDrawerContent';
 import EditTreeDetails from '../screens/EditTreeDetails';
+import StepperForm from '../screens/StepperForm';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -30,6 +31,9 @@ const MainNavigator = createStackNavigator(
 		},
 		Faq: {
 			screen: FaqScreen,
+		},
+		Form: {
+			screen: StepperForm,
 		},
 	},
 	{
