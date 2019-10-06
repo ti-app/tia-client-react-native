@@ -6,13 +6,13 @@ import MapView from 'react-native-maps';
 import { Permissions } from 'react-native-unimodules';
 import * as ImagePicker from 'expo-image-picker';
 
-import OptionsBar from '../components/Navigation/OptionsBar';
-import Tree from '../components/Map/Tree';
-import FormInput from '../components/shared/FormInput';
-import SelectTreeHealth from '../components/shared/SelectTreeHealth';
-import { addGroup } from '../store/actions/tree.action';
-import { fetchUserLocation } from '../store/actions/location.action';
-import Spot from '../components/Map/Spot';
+import OptionsBar from '../../components/Navigation/OptionsBar';
+import Tree from '../../components/Map/Tree';
+import FormInput from '../../components/shared/FormInput';
+import SelectTreeHealth from '../../components/shared/SelectTreeHealth';
+import { addGroup } from '../../store/actions/tree.action';
+import { fetchUserLocation } from '../../store/actions/location.action';
+import Spot from '../../components/Map/Spot';
 
 class AddNewSpotScreen extends React.Component {
 	state = {
@@ -174,14 +174,9 @@ class AddNewSpotScreen extends React.Component {
 								coordinate={{ latitude, longitude }}
 								health={health || 'healthy'}
 								treeCount={plants}
-								blink={false}
 							/>
 						) : (
-							<Tree
-								coordinate={{ latitude, longitude }}
-								status={health || 'healthy'}
-								blink={false}
-							/>
+							<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
 						)}
 					</MapView>
 				</View>

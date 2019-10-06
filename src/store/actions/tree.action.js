@@ -5,15 +5,13 @@ import apiClient from '../../utils/ApiClient';
 import showErrorToast from '../../utils/ErrorToast';
 import NavigationUtil from '../../utils/Navigation';
 
+export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
 export const FETCH_TREE_GROUP_SUCCESS = 'FETCH_TREE_GROUP_SUCCESS';
 export const SET_SELECTED_TREE_DETAILS = 'SET_SELECTED_TREE_DETAILS';
 export const RESET_SELECTED_TREE_DETAILS = 'RESET_SELECTED_TREE_DETAILS';
 export const SET_SELECTED_TREE_GROUP = 'SET_SELECTED_TREE_GROUP';
 export const RESET_SELECTED_TREE_GROUP = 'RESET_SELECTED_TREE_GROUP';
-export const WATER_TREE_SUCCESS = 'WATER_TREE_SUCCESS';
-export const WATER_TREE_FAILURE = 'WATER_TREE_FAILURE';
-export const DELETE_TREE = 'DELETE_TREE';
 
 /**
  * Accepts parameter treeGroup which should be a FormData including an Image.
@@ -118,14 +116,13 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 	try {
 		const { _id } = tree;
 		const url = `/tree/${_id}/water`;
-		const response = await apiClient({
+		await apiClient({
 			url,
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			noloading: true,
 		});
-		dispatch(waterTreeSuccess(response.data));
 		Toast.show({
 			text: 'Successfully updated watering details',
 			duration: 1000,
@@ -143,7 +140,6 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 		);
 	} catch (err) {
 		showErrorToast('Error watering the trees', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -180,7 +176,6 @@ export const waterTreeGroup = (tree) => async (dispatch, getState) => {
 		);
 	} catch (err) {
 		showErrorToast('Error watering the trees', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -220,7 +215,6 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 		);
 	} catch (err) {
 		showErrorToast('Error deleting the tree.', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -258,7 +252,6 @@ export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 		);
 	} catch (err) {
 		showErrorToast('Error deleting the tree.', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -296,7 +289,6 @@ export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispa
 		);
 	} catch (err) {
 		showErrorToast('Error taking action', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -334,7 +326,6 @@ export const takeModActionForTree = (treeId, approval) => async (dispatch, getSt
 		);
 	} catch (err) {
 		showErrorToast('Error taking action', err, dispatch);
-		dispatch(waterTreeFailure(err));
 	}
 };
 
@@ -358,13 +349,7 @@ export const resetSelectedTreeGroup = (payload) => ({
 	payload,
 });
 
-export const waterTreeSuccess = (payload) => ({
-	type: WATER_TREE_SUCCESS,
-	payload,
-});
-
-// Not used for now
-export const waterTreeFailure = (payload) => ({
-	type: WATER_TREE_FAILURE,
+export const setNewTreeGroupData = (payload) => ({
+	type: SET_NEW_TREE_GROUP,
 	payload,
 });
