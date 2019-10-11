@@ -150,20 +150,15 @@ class TreeGroupDetails extends React.Component {
 			return <Text>Loading...</Text>;
 		}
 
-		const {
-			location,
-			owner,
-			uploadedDate,
-			plantType,
-			photo,
-			plants,
-			lastActivityDate,
-			trees,
-		} = selectedTreeGroup;
+		const { location, owner, uploadedDate, photo, lastActivityDate, trees } = selectedTreeGroup;
 
 		const { longitude, latitude } = location;
 		const formattedLastActivityDate = lastActivityDate && this.getFormattedDate(lastActivityDate);
 		const formattedUploadedDate = uploadedDate && this.getFormattedDate(uploadedDate);
+
+		const plantTypes = [
+			...new Set(trees.filter(({ plantType }) => !!plantType).map(({ plantType }) => plantType)),
+		];
 
 		return (
 			<Container style={styles.container}>
@@ -186,7 +181,9 @@ class TreeGroupDetails extends React.Component {
 				</View>
 
 				<View style={styles.heading}>
-					<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+					<Text style={styles.plantType}>
+						{plantTypes.join(', ') || 'Plant type not specified'}
+					</Text>
 					<View style={styles.modifyButtonContainer}>
 						{/* {this.isModerator() && this.getEditButton()} */}
 						{this.getDeleteButton()}
@@ -195,7 +192,7 @@ class TreeGroupDetails extends React.Component {
 
 				<View style={styles.treeDetailsGroupContainer}>
 					<ScrollView contentContainerStyle={styles.treeDetailsGroup}>
-						<Text style={styles.treeGroupInfo}>Number of plants: {plants}</Text>
+						<Text style={styles.treeGroupInfo}>Number of plants: {trees.length}</Text>
 						{owner && owner.displayName && (
 							<Text style={styles.treeGroupInfo}>Uploaded by : {owner.displayName}</Text>
 						)}

@@ -11,7 +11,7 @@ import Step4SetPhoto from './SetPhoto';
 import OptionsBar from '../../components/Navigation/OptionsBar';
 
 import * as colors from '../../styles/colors';
-import { addGroup } from '../../store/actions/tree.action';
+import { addGroup, resetNewTreeGroupData } from '../../store/actions/tree.action';
 import constants from '../../config/common';
 
 const { distributions } = constants;
@@ -47,7 +47,7 @@ const TransitionConfiguration = () => {
 	};
 };
 
-const Controller = ({ onBack, onNext, onDone }) => {
+const Controller = ({ onBack, onNext, onDone, disableNext, disableDone }) => {
 	return (
 		<SafeAreaView style={styles.safeAreaView}>
 			{onBack && (
@@ -56,13 +56,21 @@ const Controller = ({ onBack, onNext, onDone }) => {
 				</TouchableOpacity>
 			)}
 			{onNext && (
-				<TouchableOpacity style={styles.nextButton} onPress={onNext}>
-					<AntDesign name="arrowright" color={colors.black.toString()} size={32} />
+				<TouchableOpacity onPress={disableNext ? null : onNext} style={styles.nextButton}>
+					<AntDesign
+						name="arrowright"
+						color={disableNext ? colors.black.fade(0.8).toString() : colors.black.toString()}
+						size={32}
+					/>
 				</TouchableOpacity>
 			)}
 			{onDone && (
-				<TouchableOpacity onPress={onDone}>
-					<AntDesign name="check" color={colors.green.toString()} size={32} />
+				<TouchableOpacity onPress={disableDone ? null : onDone} style={styles.nextButton}>
+					<AntDesign
+						name="check"
+						color={disableNext ? colors.green.fade(0.8).toString() : colors.green.toString()}
+						size={32}
+					/>
 				</TouchableOpacity>
 			)}
 		</SafeAreaView>
@@ -116,7 +124,10 @@ class AddNewSpotScreen extends React.Component {
 					title="Add a spot"
 					leftOption={{
 						label: 'Cancel',
-						action: () => navigation.navigate('Home'),
+						action: () => {
+							navigation.navigate('Home');
+							navigation.state.params.resetNewTreeGroupData();
+						},
 					}}
 				/>
 			),
@@ -132,8 +143,18 @@ class AddNewSpotScreen extends React.Component {
 		return header;
 	};
 
+	componentDidMount() {
+		const { navigation, resetNewTreeGroupData } = this.props;
+		navigation.setParams({
+			resetNewTreeGroupData,
+		});
+	}
+
 	handleOnBack = () => {
-		const { navigation } = this.props;
+		const { navigation, resetNewTreeGroupData } = this.props;
+		if (currentStep === 0) {
+			resetNewTreeGroupData();
+		}
 		this.setState(
 			(prevState) => ({
 				...prevState,
@@ -205,6 +226,31 @@ class AddNewSpotScreen extends React.Component {
 		return data;
 	};
 
+	isNextDisabled = () => {
+		const { newTreeGroup } = this.props;
+		const { currentStep } = this.state;
+
+		const { distribution, trees, health, plantType, waterCycle } = newTreeGroup;
+		switch (currentStep) {
+			case 0:
+				return !distribution;
+			case 1:
+				return !(distribution && trees && trees.length);
+			case 2:
+				return !(distribution && trees && trees.length && health && plantType && waterCycle);
+			case 3:
+				return !(distribution && trees && trees.length && health && plantType && waterCycle);
+			default:
+				return true;
+		}
+	};
+
+	isDoneDisabled = () => {
+		const { newTreeGroup } = this.props;
+		const { distribution, trees, health, plantType, waterCycle } = newTreeGroup;
+		return !(distribution && trees && trees.length && health && plantType && waterCycle);
+	};
+
 	render() {
 		const maxSteps = 4;
 		const { currentStep } = this.state;
@@ -216,6 +262,8 @@ class AddNewSpotScreen extends React.Component {
 					onNext={currentStep < maxSteps - 1 ? this.handleOnNext : null}
 					onBack={currentStep !== 0 ? this.handleOnBack : null}
 					onDone={currentStep === maxSteps - 1 ? this.handleOnDone : null}
+					disableNext={this.isNextDisabled()}
+					disableDone={this.isDoneDisabled()}
 				/>
 			</View>
 		);
@@ -251,6 +299,8 @@ const styles = {
 	backButton: {
 		marginRight: 'auto',
 	},
+	disabledNext: { backgroundColor: colors.black.fade(0.5) },
+	disabledDone: { backgroundColor: colors.green.fade(0.5) },
 	nextButton: {},
 };
 
@@ -260,6 +310,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	addGroup: (...params) => dispatch(addGroup(...params)),
+	resetNewTreeGroupData: () => dispatch(resetNewTreeGroupData()),
 });
 
 export default connect(

@@ -68,6 +68,7 @@ export const fetchTreeGroups = (
 			noloading: true,
 		});
 		dispatch(fetchTreeGroupsSuccess(response.data));
+		dispatch(resetNewTreeGroupData());
 		Toast.show({
 			text: 'Getting nearby plants.',
 			duration: 2000,
@@ -355,7 +356,6 @@ export const setNewTreeGroupData = (payload) => ({
 	payload,
 });
 
-export const resetNewTreeGroupData = (payload) => ({
+export const resetNewTreeGroupData = () => ({
 	type: RESET_NEW_TREE_GROUP,
-	payload,
 });

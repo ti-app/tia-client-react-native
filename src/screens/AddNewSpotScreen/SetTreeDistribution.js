@@ -29,13 +29,14 @@ class SetTreeDistributions extends React.Component {
 		const { setNewTreeGroupData, userLocation } = this.props;
 		const distributionEntry = Object.entries(distribution).find((_) => _[1] === true);
 		if (distributionEntry && distributionEntry[0]) {
-			setNewTreeGroupData({ distribution: distributionEntry[0] });
-
 			if (distributionEntry[0] === distributions.SINGLE) {
 				const { latitude, longitude } = userLocation;
-				setNewTreeGroupData({ trees: [{ latitude, longitude }] });
+				setNewTreeGroupData({
+					trees: [{ latitude, longitude }],
+					distribution: distributions.SINGLE,
+				});
 			} else {
-				setNewTreeGroupData({ trees: [] });
+				setNewTreeGroupData({ trees: [], distribution: distributions.LINE });
 			}
 		}
 	};
