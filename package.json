@@ -6,6 +6,7 @@
 		"android": "react-native run-android --port 8082",
 		"ios": "react-native run-ios --port 8082",
 		"start": "react-native start",
+		"bundle-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
 		"test": "jest",
 		"lint": "eslint ."
 	},
