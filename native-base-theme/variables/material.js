@@ -1,14 +1,15 @@
-// @flow
-
 import color from 'color';
-
 import { Platform, Dimensions, PixelRatio } from 'react-native';
+
+import { PLATFORM } from './commonColor';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 const platform = Platform.OS;
-const platformStyle = 'material';
-const isIphoneX = platform === 'ios' && (deviceHeight === 812 || deviceWidth === 812);
+const platformStyle = PLATFORM.MATERIAL;
+const isIphoneX =
+	platform === PLATFORM.IOS &&
+	(deviceHeight === 812 || deviceWidth === 812 || deviceHeight === 896 || deviceWidth === 896);
 
 export default {
 	platformStyle,
@@ -21,11 +22,24 @@ export default {
 	expandedIconStyle: '#000',
 	accordionBorderColor: '#d3d3d3',
 
+	// ActionSheet
+	elevation: 4,
+	containerTouchableBackgroundColor: 'rgba(0,0,0,0.4)',
+	innerTouchableBackgroundColor: '#fff',
+	listItemHeight: 50,
+	listItemBorderColor: 'transparent',
+	marginHorizontal: -15,
+	marginLeft: 14,
+	marginTop: 15,
+	minHeight: 56,
+	padding: 15,
+	touchableTextColor: '#757575',
+
 	// Android
 	androidRipple: true,
 	androidRippleColor: 'rgba(256, 256, 256, 0.3)',
 	androidRippleColorDark: 'rgba(0, 0, 0, 0.15)',
-	btnUppercaseAndroidText: true,
+	buttonUppercaseAndroidText: true,
 
 	// Badge
 	badgeBg: '#ED1727',
@@ -33,47 +47,46 @@ export default {
 	badgePadding: 0,
 
 	// Button
-	btnFontFamily: 'Roboto',
-	btnDisabledBg: '#b5b5b5',
+	buttonFontFamily: 'Roboto',
+	buttonDisabledBg: '#b5b5b5',
 	buttonPadding: 6,
-
-	get btnPrimaryBg() {
+	get buttonPrimaryBg() {
 		return this.brandPrimary;
 	},
-	get btnPrimaryColor() {
+	get buttonPrimaryColor() {
 		return this.inverseTextColor;
 	},
-	get btnInfoBg() {
+	get buttonInfoBg() {
 		return this.brandInfo;
 	},
-	get btnInfoColor() {
+	get buttonInfoColor() {
 		return this.inverseTextColor;
 	},
-	get btnSuccessBg() {
+	get buttonSuccessBg() {
 		return this.brandSuccess;
 	},
-	get btnSuccessColor() {
+	get buttonSuccessColor() {
 		return this.inverseTextColor;
 	},
-	get btnDangerBg() {
+	get buttonDangerBg() {
 		return this.brandDanger;
 	},
-	get btnDangerColor() {
+	get buttonDangerColor() {
 		return this.inverseTextColor;
 	},
-	get btnWarningBg() {
+	get buttonWarningBg() {
 		return this.brandWarning;
 	},
-	get btnWarningColor() {
+	get buttonWarningColor() {
 		return this.inverseTextColor;
 	},
-	get btnTextSize() {
+	get buttonTextSize() {
 		return this.fontSizeBase - 1;
 	},
-	get btnTextSizeLarge() {
+	get buttonTextSizeLarge() {
 		return this.fontSizeBase * 1.5;
 	},
-	get btnTextSizeSmall() {
+	get buttonTextSizeSmall() {
 		return this.fontSizeBase * 0.8;
 	},
 	get borderRadiusLarge() {
@@ -90,7 +103,7 @@ export default {
 	cardDefaultBg: '#fff',
 	cardBorderColor: '#ccc',
 	cardBorderRadius: 2,
-	cardItemPadding: platform === 'ios' ? 10 : 12,
+	cardItemPadding: platform === PLATFORM.IOS ? 10 : 12,
 
 	// CheckBox
 	CheckboxRadius: 0,
@@ -112,7 +125,6 @@ export default {
 	brandWarning: '#f5a623', // tia-orange
 	brandDark: '#5f5d70', // tia-darkest-gray
 	brandLight: '#f6f6f9', // tia-light-white
-	brandGrey: '#a8a5a0', // tia-light-grey
 
 	// Container
 	containerBgColor: '#fff',
@@ -120,6 +132,9 @@ export default {
 	// Date Picker
 	datePickerTextColor: '#000',
 	datePickerBg: 'transparent',
+
+	// FAB
+	fabWidth: 56,
 
 	// Font
 	DefaultFontSize: 16,
@@ -154,8 +169,8 @@ export default {
 	toolbarHeight: 56,
 	toolbarSearchIconSize: 23,
 	toolbarInputColor: '#fff',
-	searchBarHeight: platform === 'ios' ? 30 : 40,
-	searchBarInputHeight: platform === 'ios' ? 40 : 50,
+	searchBarHeight: platform === PLATFORM.IOS ? 30 : 40,
+	searchBarInputHeight: platform === PLATFORM.IOS ? 40 : 50,
 	toolbarBtnTextColor: '#fff',
 	toolbarDefaultBorder: '#3F51B5',
 	iosStatusbar: 'light-content',
@@ -189,7 +204,7 @@ export default {
 	},
 
 	// Line Height
-	btnLineHeight: 19,
+	buttonLineHeight: 19,
 	lineHeightH1: 32,
 	lineHeightH2: 27,
 	lineHeightH3: 22,

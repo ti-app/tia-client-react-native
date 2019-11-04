@@ -1,8 +1,6 @@
-// @flow
-
 import variable from './../variables/platform';
 
-export default (variables /*: * */ = variable) => {
+export default (variables /* : * */ = variable) => {
 	const checkBoxTheme = {
 		'.checked': {
 			'NativeBase.Icon': {
@@ -29,8 +27,9 @@ export default (variables /*: * */ = variable) => {
 		width: variables.checkboxSize,
 		height: variables.checkboxSize,
 		borderWidth: variables.CheckboxBorderWidth,
-		paddingLeft: variables.CheckboxPaddingLeft,
+		paddingLeft: variables.CheckboxPaddingLeft - 1,
 		paddingBottom: variables.CheckboxPaddingBottom,
+		left: 10,
 	};
 
 	return checkBoxTheme;

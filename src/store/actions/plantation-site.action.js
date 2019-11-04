@@ -1,9 +1,9 @@
 import { Toast } from 'native-base';
 
-import apiClient from '../../utils/ApiClient';
+import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/ErrorToast';
-import NavigationUtil from '../../utils/Navigation';
+import showErrorToast from '../../utils/errorToasts';
+import NavigationUtil from '../../utils/navigation';
 
 export const ADD_PLANTATION_SITE = 'ADD_PLANTATION_SITE';
 export const FETCH_PLANTATION_SITES = 'FETCH_PLANTATION_SITES';

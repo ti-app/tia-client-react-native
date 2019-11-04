@@ -25,3 +25,7 @@ const authReducer = (state = initialState, action) => {
 };
 
 export default authReducer;
+
+export const selectUser = (state) => state.auth.user;
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+export const selectUserRole = (state) => state.auth.role;

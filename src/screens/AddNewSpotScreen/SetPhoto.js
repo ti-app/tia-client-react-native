@@ -1,84 +1,81 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { View, Text, Container } from 'native-base';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-maps';
-import { Permissions } from 'react-native-unimodules';
-import * as ImagePicker from 'expo-image-picker';
+import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import ImagePicker from 'react-native-image-crop-picker';
 
-import Tree from '../../components/Map/Tree';
-import { setNewTreeGroupData } from '../../store/actions/tree.action';
+import Tree from '../../shared/Map/Tree/Tree';
+import * as treeActions from '../../store/actions/tree.action';
+import { selectUserLocation } from '../../store/reducers/location.reducer';
+import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 
-class AddNewSpotScreen extends React.Component {
-	state = {
-		centerBias: 0.00015,
-	};
+const centerBias = 0.00015;
+const SetPhoto = () => {
+	const userLocation = useSelector(selectUserLocation);
+	const newTreeGroup = useSelector(selectNewTreeGroup);
 
-	static navigationOptions = () => ({ header: null });
+	const dispatch = useDispatch();
+	const setNewTreeGroupData = useCallback(
+		(...params) => dispatch(treeActions.setNewTreeGroupData(...params)),
+		[dispatch]
+	);
 
-	takePhoto = async () => {
-		const { status: cameraPerm } = await Permissions.askAsync(Permissions.CAMERA);
+	const takePhoto = async () => {
+		const result = await request(PERMISSIONS.ANDROID.CAMERA);
 
-		const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-		if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
-			const pickerResult = await ImagePicker.launchCameraAsync({ quality: 0.75 });
-			const { setNewTreeGroupData } = this.props;
-			setNewTreeGroupData({ photo: pickerResult.uri });
+		if (result === RESULTS.GRANTED) {
+			const pickerResult = await ImagePicker.openCamera({ compressImageQuality: 0.75 });
+			setNewTreeGroupData({ photo: pickerResult.path });
 		}
 	};
 
-	renderTrees = (health) => {
-		const { newTreeGroup } = this.props;
+	const renderTrees = (health) => {
 		const { trees } = newTreeGroup;
 		return trees.map((aCoord, idx) => (
-			// eslint-disable-next-line react/no-array-index-key
 			<Tree key={idx} coordinate={aCoord} status={health || 'healthy'} />
 		));
 	};
 
-	render() {
-		const { centerBias } = this.state;
-		const { userLocation, newTreeGroup } = this.props;
-		const { latitude, longitude } = userLocation;
-		const { photo, health } = newTreeGroup;
+	const { latitude, longitude } = userLocation;
+	const { photo, health } = newTreeGroup;
 
-		return (
-			<Container style={styles.container}>
-				<View style={styles.mapViewContainer}>
-					<MapView
-						style={styles.mapView}
-						initialRegion={{
-							latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
-							longitude,
-							latitudeDelta: 0.000882007226706992,
-							longitudeDelta: 0.000752057826519012,
-						}}
-						scrollEnabled={false}
-						pitchEnabled={false}
-						rotateEnabled={false}
-						zoomEnabled={false}
-					>
-						{this.renderTrees(health)}
-					</MapView>
-				</View>
+	return (
+		<Container style={styles.container}>
+			<View style={styles.mapViewContainer}>
+				<MapView
+					style={styles.mapView}
+					initialRegion={{
+						latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
+						longitude,
+						latitudeDelta: 0.000882007226706992,
+						longitudeDelta: 0.000752057826519012,
+					}}
+					scrollEnabled={false}
+					pitchEnabled={false}
+					rotateEnabled={false}
+					zoomEnabled={false}
+				>
+					{renderTrees(health)}
+				</MapView>
+			</View>
 
-				<View style={styles.formContainer}>
-					<Text style={styles.formTitle}>Add Photo</Text>
-					<ScrollView contentContainerStyle={styles.form}>
-						{photo ? (
-							<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
-						) : (
-							<TouchableOpacity style={styles.imageUploadContainer} onPress={this.takePhoto}>
-								<Text> Take a photo</Text>
-							</TouchableOpacity>
-						)}
-					</ScrollView>
-				</View>
-			</Container>
-		);
-	}
-}
+			<View style={styles.formContainer}>
+				<Text style={styles.formTitle}>Add Photo</Text>
+				<ScrollView contentContainerStyle={styles.form}>
+					{photo ? (
+						<Image source={{ uri: photo }} resizeMode="contain" style={styles.image} />
+					) : (
+						<TouchableOpacity style={styles.imageUploadContainer} onPress={takePhoto}>
+							<Text> Take a photo</Text>
+						</TouchableOpacity>
+					)}
+				</ScrollView>
+			</View>
+		</Container>
+	);
+};
 
 const styles = StyleSheet.create({
 	container: {
@@ -123,7 +120,6 @@ const mapDispatchToProps = (dispatch) => ({
 	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
 });
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(AddNewSpotScreen);
+SetPhoto.navigationOptions = () => ({ header: null });
+
+export default SetPhoto;

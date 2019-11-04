@@ -25,3 +25,7 @@ const uiInteractionsReducer = (state = initialState, action) => {
 };
 
 export default uiInteractionsReducer;
+
+export const selectLoading = (state) => state.ui.loading;
+export const selectIsFilterOpen = (state) => state.ui.isFilterOpen;
+export const selectIsTreeDetailsOpen = (state) => state.ui.isTreeDetailsOpen;

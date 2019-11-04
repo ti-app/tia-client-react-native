@@ -1,9 +1,9 @@
 import { Toast } from 'native-base';
 
-import apiClient from '../../utils/ApiClient';
+import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/ErrorToast';
-import NavigationUtil from '../../utils/Navigation';
+import showErrorToast from '../../utils/errorToasts';
+import NavigationUtil from '../../utils/navigation';
 
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
@@ -190,7 +190,6 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 	try {
 		const { _id } = tree;
 		const url = `/tree/${_id}`;
-		console.log(`[tree-action::deleteTree] making request to "${url}"`);
 		await apiClient({
 			url,
 			headers: {
@@ -199,7 +198,6 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 			method: 'DELETE',
 			noloading: true,
 		});
-		console.log(`[tree-action::deleteTree] request to "${url}" was successful`);
 		Toast.show({
 			text: 'Tree was successfully deleted',
 			duration: 1000,

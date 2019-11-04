@@ -16,7 +16,7 @@ const deg2rad = (deg) => {
 	return deg * (Math.PI / 180);
 };
 
-export const getTreeCoordsByNumberOfTrees = (endpoints, numberOfPlants) => {
+const getTreeCoordsByNumberOfTrees = (endpoints, numberOfPlants) => {
 	const start = endpoints[0];
 	const end = endpoints[1];
 	const modifiedCoordinates = [];
@@ -50,7 +50,7 @@ export const getTreeCoordsByNumberOfTrees = (endpoints, numberOfPlants) => {
 };
 
 // spacing is in meters
-export const getTreeCoordsBySpacing = (endpoints, spacing) => {
+const getTreeCoordsBySpacing = (endpoints, spacing) => {
 	const start = endpoints[0];
 	const end = endpoints[1];
 	const modifiedCoordinates = [];
@@ -82,7 +82,21 @@ export const getTreeCoordsBySpacing = (endpoints, spacing) => {
 		modifiedCoordinates.push({ latitude: newLat, longitude: newLng });
 	}
 
-	console.log(distance, chunks, modifiedCoordinates.length);
-
 	return modifiedCoordinates;
+};
+
+export const calculateTreeCoordinates = ({ spacing, type, numberOfPlants, endpoints }) => {
+	if (endpoints.length === 2) {
+		let modifiedTrees = [];
+
+		if (type === 'spacing') {
+			if (spacing > 0) {
+				modifiedTrees = getTreeCoordsBySpacing(endpoints, spacing);
+			}
+		} else {
+			modifiedTrees = getTreeCoordsByNumberOfTrees(endpoints, numberOfPlants);
+		}
+
+		return [endpoints[0], ...modifiedTrees, endpoints[1]];
+	}
 };

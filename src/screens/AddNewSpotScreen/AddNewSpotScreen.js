@@ -1,17 +1,17 @@
-import React from 'react';
-import { createStackNavigator } from 'react-navigation';
-import { connect } from 'react-redux';
-import { SafeAreaView, View, Animated, Easing, TouchableOpacity, Platform } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import React, { useState, useCallback, useEffect } from 'react';
+import { createStackNavigator } from 'react-navigation-stack';
+import { useSelector, useDispatch } from 'react-redux';
+import { SafeAreaView, Animated, Easing, TouchableOpacity, Platform } from 'react-native';
+import { View, Icon } from 'native-base';
+
 import Step1SetTreeDistribution from './SetTreeDistribution';
 import Step2SetTreeLocations from './SetTreeLocations';
 import Step3SetTreeDetails from './SetTreeDetails';
 import Step4SetPhoto from './SetPhoto';
-
-import OptionsBar from '../../components/Navigation/OptionsBar';
-
+import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import * as colors from '../../styles/colors';
-import { addGroup, resetNewTreeGroupData } from '../../store/actions/tree.action';
+import * as treeActions from '../../store/actions/tree.action';
+import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import constants from '../../config/common';
 
 const { distributions } = constants;
@@ -52,24 +52,35 @@ const Controller = ({ onBack, onNext, onDone, disableNext, disableDone }) => {
 		<SafeAreaView style={styles.safeAreaView}>
 			{onBack && (
 				<TouchableOpacity style={styles.backButton} onPress={onBack}>
-					<AntDesign name="arrowleft" color={colors.black.toString()} size={32} />
+					<Icon
+						type="MaterialIcons"
+						name="arrow-back"
+						style={{ color: colors.black.toString() }}
+						fontSize={32}
+					/>
 				</TouchableOpacity>
 			)}
 			{onNext && (
 				<TouchableOpacity onPress={disableNext ? null : onNext} style={styles.nextButton}>
-					<AntDesign
-						name="arrowright"
-						color={disableNext ? colors.black.fade(0.8).toString() : colors.black.toString()}
-						size={32}
+					<Icon
+						type="MaterialIcons"
+						name="arrow-forward"
+						style={{
+							color: disableNext ? colors.black.fade(0.8).toString() : colors.black.toString(),
+							fontSize: 32,
+						}}
 					/>
 				</TouchableOpacity>
 			)}
 			{onDone && (
 				<TouchableOpacity onPress={disableDone ? null : onDone} style={styles.nextButton}>
-					<AntDesign
+					<Icon
+						type="MaterialIcons"
 						name="check"
-						color={disableNext ? colors.green.fade(0.8).toString() : colors.green.toString()}
-						size={32}
+						style={{
+							color: disableNext ? colors.green.fade(0.8).toString() : colors.green.toString(),
+							fontSize: 32,
+						}}
 					/>
 				</TouchableOpacity>
 			)}
@@ -106,69 +117,37 @@ const SNavigator = createStackNavigator(
 	}
 );
 
-class AddNewSpotScreen extends React.Component {
-	static router = SNavigator.router;
+const stepsArray = Object.keys(addSpotSteps).map((k) => addSpotSteps[k]);
+const maxSteps = 4;
 
-	constructor(props) {
-		super(props);
-		this.stepsArray = Object.keys(addSpotSteps).map((k) => addSpotSteps[k]);
-		this.state = {
-			currentStep: 0,
-		};
-	}
+const AddNewSpotScreen = ({ navigation }) => {
+	const [currentStep, setCurrentStep] = useState(0);
 
-	static navigationOptions = ({ navigation }) => {
-		const header = {
-			headerTitle: (
-				<OptionsBar
-					title="Add a spot"
-					leftOption={{
-						label: 'Cancel',
-						action: () => {
-							navigation.navigate('Home');
-							navigation.state.params.resetNewTreeGroupData();
-						},
-					}}
-				/>
-			),
-			headerTransparent: true,
-			headerStyle: {
-				height: 80,
-				backgroundColor: '#ffff',
-				opacity: 0.8,
-			},
-			headerLeft: null,
-		};
+	const newTreeGroup = useSelector(selectNewTreeGroup);
 
-		return header;
-	};
+	const dispatch = useDispatch();
+	const addGroup = useCallback((...params) => dispatch(treeActions.addGroup(...params)), [
+		dispatch,
+	]);
+	const resetNewTreeGroupData = useCallback(() => dispatch(treeActions.resetNewTreeGroupData()), [
+		dispatch,
+	]);
 
-	componentDidMount() {
-		const { navigation, resetNewTreeGroupData } = this.props;
+	useEffect(() => {
 		navigation.setParams({
 			resetNewTreeGroupData,
 		});
-	}
+	}, []);
 
-	handleOnBack = () => {
-		const { navigation, resetNewTreeGroupData } = this.props;
+	const handleOnBack = () => {
 		if (currentStep === 0) {
 			resetNewTreeGroupData();
 		}
-		this.setState(
-			(prevState) => ({
-				...prevState,
-				currentStep: prevState.currentStep - 1,
-			}),
-			() => {
-				navigation.pop();
-			}
-		);
+		setCurrentStep((_currentStep) => _currentStep - 1);
+		navigation.pop();
 	};
 
-	handleOnNext = () => {
-		const { currentStep } = this.state;
-		const { navigation, newTreeGroup } = this.props;
+	const handleOnNext = () => {
 		const { distribution } = newTreeGroup;
 
 		let nextStep;
@@ -179,21 +158,14 @@ class AddNewSpotScreen extends React.Component {
 			nextStep = currentStep + 1;
 		}
 
-		this.setState(
-			{
-				currentStep: nextStep,
-			},
-			() => {
-				navigation.navigate(this.stepsArray[nextStep]);
-			}
-		);
+		setCurrentStep(nextStep);
+		navigation.navigate(stepsArray[nextStep]);
 	};
 
-	handleOnDone = () => {
-		const { newTreeGroup, addGroup } = this.props;
+	const handleOnDone = () => {
 		const { distribution, trees, health, plantType, waterCycle, photo } = newTreeGroup;
 
-		const formData = this.createFormData(photo, {
+		const formData = createFormData(photo, {
 			distribution,
 			trees: JSON.stringify(
 				trees.map(({ latitude, longitude }) => ({ lat: latitude, lng: longitude }))
@@ -206,7 +178,7 @@ class AddNewSpotScreen extends React.Component {
 		addGroup(formData);
 	};
 
-	createFormData = (uri, body) => {
+	const createFormData = (uri, body) => {
 		const data = new FormData();
 		if (uri) {
 			const filename = uri.split('/').pop();
@@ -226,10 +198,7 @@ class AddNewSpotScreen extends React.Component {
 		return data;
 	};
 
-	isNextDisabled = () => {
-		const { newTreeGroup } = this.props;
-		const { currentStep } = this.state;
-
+	const isNextDisabled = () => {
 		const { distribution, trees, health, plantType, waterCycle } = newTreeGroup;
 		switch (currentStep) {
 			case 0:
@@ -245,30 +214,24 @@ class AddNewSpotScreen extends React.Component {
 		}
 	};
 
-	isDoneDisabled = () => {
-		const { newTreeGroup } = this.props;
+	const isDoneDisabled = () => {
 		const { distribution, trees, health, plantType, waterCycle } = newTreeGroup;
 		return !(distribution && trees && trees.length && health && plantType && waterCycle);
 	};
 
-	render() {
-		const maxSteps = 4;
-		const { currentStep } = this.state;
-		const { navigation } = this.props;
-		return (
-			<View style={{ flex: 1 }}>
-				<SNavigator navigation={navigation} />
-				<Controller
-					onNext={currentStep < maxSteps - 1 ? this.handleOnNext : null}
-					onBack={currentStep !== 0 ? this.handleOnBack : null}
-					onDone={currentStep === maxSteps - 1 ? this.handleOnDone : null}
-					disableNext={this.isNextDisabled()}
-					disableDone={this.isDoneDisabled()}
-				/>
-			</View>
-		);
-	}
-}
+	return (
+		<View style={{ flex: 1 }}>
+			<SNavigator navigation={navigation} />
+			<Controller
+				onNext={currentStep < maxSteps - 1 ? handleOnNext : null}
+				onBack={currentStep !== 0 ? handleOnBack : null}
+				onDone={currentStep === maxSteps - 1 ? handleOnDone : null}
+				disableNext={isNextDisabled()}
+				disableDone={isDoneDisabled()}
+			/>
+		</View>
+	);
+};
 
 const styles = {
 	container: {
@@ -304,16 +267,32 @@ const styles = {
 	nextButton: {},
 };
 
-const mapStateToProps = (state) => ({
-	newTreeGroup: state.tree.newTreeGroup,
-});
+AddNewSpotScreen.router = SNavigator.router;
+AddNewSpotScreen.navigationOptions = ({ navigation }) => {
+	const header = {
+		headerTitle: (
+			<OptionsBar
+				title="Add a spot"
+				leftOption={{
+					label: 'Cancel',
+					action: () => {
+						navigation.navigate('Home');
+						console.log(navigation.state.params);
+						navigation.state.params.resetNewTreeGroupData();
+					},
+				}}
+			/>
+		),
+		headerTransparent: true,
+		headerStyle: {
+			height: 80,
+			backgroundColor: '#ffff',
+			opacity: 0.8,
+		},
+		headerLeft: null,
+	};
 
-const mapDispatchToProps = (dispatch) => ({
-	addGroup: (...params) => dispatch(addGroup(...params)),
-	resetNewTreeGroupData: () => dispatch(resetNewTreeGroupData()),
-});
+	return header;
+};
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(AddNewSpotScreen);
+export default AddNewSpotScreen;

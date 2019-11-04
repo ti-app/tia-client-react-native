@@ -1,5 +1,5 @@
-import { Permissions } from 'react-native-unimodules';
-import * as Location from 'expo-location';
+import { RESULTS, PERMISSIONS, request } from 'react-native-permissions';
+import Geolocation from 'react-native-geolocation-service';
 
 // import { fetchTreeGroups } from './tree.action';
 
@@ -8,27 +8,37 @@ export const FETCH_USER_LOCATION = 'FETCH_USER_LOCATION';
 export const FETCH_USER_LOCATION_SUCCESS = 'FETCH_USER_LOCATION_SUCCESS';
 
 export const fetchUserLocation = () => {
+	console.log('fetching');
 	return async (dispatch) => {
 		try {
-			const { status } = await Permissions.askAsync(Permissions.LOCATION);
+			const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
 
-			if (status !== 'granted') {
+			if (result !== RESULTS.GRANTED) {
 				// TODO: think of something what to do in here.
 			}
 
 			// I don't really understand why we need to use setTimeout()
 			// Help yourself with the link below. And do tell me if you understand why we need to use this.
 			// https://github.com/expo/expo/issues/946#issuecomment-453181014
-			setTimeout(async () => {
-				try {
-					const locationData = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-					dispatch(fetchUserLocationSuccess(locationData));
-				} catch (err) {
-					console.log('Error while getting USER position', err);
-				}
+			setTimeout(() => {
+				// TODO: Not sure if following works with async/await. Try and find a way, just for the heck of consistency.
+				Geolocation.getCurrentPosition(
+					(position) => {
+						dispatch(fetchUserLocationSuccess(position));
+						console.log(position);
+					},
+					(error) => {
+						console.err('Error while getting current position', error);
+					},
+					{
+						enableHighAccuracy: true,
+						timeout: 15000,
+						maximumAge: 10000,
+					}
+				);
 			});
 		} catch (err) {
-			console.log('Error while asking for permisssion', err);
+			console.err('Error while asking for permisssion', err);
 		}
 	};
 };

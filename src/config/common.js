@@ -9,4 +9,11 @@ export default {
 		SINGLE: 'single',
 		LINE: 'line',
 	},
+	launchStatus: {
+		initial: 'INITIAL',
+		notInitial: 'NOT_INITIAL',
+	},
+	asyncStorage: {
+		launcStatus: 'LAUNCH_STATUS',
+	},
 };

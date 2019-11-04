@@ -10,7 +10,6 @@ const {
 	FIREBASE_CONFIG_MESSAGING_SENDER_ID,
 } = Config;
 
-// eslint-disable-next-line import/prefer-default-export
 export const initializeFirebase = () => {
 	if (!firebase.apps.length) {
 		const firebaseConfig = {

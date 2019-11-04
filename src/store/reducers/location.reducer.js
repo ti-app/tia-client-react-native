@@ -20,3 +20,5 @@ const locationReducer = (state = initialState, action) => {
 };
 
 export default locationReducer;
+
+export const selectUserLocation = (state) => state.location.userLocation;

@@ -1,10 +1,9 @@
-// @flow
-
 import { PixelRatio, StatusBar } from 'react-native';
 
 import variable from './../variables/platform';
+import { PLATFORM } from './../variables/commonColor';
 
-export default (variables /*: * */ = variable) => {
+export default (variables /* : * */ = variable) => {
 	const platformStyle = variables.platformStyle;
 	const platform = variables.platform;
 
@@ -49,9 +48,9 @@ export default (variables /*: * */ = variable) => {
 			shadowOffset: null,
 			shadowRadius: null,
 			shadowOpacity: null,
-			paddingTop: platform === 'android' ? StatusBar.currentHeight : undefined,
+			paddingTop: platform === PLATFORM.ANDROID ? StatusBar.currentHeight : undefined,
 			height:
-				platform === 'android'
+				platform === PLATFORM.ANDROID
 					? variables.toolbarHeight + StatusBar.currentHeight
 					: variables.toolbarHeight,
 		},
@@ -97,15 +96,15 @@ export default (variables /*: * */ = variable) => {
 		},
 		'.noLeft': {
 			'NativeBase.Left': {
-				width: platform === 'ios' ? undefined : 0,
-				flex: platform === 'ios' ? 1 : 0,
+				width: platform === PLATFORM.IOS ? undefined : 0,
+				flex: platform === PLATFORM.IOS ? 1 : 0,
 			},
 			'NativeBase.Body': {
 				'NativeBase.Title': {
-					paddingLeft: platform === 'ios' ? undefined : 10,
+					paddingLeft: platform === PLATFORM.IOS ? undefined : 10,
 				},
 				'NativeBase.Subtitle': {
-					paddingLeft: platform === 'ios' ? undefined : 10,
+					paddingLeft: platform === PLATFORM.IOS ? undefined : 10,
 				},
 			},
 		},
@@ -163,16 +162,16 @@ export default (variables /*: * */ = variable) => {
 						fontWeight: '500',
 					},
 					paddingHorizontal: null,
-					paddingLeft: platform === 'ios' ? 10 : null,
+					paddingLeft: platform === PLATFORM.IOS ? 10 : null,
 				},
-				paddingHorizontal: platform === 'ios' ? undefined : null,
-				width: platform === 'ios' ? undefined : 0,
-				height: platform === 'ios' ? undefined : 0,
+				paddingHorizontal: platform === PLATFORM.IOS ? undefined : null,
+				width: platform === PLATFORM.IOS ? undefined : 0,
+				height: platform === PLATFORM.IOS ? undefined : 0,
 			},
 		},
 		'.rounded': {
 			'NativeBase.Item': {
-				borderRadius: platform === 'ios' && platformStyle !== 'material' ? 25 : 3,
+				borderRadius: platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? 25 : 3,
 			},
 		},
 		'NativeBase.Left': {
@@ -189,7 +188,7 @@ export default (variables /*: * */ = variable) => {
 					},
 					'NativeBase.Text': {
 						color: variables.toolbarBtnTextColor,
-						fontSize: platform === 'ios' ? 17 : 0,
+						fontSize: platform === PLATFORM.IOS ? 17 : 0,
 						marginLeft: 7,
 						lineHeight: 19.5,
 					},
@@ -202,11 +201,11 @@ export default (variables /*: * */ = variable) => {
 					},
 				},
 				'.transparent': {
-					marginLeft: platform === 'ios' && platformStyle !== 'material' ? -3 : 0,
+					marginLeft: platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? -3 : 0,
 					'NativeBase.Icon': {
 						color: variables.toolbarBtnColor,
 						fontSize:
-							platform === 'ios' && variables.platformStyle !== 'material'
+							platform === PLATFORM.IOS && variables.platformStyle !== PLATFORM.MATERIAL
 								? variables.iconHeaderSize + 1
 								: variables.iconHeaderSize,
 						marginTop: 0,
@@ -217,7 +216,7 @@ export default (variables /*: * */ = variable) => {
 					'NativeBase.IconNB': {
 						color: variables.toolbarBtnColor,
 						fontSize:
-							platform === 'ios' && variables.platformStyle !== 'material'
+							platform === PLATFORM.IOS && variables.platformStyle !== PLATFORM.MATERIAL
 								? variables.iconHeaderSize + 1
 								: variables.iconHeaderSize - 2,
 						marginTop: 0,
@@ -227,10 +226,11 @@ export default (variables /*: * */ = variable) => {
 					},
 					'NativeBase.Text': {
 						color: variables.toolbarBtnTextColor,
-						fontSize: platform === 'ios' ? 17 : 0,
-						top: platform === 'ios' ? 1 : -1.5,
-						paddingLeft: platform === 'ios' && platformStyle !== 'material' ? 2 : 5,
-						paddingRight: platform === 'ios' && platformStyle !== 'material' ? undefined : 10,
+						fontSize: platform === PLATFORM.IOS ? 17 : 0,
+						top: platform === PLATFORM.IOS ? 1 : -1.5,
+						paddingLeft: platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? 2 : 5,
+						paddingRight:
+							platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? undefined : 10,
 					},
 					backgroundColor: 'transparent',
 					borderColor: null,
@@ -248,20 +248,21 @@ export default (variables /*: * */ = variable) => {
 				},
 				alignSelf: null,
 				paddingRight: variables.buttonPadding,
-				paddingLeft: platform === 'ios' && platformStyle !== 'material' ? 4 : 8,
+				paddingLeft: platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? 4 : 8,
 			},
-			flex: platform === 'ios' && platformStyle !== 'material' ? 1 : 0.4,
+			flex: platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? 1 : 0.4,
 			alignSelf: 'center',
 			alignItems: 'flex-start',
 		},
 		'NativeBase.Body': {
 			flex: 1,
-			alignItems: platform === 'ios' && platformStyle !== 'material' ? 'center' : 'flex-start',
+			alignItems:
+				platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL ? 'center' : 'flex-start',
 			alignSelf: 'center',
 			'NativeBase.Segment': {
 				borderWidth: 0,
 				alignSelf: 'flex-end',
-				marginRight: platform === 'ios' ? -40 : -55,
+				marginRight: platform === PLATFORM.IOS ? -40 : -55,
 			},
 			'NativeBase.Button': {
 				alignSelf: 'center',
@@ -293,7 +294,7 @@ export default (variables /*: * */ = variable) => {
 					},
 					'NativeBase.Text': {
 						color: variables.toolbarBtnTextColor,
-						fontSize: platform === 'ios' ? 17 : 14,
+						fontSize: platform === PLATFORM.IOS ? 17 : 14,
 						lineHeight: 19.5,
 					},
 					'NativeBase.IconNB': {
@@ -305,7 +306,7 @@ export default (variables /*: * */ = variable) => {
 					},
 				},
 				'.transparent': {
-					marginRight: platform === 'ios' ? -9 : -5,
+					marginRight: platform === PLATFORM.IOS ? -9 : -5,
 					paddingLeft: 15,
 					paddingRight: 12,
 					paddingHorizontal: 15,
@@ -328,10 +329,12 @@ export default (variables /*: * */ = variable) => {
 					},
 					'NativeBase.Text': {
 						color: variables.toolbarBtnTextColor,
-						fontSize: platform === 'ios' ? 17 : 14,
-						top: platform === 'ios' ? 1 : -1.5,
+						fontSize: platform === PLATFORM.IOS ? 17 : 14,
+						top: platform === PLATFORM.IOS ? 1 : -1.5,
 						paddingRight:
-							platform === 'ios' && variables.platformStyle !== 'material' ? 0 : undefined,
+							platform === PLATFORM.IOS && variables.platformStyle !== PLATFORM.MATERIAL
+								? 0
+								: undefined,
 					},
 					backgroundColor: 'transparent',
 					borderColor: null,
@@ -359,21 +362,22 @@ export default (variables /*: * */ = variable) => {
 		backgroundColor: variables.toolbarDefaultBg,
 		flexDirection: 'row',
 		// paddingHorizontal: 10,
-		paddingLeft: platform === 'ios' && variables.platformStyle !== 'material' ? 6 : 10,
+		paddingLeft:
+			platform === PLATFORM.IOS && variables.platformStyle !== PLATFORM.MATERIAL ? 6 : 10,
 		paddingRight: 10,
 		justifyContent: 'center',
-		paddingTop: platform === 'ios' ? 18 : 0,
-		borderBottomWidth: platform === 'ios' ? 1 / PixelRatio.getPixelSizeForLayoutSize(1) : 0,
+		paddingTop: platform === PLATFORM.IOS ? 18 : 0,
+		borderBottomWidth: platform === PLATFORM.IOS ? 1 / PixelRatio.getPixelSizeForLayoutSize(1) : 0,
 		borderBottomColor: variables.toolbarDefaultBorder,
 		height:
-			variables.platform === 'ios' && variables.platformStyle === 'material'
-				? variables.toolbarHeight + StatusBar.height
+			variables.platform === PLATFORM.IOS && variables.platformStyle === PLATFORM.MATERIAL
+				? variables.toolbarHeight + 10
 				: variables.toolbarHeight,
 		elevation: 3,
-		shadowColor: platformStyle === 'material' ? '#000' : undefined,
-		shadowOffset: platformStyle === 'material' ? { width: 0, height: 2 } : undefined,
-		shadowOpacity: platformStyle === 'material' ? 0.2 : undefined,
-		shadowRadius: platformStyle === 'material' ? 1.2 : undefined,
+		shadowColor: platformStyle === PLATFORM.MATERIAL ? '#000' : undefined,
+		shadowOffset: platformStyle === PLATFORM.MATERIAL ? { width: 0, height: 2 } : undefined,
+		shadowOpacity: platformStyle === PLATFORM.MATERIAL ? 0.2 : undefined,
+		shadowRadius: platformStyle === PLATFORM.MATERIAL ? 1.2 : undefined,
 		top: 0,
 		left: 0,
 		right: 0,

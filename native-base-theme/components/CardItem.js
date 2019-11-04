@@ -1,9 +1,9 @@
-// @flow
-
 import { StyleSheet } from 'react-native';
-import variable from './../variables/platform';
 
-export default (variables /*: * */ = variable) => {
+import variable from './../variables/platform';
+import { PLATFORM } from './../variables/commonColor';
+
+export default (variables /* : * */ = variable) => {
 	const platform = variables.platform;
 	const transparentBtnCommon = {
 		'NativeBase.Text': {
@@ -59,7 +59,7 @@ export default (variables /*: * */ = variable) => {
 		},
 		'.content': {
 			'NativeBase.Text': {
-				color: platform === 'ios' ? '#555' : '#222',
+				color: platform === PLATFORM.IOS ? '#555' : '#222',
 				fontSize: variables.DefaultFontSize - 2,
 			},
 		},
@@ -132,12 +132,12 @@ export default (variables /*: * */ = variable) => {
 		'.header': {
 			'NativeBase.Text': {
 				fontSize: 16,
-				fontWeight: platform === 'ios' ? '600' : '500',
+				fontWeight: platform === PLATFORM.IOS ? '600' : '500',
 			},
 			'.bordered': {
 				'NativeBase.Text': {
 					color: variables.brandPrimary,
-					fontWeight: platform === 'ios' ? '600' : '500',
+					fontWeight: platform === PLATFORM.IOS ? '600' : '500',
 				},
 				borderBottomWidth: variables.borderWidth,
 			},
@@ -147,12 +147,12 @@ export default (variables /*: * */ = variable) => {
 		'.footer': {
 			'NativeBase.Text': {
 				fontSize: 16,
-				fontWeight: platform === 'ios' ? '600' : '500',
+				fontWeight: platform === PLATFORM.IOS ? '600' : '500',
 			},
 			'.bordered': {
 				'NativeBase.Text': {
 					color: variables.brandPrimary,
-					fontWeight: platform === 'ios' ? '600' : '500',
+					fontWeight: platform === PLATFORM.IOS ? '600' : '500',
 				},
 				borderTopWidth: variables.borderWidth,
 			},
@@ -186,7 +186,7 @@ export default (variables /*: * */ = variable) => {
 		},
 		flexDirection: 'row',
 		alignItems: 'center',
-		borderRadius: 2,
+		borderRadius: variables.cardBorderRadius,
 		padding: variables.cardItemPadding + 5,
 		paddingVertical: variables.cardItemPadding,
 		backgroundColor: variables.cardDefaultBg,

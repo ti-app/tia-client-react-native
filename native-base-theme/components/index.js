@@ -1,6 +1,7 @@
-// @flow
+/* eslint-disable no-param-reassign */
 
 import _ from 'lodash';
+
 import bodyTheme from './Body';
 import leftTheme from './Left';
 import rightTheme from './Right';
@@ -43,9 +44,9 @@ import listItemTheme from './ListItem';
 import formTheme from './Form';
 import separatorTheme from './Separator';
 import pickerTheme from './Picker';
-import variable from '../variables/platform';
+import variable from './../variables/platform';
 
-export default (variables = variable) => {
+export default (variables /* : * */ = variable) => {
 	const theme = {
 		variables,
 		'NativeBase.Left': {
@@ -94,7 +95,7 @@ export default (variables = variable) => {
 		},
 
 		'NativeBase.Card': {
-			...cardTheme(),
+			...cardTheme(variables),
 		},
 
 		'NativeBase.CardItem': {
@@ -217,8 +218,6 @@ export default (variables = variable) => {
 
 	const cssifyTheme = (grandparent, parent, parentKey) => {
 		_.forEach(parent, (style, styleName) => {
-			// console.log('styleName', styleName);
-			// console.log('parentKey', parentKey);
 			if (styleName.indexOf('.') === 0 && parentKey && parentKey.indexOf('.') === 0) {
 				if (grandparent) {
 					if (!grandparent[styleName]) {

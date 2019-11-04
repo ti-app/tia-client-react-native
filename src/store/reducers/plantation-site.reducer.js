@@ -28,3 +28,6 @@ const plantationSiteReducer = (state = initialState, action) => {
 };
 
 export default plantationSiteReducer;
+
+export const selectPlantationSites = (state) => state.plantationSite.plantationSites;
+export const selectSelectedPlantationSite = (state) => state.plantationSite.selectedPlantationSite;

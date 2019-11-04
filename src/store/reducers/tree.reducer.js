@@ -76,3 +76,8 @@ const treeReducer = (state = initialState, action) => {
 };
 
 export default treeReducer;
+
+export const selectTreeGroups = (state) => state.tree.treeGroups;
+export const selectSelectedTree = (state) => state.tree.selectedTree;
+export const selectSelectedTreeGroup = (state) => state.tree.selectedTreeGroup;
+export const selectNewTreeGroup = (state) => state.tree.newTreeGroup;

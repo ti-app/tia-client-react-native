@@ -1,14 +1,16 @@
-import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
-import HomeScreen from '../screens/HomeScreen';
-import AddPlantationSiteScreen from '../screens/AddPlantationSiteScreen';
-import UserProfileScreen from '../screens/UserProfileScreen';
-import FaqScreen from '../screens/FaqScreen';
-import TreeDetails from '../screens/TreeDetails';
-import SideDrawerContent from '../components/Home/SideDrawerContent';
-import EditTreeDetails from '../screens/EditTreeDetails';
-import PlantationSiteDetails from '../screens/PlantationSiteDetails';
-import EditPlantationSiteDetails from '../screens/EditPlantationSiteDetails';
-import TreeGroupDetails from '../screens/TreeGroupDetails';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import HomeScreen from '../screens/HomeScreen/HomeScreen';
+import AddPlantationSiteScreen from '../screens/AddPlantationSiteScreen/AddPlantationSiteScreen';
+import UserProfileScreen from '../screens/UserProfileScreen/UserProfileScreen';
+import FaqScreen from '../screens/FaqScreen/FaqScreen';
+import TreeDetails from '../screens/TreeDetails/TreeDetails';
+import SideDrawerContent from '../shared/SideDrawerContent/SideDrawerContent';
+import EditTreeDetails from '../screens/EditTreeDetails/EditTreeDetails';
+import PlantationSiteDetails from '../screens/PlantationSiteDetails/PlantationSiteDetails';
+import EditPlantationSiteDetails from '../screens/EditPlantationSiteDetails/EditPlantationSiteDetails';
+import TreeGroupDetails from '../screens/TreeGroupDetails/TreeGroupDetails';
 import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
 
 const MainNavigator = createStackNavigator(

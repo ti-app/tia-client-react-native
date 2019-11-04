@@ -1,5 +1,4 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { StyleProvider, Root } from 'native-base';
 import { Provider } from 'react-redux';
@@ -9,108 +8,52 @@ import getTheme from './native-base-theme/components';
 import material from './native-base-theme/variables/material';
 import store from './src/store';
 import AppContent from './src';
-import loadResourcesAsync from './src/utils/LoadResources';
-import * as colors from './src/styles/colors';
+import constants from './src/config/common';
+import IntroSlides from './src/utils/introSlides';
 
-export default class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			showIntroduction: false,
-		};
-	}
+const App = () => {
+	const [showIntro, setShowIntro] = useState(false);
 
-	async componentWillMount() {
-		const launchStatus = await this.getLaunchStatus();
-		this.setState({ showIntroduction: launchStatus === 'INITIAL' });
-	}
+	useEffect(() => {
+		setLaunchStatus();
+	}, []);
 
-	componentDidMount() {
-		loadResourcesAsync();
-	}
-
-	onIntroductionDone = async () => {
-		this.setState({ showIntroduction: false });
+	const onIntroductionDone = async () => {
+		setShowIntro(false);
 		try {
-			await AsyncStorage.setItem('LAUNCH_STATUS', 'NOT_INITIAL');
+			await AsyncStorage.setItem(
+				constants.asyncStorage.launcStatus,
+				constants.launchStatus.notInitial
+			);
 		} catch (error) {
-			console.log('Error setting launch status', error);
+			console.error('Error setting launch status', error);
 		}
 	};
 
-	getLaunchStatus = async () => {
+	const setLaunchStatus = async () => {
 		try {
-			const value = await AsyncStorage.getItem('LAUNCH_STATUS');
-			return value || 'INITIAL';
+			const value = await AsyncStorage.getItem(constants.asyncStorage.launcStatus);
+			const launchStatus = value || constants.launchStatus.initial;
+			setShowIntro(launchStatus === constants.launchStatus.initial);
 		} catch (error) {
-			console.log('Error gettings launch status', error);
+			console.error('Error gettings launch status', error);
 			throw error;
 		}
 	};
 
-	render() {
-		const { showIntroduction } = this.state;
-		if (showIntroduction) {
-			return <AppIntroSlider slides={slides} onDone={this.onIntroductionDone} />;
-		}
-
-		return (
-			<Root>
-				<Provider store={store}>
-					<StyleProvider style={getTheme(material)}>
-						<AppContent />
-					</StyleProvider>
-				</Provider>
-			</Root>
-		);
+	if (showIntro) {
+		return <AppIntroSlider slides={IntroSlides} onDone={onIntroductionDone} />;
 	}
-}
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: colors.white,
-	},
+	return (
+		<Root>
+			<Provider store={store}>
+				<StyleProvider style={getTheme(material)}>
+					<AppContent />
+				</StyleProvider>
+			</Provider>
+		</Root>
+	);
+};
 
-	loading: {
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		top: 0,
-		bottom: 0,
-		alignItems: 'center',
-		justifyContent: 'center',
-		opacity: 0.5,
-		backgroundColor: 'black',
-		zIndex: 99,
-	},
-});
-
-/* eslint-disable */
-const slides = [
-	{
-		key: 'intro_1',
-		title: 'Title 1',
-		text: 'Description.\nSay something cool',
-		image: require('./assets/images/tia_intro_1.png'),
-		imageStyle: styles.introImage,
-		backgroundColor: colors.green,
-	},
-	{
-		key: 'intro_2',
-		title: 'Title 2',
-		text: 'Other cool stuff',
-		image: require('./assets/images/tia_intro_1.png'),
-		imageStyle: styles.introImage,
-		backgroundColor: colors.yellow,
-	},
-	{
-		key: 'intro_3',
-		title: 'Rocket guy',
-		text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-		image: require('./assets/images/tia_intro_1.png'),
-		imageStyle: styles.introImage,
-		backgroundColor: colors.orange,
-	},
-];
-/* eslint-enable */
+export default App;
