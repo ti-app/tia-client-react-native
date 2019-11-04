@@ -17,7 +17,7 @@ jobs:
           key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
       - run: yarn install
-      - run: npx jetify
+      # - run: npx jetify
       - run:
           name: Setup environment file
           command: |
