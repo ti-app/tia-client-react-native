@@ -18,19 +18,13 @@ yarn global add react-native
 yarn install
 ```
 
-4: We are using React Native modules with native Java code that isn't converted to AndroidX, and our app is AndroidX. That is why following command:
+4: Create `.env` file in root, copy content from `https://ti-app.slack.com/archives/CE68JUXPC/p1564943184000300` and paste it in the file.
 
-```
-npx jetify
-```
+5: (Optional) Create `.prettierrc` in root and add your config ;)
 
-5: Create `.env` file in root, copy content from `https://ti-app.slack.com/archives/CE68JUXPC/p1564943184000300` and paste it in the file.
+6: Ensure that emulator is running or an android device is connected with `adb` setup properly.
 
-6: (Optional) Create `.prettierrc` in root and add your config ;)
-
-7: Ensure that emulator is running or an android device is connected with `adb` setup properly.
-
-8: Run following command in seperate terminal (not in integrated terminal of vscode).
+7: Run following command in seperate terminal (not in integrated terminal of vscode).
 
 ```
 react-native run-android
@@ -43,12 +37,6 @@ react-native run-android
 ## Debug Build:
 
 1:
-
-```
-react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-```
-
-2:
 
 ```
 cd android/
@@ -65,13 +53,7 @@ You can find the build here: `app/build/outputs/apk/`
 
 2: Get `tiarelase.keystore` from `https://ti-app.slack.com/files/UE5JTSF4Z/FLXHA0YUT/tiarelease.keystore` and put it in `./android/app` directory.
 
-3: Generate android bundle.
-
-```
-react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-```
-
-4: Generate a release build.
+3: Generate a release build.
 
 ```
 cd android
