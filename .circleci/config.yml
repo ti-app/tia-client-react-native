@@ -31,9 +31,9 @@ jobs:
             echo "FB_APP_ID=$FB_APP_ID" >> ${HOME}/tia-client-react-native/.env
             echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> ${HOME}/tia-client-react-native/.env
 
-      - run:
-          name: Generate android bundle
-          command: yarn bundle-android
+      # - run:
+      #     name: Generate android bundle
+      #     command: yarn bundle-android
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
@@ -69,7 +69,7 @@ jobs:
           name: Build debug APK and release APK
           command: |
             cd android
-            ./gradlew assembleRelease -x bundleReleaseJsAndAssets --stacktrace
+            ./gradlew assembleRelease
       - store_test_results:
           path: android/app/build/outputs/apk/
           destination: apks/

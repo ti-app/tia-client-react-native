@@ -69,3 +69,7 @@ buck-out/
 
 # Local prettier file
 /.prettierrc
+
+# Android Release Build related files
+index.android.bundle
+release.keystore.properties
