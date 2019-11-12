@@ -16,7 +16,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Tree from '../../shared/Map/Tree/Tree';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import FormInput from '../../shared/FormInput/FormInput';
-import SelectTreeHealth from '../../shared/SelectButtons/SelectTreeHealth/SelectTreeHealth';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 import * as locationActions from '../../store/actions/location.action';
 import * as treeActions from '../../store/actions/tree.action';
 import { selectSelectedTree } from '../../store/reducers/tree.reducer';
@@ -112,15 +112,13 @@ const EditTreeDetails = () => {
 		return data;
 	};
 
-	const handlePlantType = (plantType) => setPlantType(plantType);
+	const handlePlantType = (_plantType) => setPlantType(_plantType);
 
-	const handleWaterCycleChange = (healthCycle) => setHealthCycle(healthCycle);
+	const handleWaterCycleChange = (_healthCycle) => setHealthCycle(_healthCycle);
 
-	const handleSelectedStatusChange = (selectedStatus) => {
-		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (healthEntry && healthEntry[0]) {
-			setHealth(healthEntry[0]);
-		}
+	const handleSelectedStatusChange = (_status) => {
+		const { value } = _status;
+		setHealth({ health: value });
 	};
 
 	const handlePlantLocationChange = () => {
@@ -132,7 +130,7 @@ const EditTreeDetails = () => {
 			// Reset plant location
 			setUpdatedLocation(currentLocation);
 		}
-		setChangePlantLocation((changePlantLocation) => !changePlantLocation);
+		setChangePlantLocation((_changePlantLocation) => !_changePlantLocation);
 	};
 
 	if (!selectedTree) {
@@ -193,9 +191,14 @@ const EditTreeDetails = () => {
 					<View>
 						<Text style={styles.paddingBottomTen}> Health of a plant </Text>
 						<View style={styles.paddingBottomTen}>
-							<SelectTreeHealth
-								presetHealthStatus={presetHealthStatus}
-								onSelectedStatusChange={handleSelectedStatusChange}
+							<SelectButton
+								presetData={[
+									{ value: 'healthy', label: 'HEALTHY', status: 'success' },
+									{ value: 'weak', label: 'WEAK', status: 'warning' },
+									{ value: 'almostDead', label: 'ALMOST DEAD', status: 'danger' },
+								]}
+								onSelectedItemChange={handleSelectedStatusChange}
+								equallySpaced={false}
 							/>
 						</View>
 					</View>

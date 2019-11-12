@@ -3,12 +3,12 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text, Icon } from 'native-base';
 import * as colors from '../../styles/colors';
 
-const OptionsBar = ({ title, leftOption, rightOption }) => (
+const OptionsBar = ({ title, leftOption, rightOption, floatOver = false }) => (
 	<View style={styles.container}>
 		{leftOption ? (
 			<TouchableOpacity style={styles.leftButton} onPress={() => leftOption.action()}>
 				{leftOption.label ? (
-					<Text style={styles.leftOptionLabel}> {leftOption.label} </Text>
+					<Text style={styles.leftOptionLabel}>{leftOption.label}</Text>
 				) : (
 					<Icon type="FontAwesome5" name="arrow-left" style={styles.leftIcon} />
 				)}
@@ -21,7 +21,7 @@ const OptionsBar = ({ title, leftOption, rightOption }) => (
 		</View>
 		{rightOption ? (
 			<TouchableOpacity style={styles.rightButton} onPress={() => rightOption.action()}>
-				<Text style={styles.rightOptionLabel}> {rightOption.label} </Text>
+				<Text style={styles.rightOptionLabel}>{rightOption.label}</Text>
 			</TouchableOpacity>
 		) : (
 			<View style={styles.rightButton} />
@@ -43,7 +43,9 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		fontSize: 18,
 	},
-	leftOptionLabel: {},
+	leftOptionLabel: {
+		textAlign: 'left',
+	},
 	rightOptionLabel: {
 		textAlign: 'right',
 	},

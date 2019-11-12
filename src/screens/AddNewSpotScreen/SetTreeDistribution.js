@@ -6,11 +6,11 @@ import MapView from 'react-native-maps';
 
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import Tree from '../../shared/Map/Tree/Tree';
-import SelectDistribution from '../../shared/SelectButtons/SelectDistribution/SelectDistribution';
 import * as treeActions from '../../store/actions/tree.action';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import Spot from '../../shared/Map/Spot/Spot';
 import constants from '../../config/common';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 
 const { distributions } = constants;
 
@@ -28,20 +28,19 @@ const SetTreeDistributions = () => {
 	useEffect(() => {
 		const { latitude, longitude } = userLocation;
 		setNewTreeGroupData({ trees: [{ latitude, longitude }] });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userLocation]);
 
 	const handleDistributionChange = (distribution) => {
-		const distributionEntry = Object.entries(distribution).find((_) => _[1] === true);
-		if (distributionEntry && distributionEntry[0]) {
-			if (distributionEntry[0] === distributions.SINGLE) {
-				const { latitude, longitude } = userLocation;
-				setNewTreeGroupData({
-					trees: [{ latitude, longitude }],
-					distribution: distributions.SINGLE,
-				});
-			} else {
-				setNewTreeGroupData({ trees: [], distribution: distributions.LINE });
-			}
+		const { value } = distribution;
+		if (value === distributions.SINGLE) {
+			const { latitude, longitude } = userLocation;
+			setNewTreeGroupData({
+				trees: [{ latitude, longitude }],
+				distribution: distributions.SINGLE,
+			});
+		} else {
+			setNewTreeGroupData({ trees: [], distribution: distributions.LINE });
 		}
 	};
 
@@ -79,9 +78,13 @@ const SetTreeDistributions = () => {
 				<Text style={styles.formTitle}> Select Distribution</Text>
 				<ScrollView contentContainerStyle={styles.form}>
 					<View style={styles.paddingBottomTen}>
-						<SelectDistribution
-							presetDistribution={presetDistribution}
-							onSelectedDistributionChange={handleDistributionChange}
+						<SelectButton
+							presetData={[
+								{ selected: true, value: distributions.SINGLE, label: 'SINGLE' },
+								{ value: distributions.LINE, label: 'LINE' },
+							]}
+							onSelectedItemChange={handleDistributionChange}
+							orientation="vertical"
 						/>
 					</View>
 				</ScrollView>

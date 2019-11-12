@@ -44,13 +44,13 @@ const LoginForm = ({ style, navigation }) => {
 				} catch (error) {
 					setLoading(false);
 					showSomethingBadToast();
-					console.error('Error while saving user in async storage.', error);
+					console.log('Error while saving user in async storage.', error);
 				}
 			})
 			.catch((error) => {
 				setLoading(false);
 				showLoginFailed();
-				console.error('Error while login.', error);
+				console.log('Error while login.', error);
 			});
 	};
 

@@ -51,14 +51,14 @@ const RegisterPasswordForm = ({ navigation }) => {
 							} catch (error) {
 								setLoading(false);
 								showSomethingBadToast();
-								console.error('Error while registering', error);
+								console.log('Error while registering', error);
 							}
 						});
 				},
 				(error) => {
 					setLoading(false);
 					showErrorToast(error.message);
-					console.error(error.message);
+					console.log(error.message);
 				}
 			);
 	};

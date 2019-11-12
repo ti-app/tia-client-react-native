@@ -43,7 +43,7 @@ const SocialLogin = ({ style }) => {
 		try {
 			signInWithFB();
 		} catch (error) {
-			console.error('Error login with facebook', error);
+			console.log('Error login with facebook', error);
 			showLoginFailed();
 		}
 	};
@@ -52,7 +52,7 @@ const SocialLogin = ({ style }) => {
 		try {
 			signInWithGoogle();
 		} catch (error) {
-			console.error('Error login with google', error);
+			console.log('Error login with google', error);
 			showLoginFailed();
 		}
 	};

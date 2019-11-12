@@ -3,17 +3,18 @@ import { useDispatch } from 'react-redux';
 import { StyleSheet, Slider } from 'react-native';
 import { Container, Content, View, Text } from 'native-base';
 import * as uiActions from '../../store/actions/ui-interactions.action';
-import SelectTreeHealth from '../../shared/SelectButtons/SelectTreeHealth/SelectTreeHealth';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import * as colors from '../../styles/colors';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 
-const FilterTree = ({ currentRangeFilter, currentHealthFilter, onFilterChanged }) => {
+const FilterTree = ({ currentRangeFilter, currentStatusList, onFilterChanged }) => {
 	const [range, setRange] = useState(0.5);
-	const [selectedStatus, setSelectedStatus] = useState({
-		healthy: true,
-		weak: true,
-		almostDead: true,
-	});
+	const [selectedStatusList, setSelectedStatusList] = useState(['healthy', 'weak', 'almostDead']);
+	const [statusFilterData, setStatusFilterData] = useState([
+		{ value: 'healthy', label: 'HEALTHY', status: 'success', selected: true },
+		{ value: 'weak', label: 'WEAK', status: 'warning', selected: true },
+		{ value: 'almostDead', label: 'ALMOST DEAD', status: 'danger', selected: true },
+	]);
 
 	const dispatch = useDispatch();
 	const toggleFilter = useCallback(() => dispatch(uiActions.toggleFilter()), [dispatch]);
@@ -23,10 +24,24 @@ const FilterTree = ({ currentRangeFilter, currentHealthFilter, onFilterChanged }
 			setRange(currentRangeFilter);
 		}
 
-		if (currentHealthFilter) {
-			setSelectedStatus(currentHealthFilter);
+		if (currentStatusList) {
+			setStatusFilterDataFromStatusList(currentStatusList);
+			setSelectedStatusList(currentStatusList);
 		}
-	}, [currentHealthFilter, currentRangeFilter]);
+	}, [currentStatusList, currentRangeFilter]);
+
+	const handleStatusChange = (itemList) => {
+		const statusList = itemList.filter((_) => _.selected).map((_) => _.value);
+		setStatusFilterDataFromStatusList(statusList);
+		setSelectedStatusList(statusList);
+	};
+
+	const setStatusFilterDataFromStatusList = (_statusList) => {
+		const modifiedStatusFilterData = statusFilterData.map(({ value, ...rest }) => {
+			return { value, ...rest, selected: _statusList.includes(value) };
+		});
+		setStatusFilterData(modifiedStatusFilterData);
+	};
 
 	return (
 		<Container style={styles.container}>
@@ -39,7 +54,7 @@ const FilterTree = ({ currentRangeFilter, currentHealthFilter, onFilterChanged }
 				rightOption={{
 					label: 'Save',
 					action: () => {
-						onFilterChanged({ range, selectedStatus });
+						onFilterChanged({ range, selectedStatusList });
 					},
 				}}
 			/>
@@ -62,10 +77,12 @@ const FilterTree = ({ currentRangeFilter, currentHealthFilter, onFilterChanged }
 					<Text style={styles.currentRange}>{`${range}km`}</Text>
 				</View>
 				<Text style={styles.textStyle}>Health of the plant(s)</Text>
-				<SelectTreeHealth
-					onSelectedStatusChange={(changedStatus) => setSelectedStatus(changedStatus)}
-					presetHealthStatus={selectedStatus}
-					type="multiple"
+				<SelectButton
+					presetData={statusFilterData}
+					data={statusFilterData}
+					onSelectedItemChange={handleStatusChange}
+					equallySpaced={false}
+					multiple
 				/>
 			</Content>
 		</Container>

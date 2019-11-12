@@ -25,6 +25,7 @@ const Spot = ({ coordinate, onPress, notApproved, deleteNotApproved, health, tre
 		if (forceUpdate || latitude !== prevLatitude || longitude !== prevLongitude) {
 			setTrackViewChanges(true);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [coordinate]);
 
 	useEffect(() => {
@@ -32,8 +33,10 @@ const Spot = ({ coordinate, onPress, notApproved, deleteNotApproved, health, tre
 			startBlinking();
 			return;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [notApproved, deleteNotApproved]);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (notApproved || deleteNotApproved) {
 			return;

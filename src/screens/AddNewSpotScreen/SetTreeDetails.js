@@ -6,10 +6,10 @@ import MapView from 'react-native-maps';
 
 import Tree from '../../shared/Map/Tree/Tree';
 import FormInput from '../../shared/FormInput/FormInput';
-import SelectTreeHealth from '../../shared/SelectButtons/SelectTreeHealth/SelectTreeHealth';
 import * as treeActions from '../../store/actions/tree.action';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 
 const centerBias = 0.00015;
 
@@ -31,17 +31,14 @@ const SetTreeDetails = () => {
 		setNewTreeGroupData({ waterCycle });
 	};
 
-	const handleSelectedStatusChange = (selectedStatus) => {
-		const healthEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (healthEntry && healthEntry[0]) {
-			setNewTreeGroupData({ health: healthEntry[0] });
-		}
+	const handleSelectedStatusChange = (status) => {
+		const { value } = status;
+		setNewTreeGroupData({ health: value });
 	};
 
 	const renderTrees = (health) => {
 		const { trees } = newTreeGroup;
 		return trees.map((aCoord, idx) => (
-			// eslint-disable-next-line react/no-array-index-key
 			<Tree key={idx} coordinate={aCoord} status={health || 'healthy'} />
 		));
 	};
@@ -85,7 +82,16 @@ const SetTreeDetails = () => {
 					<View>
 						<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>
 						<View style={styles.paddingBottomTen}>
-							<SelectTreeHealth onSelectedStatusChange={handleSelectedStatusChange} />
+							{/* <SelectTreeHealth onSelectedStatusChange={handleSelectedStatusChange} /> */}
+							<SelectButton
+								presetData={[
+									{ value: 'healthy', label: 'HEALTHY', status: 'success' },
+									{ value: 'weak', label: 'WEAK', status: 'warning' },
+									{ value: 'almostDead', label: 'ALMOST DEAD', status: 'danger' },
+								]}
+								onSelectedItemChange={handleSelectedStatusChange}
+								equallySpaced={false}
+							/>
 						</View>
 					</View>
 				</ScrollView>

@@ -62,8 +62,8 @@ const SideDrawerContent = ({ navigation }) => {
 						<ListItem button>
 							<Text style={styles.text}>Settings</Text>
 						</ListItem>
-						<ListItem button>
-							<Text style={styles.text}>History</Text>
+						<ListItem button onPress={() => navigateTo('UserActivity')}>
+							<Text style={styles.text}>My Activity</Text>
 						</ListItem>
 						<ListItem button onPress={() => navigateTo('Faq')}>
 							<Text style={styles.text}>FAQ</Text>

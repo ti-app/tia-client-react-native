@@ -32,7 +32,7 @@ const ResetPasswordForm = ({ navigation }) => {
 				navigation.navigate('Home');
 			})
 			.catch((error) => {
-				console.error('Error while sending reset password mail', error);
+				console.log('Error while sending reset password mail', error);
 				showPasswordResetIssueToast();
 				setLoading(false);
 			});

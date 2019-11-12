@@ -51,8 +51,11 @@ const ApproveTreeGroupModal = ({ visible, approveType, onClose }) => {
 	if (!selectedTreeGroup) return null;
 
 	const photo = selectedTreeGroup ? selectedTreeGroup.photo : null;
-	const { health, owner, uploadedDate, plantType, plants } = selectedTreeGroup;
+	const { owner, uploadedDate, trees } = selectedTreeGroup;
 	const formattedUploadedDate = uploadedDate && getFormattedDate(uploadedDate);
+
+	const plantTypes = Array.from(new Set(trees.map((_) => _.plantType)));
+	const healths = Array.from(new Set(trees.map((_) => _.health)));
 
 	return (
 		<Modal animationType="slide" transparent visible={visible} onRequestClose={() => onClose()}>
@@ -65,19 +68,23 @@ const ApproveTreeGroupModal = ({ visible, approveType, onClose }) => {
 				<TouchableWithoutFeedback>
 					<View style={styles.content}>
 						<View style={styles.heading}>
-							<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
+							<Text style={styles.plantType}>
+								{plantTypes && plantTypes.length
+									? plantTypes.join(', ')
+									: 'Plant type not specified'}
+							</Text>
 						</View>
 
 						<View style={styles.treeDetailsContainer}>
 							<ScrollView contentContainerStyle={styles.treeDetails}>
-								<Text style={styles.plantInfo}>No. of plants: {plants}</Text>
+								<Text style={styles.plantInfo}>No. of plants: {trees.length}</Text>
 								{owner && owner.displayName && (
 									<Text style={styles.plantInfo}>Uploaded by : {owner.displayName}</Text>
 								)}
 								{formattedUploadedDate && (
 									<Text style={styles.plantInfo}>Created on {formattedUploadedDate}</Text>
 								)}
-								<Text style={styles.plantInfo}>Health: {health}</Text>
+								<Text style={styles.plantInfo}>Health: {healths.join(', ')}</Text>
 								{photo && photo.length > 0 ? (
 									<Image
 										source={{

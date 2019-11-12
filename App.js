@@ -26,7 +26,7 @@ const App = () => {
 				constants.launchStatus.notInitial
 			);
 		} catch (error) {
-			console.error('Error setting launch status', error);
+			console.log('Error setting launch status', error);
 		}
 	};
 
@@ -36,7 +36,7 @@ const App = () => {
 			const launchStatus = value || constants.launchStatus.initial;
 			setShowIntro(launchStatus === constants.launchStatus.initial);
 		} catch (error) {
-			console.error('Error gettings launch status', error);
+			console.log('Error gettings launch status', error);
 			throw error;
 		}
 	};

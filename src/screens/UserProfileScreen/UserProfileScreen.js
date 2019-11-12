@@ -18,7 +18,7 @@ const UserProfileScreen = () => {
 			const currentUser = JSON.parse(user) || 'INITIAL';
 			setCurrentUser(currentUser);
 		} catch (error) {
-			console.error(error);
+			console.log(error);
 			throw error;
 		}
 	};

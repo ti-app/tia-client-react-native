@@ -19,7 +19,7 @@ const TreeDetails = ({ navigation }) => {
 	const userRole = useSelector(selectUserRole);
 
 	const dispatch = useDispatch();
-	const waterTree = useCallback((...param) => dispatch(treeActions.updateTree(...param)), [
+	const waterTree = useCallback((...param) => dispatch(treeActions.waterTree(...param)), [
 		dispatch,
 	]);
 	const deleteTree = useCallback((...param) => dispatch(treeActions.deleteTree(...param)), [
@@ -70,6 +70,16 @@ const TreeDetails = ({ navigation }) => {
 			{ cancelable: false }
 		);
 	};
+
+	const getActivityButton = () => (
+		<TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('TreeActivity')}>
+			<Icon
+				type="Feather"
+				name="activity"
+				style={{ color: colors.black.toString(), fontSize: 24 }}
+			/>
+		</TouchableOpacity>
+	);
 
 	const getDeleteButton = () => (
 		<TouchableOpacity style={styles.deleteButton} onPress={showConfirmDeleteAlert}>
@@ -141,6 +151,7 @@ const TreeDetails = ({ navigation }) => {
 				<Text style={styles.plantType}>{plantType || 'Plant type not specified'}</Text>
 
 				<View style={styles.modifyButtonContainer}>
+					{getActivityButton()}
 					{isModerator() && getEditButton()}
 					{getDeleteButton()}
 				</View>

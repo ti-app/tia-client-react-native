@@ -1,5 +1,4 @@
-import React, { useState, useEffect, createRef, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,14 +14,13 @@ import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/predefinedToasts';
-import { getAPIParamForHealth } from '../../utils/misc';
 import { usePrevious } from '../../utils/customHooks';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
 import { selectPlantationSites } from '../../store/reducers/plantation-site.reducer';
 import { selectUserRole } from '../../store/reducers/auth.reducer';
 
-const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoad }) => {
+const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
@@ -33,7 +31,7 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 	const plantationSites = useSelector(selectPlantationSites);
 	const userRole = useSelector(selectUserRole);
 
-	const prevCurrentHealthFilter = usePrevious(currentHealthFilter);
+	const prevCurrentStatusList = usePrevious(currentStatusList);
 	const prevCurrentRangeFilter = usePrevious(currentRangeFilter);
 	const prevUserLocation = usePrevious(userLocation);
 
@@ -65,20 +63,14 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 		let rangeChanged = false;
 
 		const { latitude: userLatitude, longitude: userLongitude } = userLocation;
-		const { healthy, weak, almostDead } = currentHealthFilter;
 
-		if (!prevUserLocation || !prevCurrentHealthFilter || !prevCurrentRangeFilter) {
+		if (!prevUserLocation || !prevCurrentStatusList || !prevCurrentRangeFilter) {
 			forcedUpdate = true;
 		} else {
 			const { latitude: prevUserLat, longitude: prevUserLng } = prevUserLocation;
-			const {
-				healthy: prevHealthy,
-				weak: prevWeak,
-				almostDead: prevAlmostDead,
-			} = prevCurrentHealthFilter;
 
 			healthFilterChanged =
-				healthy !== prevHealthy || weak !== prevWeak || almostDead !== prevAlmostDead;
+				JSON.stringify(prevCurrentStatusList) !== JSON.stringify(currentStatusList);
 			locationChanged = userLatitude !== prevUserLat || userLongitude !== prevUserLng;
 			rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
 		}
@@ -93,15 +85,12 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 
 			mapRef.animateToRegion(mapLocation, 2000);
 
-			fetchTreeGroups(
-				userLocation,
-				currentRangeFilter * 1000,
-				getAPIParamForHealth(healthy, weak, almostDead)
-			);
+			fetchTreeGroups(userLocation, currentRangeFilter * 1000, currentStatusList.join(','));
 
 			fetchPlanatationSites(userLocation, currentRangeFilter * 1000);
 		}
-	}, [userLocation, currentHealthFilter, currentRangeFilter]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [userLocation, currentStatusList, currentRangeFilter]);
 
 	const selectTree = (tree) => {
 		const deleteObject = tree.delete;
@@ -122,9 +111,9 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 		}
 	};
 
-	const selectTreeGroup = (treeGroup) => {
-		const { moderatorApproved } = treeGroup;
-		const deleteObject = treeGroup.delete;
+	const selectTreeGroup = (_treeGroup) => {
+		const { moderatorApproved } = _treeGroup;
+		const deleteObject = _treeGroup.delete;
 		const deleteNotApproved =
 			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
 
@@ -133,22 +122,22 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 				showNeedApproval();
 				break;
 			case !moderatorApproved && isModerator():
-				setSelectedTreeGroup(treeGroup);
+				setSelectedTreeGroup(_treeGroup);
 				setApproveTreeGroupModal({ show: true, type: 'ADD' });
 				break;
 			case deleteNotApproved && isModerator():
-				setSelectedTreeGroup(treeGroup);
+				setSelectedTreeGroup(_treeGroup);
 				setApproveTreeGroupModal({ show: true, type: 'DELETE' });
 				break;
 			default:
-				setSelectedTreeGroup(treeGroup);
+				setSelectedTreeGroup(_treeGroup);
 				navigation.navigate('TreeGroupDetails');
 		}
 	};
 
-	const selectPlantationSite = (plantationSite) => {
-		const { moderatorApproved } = plantationSite;
-		const deleteObject = plantationSite.delete;
+	const selectPlantationSite = (_plantationSite) => {
+		const { moderatorApproved } = _plantationSite;
+		const deleteObject = _plantationSite.delete;
 		const deleteNotApproved =
 			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
 
@@ -157,15 +146,15 @@ const HomeMap = ({ currentRangeFilter, currentHealthFilter, navigation, onMapLoa
 				showNeedApproval();
 				break;
 			case !moderatorApproved && isModerator():
-				setSelectedPlantationSite(plantationSite);
+				setSelectedPlantationSite(_plantationSite);
 				setApproveSiteModal({ show: true, type: 'ADD' });
 				break;
 			case deleteNotApproved && isModerator():
-				setSelectedPlantationSite(plantationSite);
+				setSelectedPlantationSite(_plantationSite);
 				setApproveSiteModal({ show: true, type: 'DELETE' });
 				break;
 			default:
-				setSelectedPlantationSite(plantationSite);
+				setSelectedPlantationSite(_plantationSite);
 				navigation.navigate('PlantationSiteDetails');
 		}
 	};

@@ -2,7 +2,6 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	StyleSheet,
-	Keyboard,
 	ScrollView,
 	TouchableOpacity,
 	CheckBox,
@@ -17,14 +16,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import PlantationSite from '../../shared/Map/PlantationSite/PlantationSite';
 import FormInput from '../../shared/FormInput/FormInput';
-import SelectSoilQuality from '../../shared/SelectButtons/SelectSoilQuality/SelectSoilQuality';
-import SelectPropertyType from '../../shared/SelectButtons/SelectPropertyType/SelectPropertyType';
 import * as locationActions from '../../store/actions/location.action';
 import * as plantationSiteActions from '../../store/actions/plantation-site.action';
 import * as colors from '../../styles/colors';
 import { selectSelectedPlantationSite } from '../../store/reducers/plantation-site.reducer';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { useKeyboardHideHook } from '../../utils/customHooks';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 
 const centerBias = 0.00015;
 
@@ -147,22 +145,17 @@ const EditPlantationSiteScreen = () => {
 		setWateringNearby((_wateringNearBy) => !_wateringNearBy);
 	};
 
-	const handleSoilQualityChange = (selectedStatus) => {
-		const soilQualityEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (soilQualityEntry && soilQualityEntry[0]) {
-			setSoilQuality(soilQualityEntry[0]);
-		}
+	const handleSoilQualityChange = (_quality) => {
+		const { value } = _quality;
+		setSoilQuality(value);
 	};
 
-	const handlePropertyTypeChange = (selectedStatus) => {
-		const typeEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (typeEntry && typeEntry[0]) {
-			if (typeEntry[0] === 'publicProperty') {
-				setType('public');
-			}
-			if (typeEntry[0] === 'privateProperty') {
-				setType('private');
-			}
+	const handlePropertyTypeChange = (_propertyType) => {
+		const { value } = _propertyType;
+		if (value === 'privateProperty') {
+			setType('private');
+		} else {
+			setType('public');
 		}
 	};
 
@@ -238,17 +231,23 @@ const EditPlantationSiteScreen = () => {
 
 					<View style={styles.paddingBottomTen}>
 						<Text style={styles.paddingBottomTen}> Soil Quality </Text>
-						<SelectSoilQuality
-							presetSoilQuality={presetSoilQuality}
-							onSelectedSoilQualityChange={handleSoilQualityChange}
+						<SelectButton
+							presetData={[
+								{ value: 'good', label: 'GOOD', status: 'success' },
+								{ value: 'bad', label: 'BAD', status: 'danger' },
+							]}
+							onSelectedItemChange={handleSoilQualityChange}
 						/>
 					</View>
 
 					<View style={styles.paddingBottomTen}>
 						<Text style={styles.paddingBottomTen}> Property Type </Text>
-						<SelectPropertyType
-							presetType={presetType}
-							onSelectedPropertyTypeChange={handlePropertyTypeChange}
+						<SelectButton
+							presetData={[
+								{ value: 'publicProperty', label: 'PUBLIC' },
+								{ value: 'privateProperty', label: 'PRIVATE' },
+							]}
+							onSelectedItemChange={handlePropertyTypeChange}
 						/>
 					</View>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Icon, Text } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { View, Icon } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 
 import HomeMap from './HomeMap';
@@ -28,11 +28,7 @@ const defaultHeaderOptions = {
 
 const HomeScreen = (props) => {
 	const { navigation } = props;
-	const [currentHealthFilter, setCurrentHealthFilter] = useState({
-		healthy: true,
-		weak: true,
-		almostDead: true,
-	});
+	const [currentStatusList, setCurrentStatusList] = useState(['healthy', 'weak', 'almostDead']);
 	const [currentRangeFilter, setCurrentRangeFilter] = useState(0.5);
 	const [mapRef, setMapRef] = useState(null);
 
@@ -90,9 +86,9 @@ const HomeScreen = (props) => {
 		setMapRef(ref);
 	};
 
-	const handleFilterChange = ({ range, selectedStatus }) => {
+	const handleFilterChange = ({ range, selectedStatusList: statusList }) => {
 		setCurrentRangeFilter(range);
-		setCurrentHealthFilter(selectedStatus);
+		setCurrentStatusList(statusList);
 	};
 
 	return (
@@ -100,7 +96,7 @@ const HomeScreen = (props) => {
 			{isFilterOpen ? (
 				<View style={styles.filterContainer}>
 					<FilterTree
-						currentHealthFilter={currentHealthFilter}
+						currentStatusList={currentStatusList}
 						onFilterChanged={handleFilterChange}
 						currentRangeFilter={currentRangeFilter}
 					/>
@@ -109,7 +105,7 @@ const HomeScreen = (props) => {
 
 			<HomeMap
 				currentRangeFilter={currentRangeFilter}
-				currentHealthFilter={currentHealthFilter}
+				currentStatusList={currentStatusList}
 				onMapLoad={handleOnMapLoad}
 				{...props}
 			/>

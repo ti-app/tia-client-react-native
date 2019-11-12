@@ -4,7 +4,6 @@ import { View, Container, Button, Text } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { Polyline } from 'react-native-maps';
 
-import SelectLineDistParam from '../../shared/SelectButtons/SelectLineDistParam/SelectLineDistParam';
 import Tree from '../../shared/Map/Tree/Tree';
 import FormInput from '../../shared/FormInput/FormInput';
 import * as treeActions from '../../store/actions/tree.action';
@@ -12,9 +11,9 @@ import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import * as colors from '../../styles/colors';
 import { calculateTreeCoordinates } from '../../utils/geo';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 
 const renderTrees = (coordinates) =>
-	// eslint-disable-next-line react/no-array-index-key
 	(coordinates || []).map((aCoord, idx) => <Tree key={idx} coordinate={aCoord} status="healthy" />);
 
 const centerBias = 0.00015;
@@ -56,24 +55,24 @@ const SetTreeLocations = () => {
 		setNewTreeGroupData({ trees: treeCoords });
 	};
 
-	const handleDistParamChange = (_type) => {
-		const typeEntry = Object.entries(_type).find((_) => _[1] === true);
-		if (typeEntry && typeEntry[0]) {
-			setType(typeEntry[0]);
-			const treeCoords = calculateTreeCoordinates({
-				spacing,
-				numberOfPlants,
-				type: typeEntry[0],
-				endpoints,
-			});
-			setNewTreeGroupData({ trees: treeCoords });
-		}
+	const handleDistParamChange = (distParam) => {
+		const { value } = distParam;
+		setType(value);
+		const treeCoords = calculateTreeCoordinates({
+			spacing,
+			numberOfPlants,
+			type: value,
+			endpoints,
+		});
+		setNewTreeGroupData({ trees: treeCoords });
 	};
 
 	const handleMapPress = (e) => {
 		const { coordinate: newCoordinate } = e.nativeEvent;
 
-		if (endpoints.length >= 2) return;
+		if (endpoints.length >= 2) {
+			return;
+		}
 
 		const modifiedEndpoints = [...endpoints];
 
@@ -148,9 +147,14 @@ const SetTreeLocations = () => {
 				<Text style={styles.formTitle}> Select Tree Locations </Text>
 				<ScrollView contentContainerStyle={styles.form}>
 					<Text>Distribute trees along line by:</Text>
-					<SelectLineDistParam
-						presetDistParams={presetDistParams}
-						onSelectedDistParamChange={handleDistParamChange}
+					<SelectButton
+						presetData={[
+							{ value: 'spacing', label: 'SPACING', selected: true },
+							{ value: 'numberOfPlants', label: 'NUMBER OF PLANTS' },
+						]}
+						onSelectedItemChange={handleDistParamChange}
+						orientation="horizontal"
+						atleastOneSelected
 					/>
 					<Text>
 						{type === 'spacing' && 'Enter spacing in meters:'}

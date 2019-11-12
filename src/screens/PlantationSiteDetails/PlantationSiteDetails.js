@@ -76,7 +76,7 @@ const PlantationSiteDetails = ({ navigation }) => {
 
 	const getFormattedDate = (date) => new Date(date).toDateString().substr(4, 12);
 
-	isModerator = () => {
+	const isModerator = () => {
 		return userRole === config.roles.MODERATOR;
 	};
 

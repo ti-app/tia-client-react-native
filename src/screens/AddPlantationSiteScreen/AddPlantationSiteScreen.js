@@ -1,13 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {
-	StyleSheet,
-	Keyboard,
-	ScrollView,
-	TouchableOpacity,
-	CheckBox,
-	Image,
-	Platform,
-} from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, CheckBox, Image, Platform } from 'react-native';
 import { Container, View, Text, Button } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -17,8 +9,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import PlantationSite from '../../shared/Map/PlantationSite/PlantationSite';
 import FormInput from '../../shared/FormInput/FormInput';
-import SelectSoilQuality from '../../shared/SelectButtons/SelectSoilQuality/SelectSoilQuality';
-import SelectPropertyType from '../../shared/SelectButtons/SelectPropertyType/SelectPropertyType';
+import SelectButton from '../../shared/SelectButton/SelectButton';
 import * as plantationSiteActions from '../../store/actions/plantation-site.action';
 import * as locationActions from '../../store/actions/location.action';
 import * as colors from '../../styles/colors';
@@ -48,6 +39,7 @@ const AddPlantationSiteScreen = () => {
 
 	useEffect(() => {
 		fetchUserLocation();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const takePhoto = async () => {
@@ -59,12 +51,12 @@ const AddPlantationSiteScreen = () => {
 		}
 	};
 
-	const handleSiteNameChange = (siteDisplayName) => {
-		setSiteDisplayName(siteDisplayName);
+	const handleSiteNameChange = (_siteDisplayName) => {
+		setSiteDisplayName(_siteDisplayName);
 	};
 
-	const handleNumberOfPlantsChange = (numberOfPlants) => {
-		setPlants(numberOfPlants);
+	const handleNumberOfPlantsChange = (_numberOfPlants) => {
+		setPlants(_numberOfPlants);
 	};
 
 	const handleAddSite = () => {
@@ -83,46 +75,41 @@ const AddPlantationSiteScreen = () => {
 		addPlantationSite(formData);
 	};
 
-	const createFormData = (uri, body) => {
-		const data = new FormData();
-		if (uri) {
-			const filename = uri.split('/').pop();
-			const type = filename.split('.').pop();
+	const createFormData = (_uri, _body) => {
+		const _data = new FormData();
+		if (_uri) {
+			const _filename = _uri.split('/').pop();
+			const _type = _filename.split('.').pop();
 
-			data.append('photo', {
-				uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
-				type: `image/${type}`,
-				name: filename,
+			_data.append('photo', {
+				_uri: Platform.OS === 'android' ? _uri : _uri.replace('file://', ''),
+				_type: `image/${_type}`,
+				name: _filename,
 			});
 		}
 
-		Object.keys(body).forEach((key) => {
-			data.append(key, body[key]);
+		Object.keys(_body).forEach((_key) => {
+			_data.append(_key, _body[_key]);
 		});
 
-		return data;
+		return _data;
 	};
 
 	const handleOnWateringNearbyChange = () => {
 		setWateringNearBy((watering) => !watering);
 	};
 
-	const handleSoilQualityChange = (selectedStatus) => {
-		const soilQualityEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (soilQualityEntry && soilQualityEntry[0]) {
-			setSoilQuality(soilQualityEntry[0]);
-		}
+	const handleSoilQualityChange = (_quality) => {
+		const { value } = _quality;
+		setSoilQuality(value);
 	};
 
-	const handlePropertyTypeChange = (selectedStatus) => {
-		const typeEntry = Object.entries(selectedStatus).find((_) => _[1] === true);
-		if (typeEntry && typeEntry[0]) {
-			if (typeEntry[0] === 'publicProperty') {
-				setType('public');
-			}
-			if (typeEntry[0] === 'privateProperty') {
-				setType('private');
-			}
+	const handlePropertyTypeChange = (_propertyType) => {
+		const { value } = _propertyType;
+		if (value === 'privateProperty') {
+			setType('private');
+		} else {
+			setType('public');
 		}
 	};
 
@@ -176,12 +163,24 @@ const AddPlantationSiteScreen = () => {
 					</TouchableOpacity>
 					<View style={styles.paddingBottomTen}>
 						<Text style={styles.paddingBottomTen}> Soil Quality </Text>
-						<SelectSoilQuality onSelectedSoilQualityChange={handleSoilQualityChange} />
+						<SelectButton
+							data={[
+								{ value: 'good', label: 'GOOD', status: 'success' },
+								{ value: 'bad', label: 'BAD', status: 'danger' },
+							]}
+							onSelectedItemChange={handleSoilQualityChange}
+						/>
 					</View>
 
 					<View style={styles.paddingBottomTen}>
 						<Text style={styles.paddingBottomTen}> Property Type </Text>
-						<SelectPropertyType onSelectedPropertyTypeChange={handlePropertyTypeChange} />
+						<SelectButton
+							presetData={[
+								{ value: 'publicProperty', label: 'PUBLIC' },
+								{ value: 'privateProperty', label: 'PRIVATE' },
+							]}
+							onSelectedItemChange={handlePropertyTypeChange}
+						/>
 					</View>
 
 					{photo ? (

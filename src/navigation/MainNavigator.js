@@ -12,6 +12,8 @@ import PlantationSiteDetails from '../screens/PlantationSiteDetails/PlantationSi
 import EditPlantationSiteDetails from '../screens/EditPlantationSiteDetails/EditPlantationSiteDetails';
 import TreeGroupDetails from '../screens/TreeGroupDetails/TreeGroupDetails';
 import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
+import UserActivity from '../screens/UserActivity/UserActivity';
+import TreeActivity from '../screens/TreeActivity/TreeActivity';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -44,6 +46,12 @@ const MainNavigator = createStackNavigator(
 		},
 		AddNewSpot: {
 			screen: AddNewSpotScreen,
+		},
+		UserActivity: {
+			screen: UserActivity,
+		},
+		TreeActivity: {
+			screen: TreeActivity,
 		},
 	},
 	{
