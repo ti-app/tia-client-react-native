@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, StatusBar, StyleSheet, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
