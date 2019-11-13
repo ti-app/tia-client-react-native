@@ -1,3 +1,4 @@
+import destination from '@turf/destination';
 /**
  * Returns a distance in meters
  * @param {Array.<{latitude: Number, longitude: Number}>} endpoints
@@ -14,6 +15,24 @@ export const getDistanceFromLatLon = (endpoints) => {
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	const d = R * c; // Distance in km
 	return d * 1000;
+};
+
+/**
+ * Returns a LatLngDelta to the top and right of the location
+ * @param {{latitude: Number, longitude: Number}} location
+ * @param {Number} distance in meters
+ */
+export const getLatLngDeltaForDistance = (location, distance) => {
+	const { latitude, longitude } = location;
+	const point = [longitude, latitude];
+	const bearing = 90;
+	const options = { units: 'kilometers' };
+
+	const secondPoint = destination(point, (distance * 2) / 1000, bearing, options);
+
+	const [secondLongitude, secondLatitude] = secondPoint.geometry.coordinates;
+
+	return { latitudeDelta: secondLatitude - latitude, longitudeDelta: secondLongitude - longitude };
 };
 
 /**

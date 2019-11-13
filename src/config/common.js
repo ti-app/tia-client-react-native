@@ -68,4 +68,5 @@ export default {
 			label: 'Updated a site',
 		},
 	},
+	maxProximityDistance: 50, // in meters
 };

@@ -59,7 +59,7 @@ export const showSomethingBadToast = () => {
 
 export const showErrorToast = (errorMessage) => {
 	Toast.show({
-		text: '${errorMessage}',
+		text: errorMessage,
 		buttonText: 'Oops',
 		style: { backgroundColor: colors.red },
 	});

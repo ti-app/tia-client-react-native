@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { View, Container, Button, Text } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import MapView, { Polyline } from 'react-native-maps';
+import MapView, { Polyline, Circle } from 'react-native-maps';
 
 import Tree from '../../shared/Map/Tree/Tree';
 import FormInput from '../../shared/FormInput/FormInput';
@@ -10,19 +10,26 @@ import * as treeActions from '../../store/actions/tree.action';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import * as colors from '../../styles/colors';
-import { calculateTreeCoordinates } from '../../utils/geo';
+import {
+	calculateTreeCoordinates,
+	getLatLngDeltaForDistance,
+	getDistanceFromLatLon,
+} from '../../utils/geo';
 import SelectButton from '../../shared/SelectButton/SelectButton';
+import config from '../../config/common';
+import { showErrorToast } from '../../utils/predefinedToasts';
 
 const renderTrees = (coordinates) =>
 	(coordinates || []).map((aCoord, idx) => <Tree key={idx} coordinate={aCoord} status="healthy" />);
 
-const centerBias = 0.00015;
+const centerBias = 0.000015;
 
 const SetTreeLocations = () => {
 	const [type, setType] = useState('spacing'); // should be one of 'spacing' or 'numberOfPlants'
 	const [spacing, setSpacing] = useState(0);
 	const [numberOfPlants, setNumberOfPlants] = useState(0);
 	const [endpoints, setEndpoints] = useState([]);
+	const [mapRef, setMapRef] = useState(null);
 
 	const userLocation = useSelector(selectUserLocation);
 	const newTreeGroup = useSelector(selectNewTreeGroup);
@@ -31,6 +38,19 @@ const SetTreeLocations = () => {
 	const setNewTreeGroupData = useCallback(
 		(...params) => dispatch(treeActions.setNewTreeGroupData(...params)),
 		[dispatch]
+	);
+
+	const { latitude, longitude } = userLocation;
+	const { trees } = newTreeGroup;
+
+	const presetDistParams = { spacing: false, numberOfPlants: false };
+	presetDistParams[type] = true;
+
+	const clearanceDistance = 2; // in meters
+	const mapViewDistanceFromCenter = config.maxProximityDistance + clearanceDistance;
+	const { latitudeDelta, longitudeDelta } = getLatLngDeltaForDistance(
+		userLocation,
+		mapViewDistanceFromCenter
 	);
 
 	const handleSpacingChange = (_spacing) => {
@@ -74,6 +94,13 @@ const SetTreeLocations = () => {
 			return;
 		}
 
+		const distanceFromCenter = getDistanceFromLatLon([userLocation, newCoordinate]);
+
+		if (distanceFromCenter > config.maxProximityDistance) {
+			showErrorToast(`You can only select a point inside ${config.maxProximityDistance} meters`);
+			return;
+		}
+
 		const modifiedEndpoints = [...endpoints];
 
 		modifiedEndpoints.push(newCoordinate);
@@ -106,11 +133,51 @@ const SetTreeLocations = () => {
 		setNewTreeGroupData({ trees: [] });
 	};
 
-	const { latitude, longitude } = userLocation;
-	const { trees } = newTreeGroup;
+	const handleMapRegionChange = (region) => {
+		if (!mapRef) {
+			return;
+		}
 
-	const presetDistParams = { spacing: false, numberOfPlants: false };
-	presetDistParams[type] = true;
+		const {
+			latitude: currentCenterLat,
+			longitude: currentCenterLng,
+			latitudeDelta: currentCenterLatDelta,
+			longitudeDelta: currentCenterLngDelta,
+		} = region;
+
+		const topRightLat = currentCenterLat + currentCenterLatDelta;
+		const topRightLng = currentCenterLng + currentCenterLngDelta;
+		const bottomLeftLat = currentCenterLat - currentCenterLatDelta;
+		const bottomLeftLng = currentCenterLng - currentCenterLngDelta;
+
+		const distanceToTopRight = getDistanceFromLatLon([
+			userLocation,
+			{ latitude: topRightLat, longitude: topRightLng },
+		]);
+		const distanceToBottomLeft = getDistanceFromLatLon([
+			userLocation,
+			{ latitude: bottomLeftLat, longitude: bottomLeftLng },
+		]);
+		const distanceToCurrentCenter = getDistanceFromLatLon([
+			userLocation,
+			{ latitude: currentCenterLat, longitude: currentCenterLng },
+		]);
+
+		if (
+			distanceToCurrentCenter > mapViewDistanceFromCenter ||
+			distanceToTopRight > mapViewDistanceFromCenter ||
+			distanceToBottomLeft > mapViewDistanceFromCenter
+		) {
+			const mapLocation = {
+				latitude,
+				longitude,
+				latitudeDelta: Math.abs(latitudeDelta),
+				longitudeDelta: Math.abs(longitudeDelta),
+			};
+
+			mapRef.animateToRegion(mapLocation, 1000);
+		}
+	};
 
 	return (
 		<Container style={styles.container}>
@@ -120,19 +187,32 @@ const SetTreeLocations = () => {
 					initialRegion={{
 						latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
 						longitude,
-						latitudeDelta: 0.000882007226706992,
-						longitudeDelta: 0.000752057826519012,
+						latitudeDelta: Math.abs(latitudeDelta),
+						longitudeDelta: Math.abs(longitudeDelta),
 					}}
-					scrollEnabled={false}
-					pitchEnabled={false}
-					rotateEnabled={false}
-					zoomEnabled={false}
+					// scrollEnabled={false}
+					// pitchEnabled={false}
+					// rotateEnabled={false}
+					// zoomEnabled={false}
+					ref={(r) => {
+						setMapRef(r);
+					}}
+					onRegionChangeComplete={(region) => {
+						handleMapRegionChange(region);
+					}}
 					onPress={handleMapPress}
 					moveOnMarkerPress={false}
 				>
 					{endpoints.length === 2 && (
 						<Polyline coordinates={endpoints} strokeColor={colors.purple} strokeWidth={3} />
 					)}
+					<Circle
+						center={{ latitude, longitude }}
+						radius={config.maxProximityDistance}
+						strokeWidth={1}
+						strokeColor={colors.blue.toString()}
+						fillColor={colors.lightGray.alpha(0.5)}
+					/>
 					{renderTrees(trees)}
 				</MapView>
 				<Text style={styles.instruction}>{getInstruction()}</Text>
