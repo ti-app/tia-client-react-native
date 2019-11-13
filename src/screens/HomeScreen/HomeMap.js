@@ -76,15 +76,6 @@ const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad 
 		}
 
 		if ((forcedUpdate || locationChanged || rangeChanged || healthFilterChanged) && mapRef) {
-			const mapLocation = {
-				latitude: userLatitude,
-				longitude: userLongitude,
-				latitudeDelta: 0.011582007226706992,
-				longitudeDelta: 0.010652057826519012,
-			};
-
-			mapRef.animateToRegion(mapLocation, 2000);
-
 			fetchTreeGroups(userLocation, currentRangeFilter * 1000, currentStatusList.join(','));
 
 			fetchPlanatationSites(userLocation, currentRangeFilter * 1000);

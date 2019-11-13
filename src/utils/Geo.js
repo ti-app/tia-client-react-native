@@ -1,3 +1,7 @@
+/**
+ * Returns a distance in meters
+ * @param {Array.<{latitude: Number, longitude: Number}>} endpoints
+ */
 export const getDistanceFromLatLon = (endpoints) => {
 	const { latitude: lat1, longitude: lon1 } = endpoints[0];
 	const { latitude: lat2, longitude: lon2 } = endpoints[1];
@@ -12,6 +16,10 @@ export const getDistanceFromLatLon = (endpoints) => {
 	return d * 1000;
 };
 
+/**
+ * Converts degrees to radian
+ * @param Number deg
+ */
 const deg2rad = (deg) => {
 	return deg * (Math.PI / 180);
 };

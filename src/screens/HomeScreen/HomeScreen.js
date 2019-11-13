@@ -39,9 +39,10 @@ const HomeScreen = (props) => {
 	const prevTreeGroups = usePrevious(treeGroups);
 
 	const dispatch = useDispatch();
-	const fetchUserLocation = useCallback(() => dispatch(locationActions.fetchUserLocation()), [
-		dispatch,
-	]);
+	const fetchUserLocation = useCallback(
+		(_mapRef) => dispatch(locationActions.fetchUserLocation(_mapRef)),
+		[dispatch]
+	);
 
 	const setDefaultNavigationBar = (nearbyTreesCount = 0) => {
 		navigation.setParams({
@@ -53,9 +54,11 @@ const HomeScreen = (props) => {
 	};
 
 	useEffect(() => {
-		fetchUserLocation();
+		if (mapRef) {
+			fetchUserLocation(mapRef);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [mapRef]);
 
 	useEffect(() => {
 		const changeNavigationBar = isFilterOpen !== prevIsFilterOpen;
@@ -79,7 +82,7 @@ const HomeScreen = (props) => {
 	}, [treeGroups, isFilterOpen]);
 
 	const handleMyLocationClick = () => {
-		fetchUserLocation();
+		fetchUserLocation(mapRef);
 	};
 
 	const handleOnMapLoad = (ref) => {
