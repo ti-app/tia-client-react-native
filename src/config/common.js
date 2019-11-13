@@ -19,11 +19,53 @@ export default {
 		launcStatus: 'LAUNCH_STATUS',
 	},
 	activity: {
-		TREE_WATERED: 'TREE_WATERED',
-		TREE_ADDED: 'TREE_ADDED',
-	},
-	icons: {
-		treeWatered: { name: 'water', provider: 'Ionicons', color: colors.black.toString() },
-		treeAdded: { name: 'tree', provider: 'Entypo', color: colors.black.toString() },
+		TREE_WATERED: {
+			iconName: 'water',
+			iconProvider: 'Ionicons',
+			iconColor: colors.black.toString(),
+			label: 'Watered a plant',
+		},
+		TREE_ADDED: {
+			iconName: 'tree',
+			iconProvider: 'Entypo',
+			iconColor: colors.black.toString(),
+			label: 'Added a plant',
+		},
+		TREE_DELETED: {
+			iconName: 'delete',
+			iconProvider: 'AntDesign',
+			iconColor: colors.black.toString(),
+			label: 'Deleted a plant',
+		},
+		TREE_UPDATED: {
+			iconName: 'update',
+			iconProvider: 'MaterialIcons',
+			iconColor: colors.black.toString(),
+			label: 'Updated a plant',
+		},
+		TREE_FERTILIZED: {
+			iconName: 'toolbox',
+			iconProvider: 'MaterialCommunityIcons',
+			iconColor: colors.black.toString(),
+			label: 'Fertilized a plant',
+		},
+		SITE_ADDED: {
+			iconName: 'check-box-outline-blank',
+			iconProvider: 'MaterialIcons',
+			iconColor: colors.black.toString(),
+			label: 'Added a site',
+		},
+		SITE_DELETED: {
+			iconName: 'delete',
+			iconProvider: 'AntDesign',
+			iconColor: colors.black.toString(),
+			label: 'Deleted a site',
+		},
+		SITE_UPDATED: {
+			iconName: 'update',
+			iconProvider: 'MaterialIcons',
+			iconColor: colors.black.toString(),
+			label: 'Updated a site',
+		},
 	},
 };

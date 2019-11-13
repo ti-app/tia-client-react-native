@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
 	},
 	mapView: { flex: 1.0, height: '100%' },
 	treeDetailsGroupContainer: {
-		flex: 1.4,
+		flex: 1,
 	},
 	treeDetailsGroup: {
 		display: 'flex',

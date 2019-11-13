@@ -192,7 +192,6 @@ const TreeDetails = ({ navigation }) => {
 							<Text style={styles.imageNotFoundText}>No Image.</Text>
 						</View>
 					)}
-					<Text style={styles.moreWateredHereText}>{wateredPlant} more have watered here</Text>
 				</ScrollView>
 			</View>
 			<View style={styles.waterButtonContainer}>
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
 	},
 	mapView: { flex: 1.0, height: '100%' },
 	treeDetailsContainer: {
-		flex: 1.4,
+		flex: 1,
 	},
 	treeDetails: {
 		display: 'flex',

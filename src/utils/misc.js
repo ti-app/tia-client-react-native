@@ -24,28 +24,6 @@ export const getAPIParamForHealth = (healthy, weak, almostDead) => {
 };
 
 export const getActivityDetails = (activity) => {
-	let icon, iconProvider, iconColor, title;
-
-	switch (activity) {
-		case config.activity.TREE_WATERED: {
-			icon = config.icons.treeWatered.name;
-			iconProvider = config.icons.treeWatered.provider;
-			iconColor = config.icons.treeWatered.color;
-			title = 'Watered a plant';
-			break;
-		}
-		case config.activity.TREE_ADDED: {
-			icon = config.icons.treeAdded.name;
-			iconProvider = config.icons.treeAdded.provider;
-			iconColor = config.icons.treeAdded.color;
-			title = 'Added a plant';
-			break;
-		}
-		default: {
-			icon = 'question';
-			iconProvider = 'AntDesign';
-			iconColor = colors.black.toString();
-		}
-	}
-	return { icon, iconProvider, iconColor, title };
+	const { iconName, iconProvider, iconColor, label } = config.activity[activity];
+	return { icon: iconName, iconProvider, iconColor, title: label };
 };
