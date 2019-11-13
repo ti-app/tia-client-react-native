@@ -17,7 +17,7 @@ const treeReducer = (state = initialState, action) => {
 		case FETCH_USER_ACTIVITIES_SUCCESS: {
 			return {
 				...state,
-				user: action.payload,
+				user: action.payload ? action.payload.activities : [],
 			};
 		}
 

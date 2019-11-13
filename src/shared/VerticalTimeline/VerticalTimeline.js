@@ -40,10 +40,10 @@ const VerticalTimeline = ({ data }) => {
 					}
 				}}
 			>
-				<TouchableOpacity>
+				<View>
 					<View style={styles.detail}>{_renderDetail(rowData, rowID)}</View>
 					{_renderSeparator()}
-				</TouchableOpacity>
+				</View>
 			</View>
 		);
 	};

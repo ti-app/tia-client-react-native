@@ -29,7 +29,7 @@ const UserActivity = ({ navigation }) => {
 	}, [user]);
 
 	const data = (activities || []).map((anActivity) => {
-		const { activity, date: activityTimestamp } = anActivity;
+		const { activity, date: activityTimestamp } = anActivity.activity;
 
 		const { icon, iconProvider, iconColor, title } = getActivityDetails(activity);
 
