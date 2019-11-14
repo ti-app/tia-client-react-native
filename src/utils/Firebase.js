@@ -10,6 +10,9 @@ const {
 	FIREBASE_CONFIG_MESSAGING_SENDER_ID,
 } = Config;
 
+/**
+ * Intializes firebase
+ */
 export const initializeFirebase = () => {
 	if (!firebase.apps.length) {
 		const firebaseConfig = {
