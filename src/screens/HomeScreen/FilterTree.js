@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Slider } from 'react-native';
 import { Container, Content, View, Text } from 'native-base';
 import * as uiActions from '../../store/actions/ui-interactions.action';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import * as colors from '../../styles/colors';
 import SelectButton from '../../shared/SelectButton/SelectButton';
+import {
+	selectCurrentStatusList,
+	selectCurrentRangeFilter,
+} from '../../store/reducers/ui-interactions.reducer';
 
-const FilterTree = ({ currentRangeFilter, currentStatusList, onFilterChanged }) => {
+const FilterTree = ({ onFilterChanged }) => {
 	const [range, setRange] = useState(0.5);
 	const [selectedStatusList, setSelectedStatusList] = useState(['healthy', 'weak', 'almostDead']);
 	const [statusFilterData, setStatusFilterData] = useState([
@@ -15,6 +19,9 @@ const FilterTree = ({ currentRangeFilter, currentStatusList, onFilterChanged }) 
 		{ value: 'weak', label: 'WEAK', status: 'warning', selected: true },
 		{ value: 'almostDead', label: 'ALMOST DEAD', status: 'danger', selected: true },
 	]);
+
+	const currentStatusList = useSelector(selectCurrentStatusList);
+	const currentRangeFilter = useSelector(selectCurrentRangeFilter);
 
 	const dispatch = useDispatch();
 	const toggleFilter = useCallback(() => dispatch(uiActions.toggleFilter()), [dispatch]);

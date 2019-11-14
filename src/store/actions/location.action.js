@@ -1,12 +1,21 @@
 import { RESULTS, PERMISSIONS, request } from 'react-native-permissions';
 import Geolocation from 'react-native-geolocation-service';
+import Config from 'react-native-config';
+import Axios from 'axios';
 
-// import { fetchTreeGroups } from './tree.action';
+import showErrorToast from '../../utils/errorToasts';
+import { goToMapLocation } from '../../utils/geo';
 
-// export const SET_MAP_CENTER = 'SET_MAP_CENTER';
-export const FETCH_USER_LOCATION = 'FETCH_USER_LOCATION';
+const { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } = Config;
+
+export const SET_HOME_MAP_CENTER = 'SET_HOME_MAP_CENTER';
 export const FETCH_USER_LOCATION_SUCCESS = 'FETCH_USER_LOCATION_SUCCESS';
+export const FETCH_SEARCHED_LOCATION_SUCCESS = 'FETCH_SEARCHED_LOCATION_SUCCESS';
 
+/**
+ * Fetched user location and if mapRef is passed, moves map to userLocation
+ * @param {Object} mapRef
+ */
 export const fetchUserLocation = (mapRef) => {
 	return async (dispatch) => {
 		try {
@@ -27,16 +36,9 @@ export const fetchUserLocation = (mapRef) => {
 
 						if (position && position.coords) {
 							const { latitude, longitude } = position.coords;
-							if (mapRef) {
-								const mapLocation = {
-									latitude,
-									longitude,
-									latitudeDelta: 0.011582007226706992,
-									longitudeDelta: 0.010652057826519012,
-								};
-
-								mapRef.animateToRegion(mapLocation, 2000);
-							}
+							const location = { latitude, longitude };
+							goToMapLocation(mapRef, location);
+							dispatch(setHomeMapCenter(location));
 						}
 					},
 					(error) => {
@@ -60,14 +62,55 @@ export const fetchUserLocationSuccess = (locationData) => ({
 	payload: locationData,
 });
 
-// export const setMapCenterAndFetchTreeGroups = locationData => {
-//   return dispatch => {
-//     dispatch(setMapCenter(locationData));
-//     dispatch(fetchTreeGroups(locationData));
-//   };
-// };
+export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState) => {
+	const placesApiKey = GOOGLE_PLACES_API_KEY;
 
-// export const setMapCenter = locationData => ({
-//   type: SET_MAP_CENTER,
-//   payload: locationData
-// });
+	const { userLocation } = getState().location;
+
+	const { latitude, longitude } = userLocation || {};
+
+	const location = `${latitude},${longitude}`;
+
+	try {
+		const response = await Axios({
+			url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?location=${location}&input=${searchQuery}&key=${placesApiKey}`,
+			noloading: true,
+		});
+		dispatch(fetchSearchedLocationSuccess(response.data));
+	} catch (err) {
+		showErrorToast('Error searching.', err, dispatch);
+	}
+};
+
+export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => async (dispatch) => {
+	const geocodeApiKey = GOOGLE_GEOCODING_API_KEY;
+
+	try {
+		const response = await Axios({
+			url: `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${geocodeApiKey}`,
+			noloading: true,
+		});
+
+		const { results } = response.data;
+
+		if (results && results.length && results[0] && results[0].geometry) {
+			const { lat: latitude, lng: longitude } = results[0].geometry.location;
+			const location = { latitude, longitude };
+			goToMapLocation(mapRef, location);
+			dispatch(setHomeMapCenter(location));
+			callback();
+		}
+	} catch (err) {
+		showErrorToast('Error searching.', err, dispatch);
+	}
+};
+
+export const fetchSearchedLocationSuccess = (data) => ({
+	type: FETCH_SEARCHED_LOCATION_SUCCESS,
+	payload: data,
+});
+
+export const setHomeMapCenter = (data) => ({
+	type: SET_HOME_MAP_CENTER,
+	payload: data,
+});

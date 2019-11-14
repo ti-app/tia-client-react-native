@@ -1,9 +1,9 @@
 import { Toast } from 'native-base';
 
 import apiClient from '../../utils/apiClient';
-
-import showErrorToast from '../../utils/errorToasts';
+import { showErrorToast } from '../../utils/preDefinedToasts';
 import NavigationUtil from '../../utils/navigation';
+import { checkIfOutOfRange } from '../../utils/geo';
 
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
@@ -14,16 +14,29 @@ export const RESET_SELECTED_TREE_DETAILS = 'RESET_SELECTED_TREE_DETAILS';
 export const SET_SELECTED_TREE_GROUP = 'SET_SELECTED_TREE_GROUP';
 export const RESET_SELECTED_TREE_GROUP = 'RESET_SELECTED_TREE_GROUP';
 
+const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
+	const state = getState();
+	const {
+		location: { homeMapCenter },
+		ui: { currentStatusList, currentRangeFilter },
+	} = state;
+
+	dispatch(
+		fetchTreeGroups(
+			{
+				...homeMapCenter,
+			},
+			currentRangeFilter * 1000,
+			currentStatusList.join(',')
+		)
+	);
+};
+
 /**
  * Accepts parameter treeGroup which should be a FormData including an Image.
  * @param {FormData} treeGroup
  */
 export const addGroup = (treeGroup) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		await apiClient({
 			method: 'post',
@@ -36,13 +49,9 @@ export const addGroup = (treeGroup) => async (dispatch, getState) => {
 		});
 
 		NavigationUtil.navigate('Home');
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error adding a tree group.', err, dispatch);
+		showErrorToast('Error adding a tree group.');
 	}
 };
 
@@ -77,16 +86,14 @@ export const fetchTreeGroups = (
 			},
 		});
 	} catch (err) {
-		showErrorToast('Error fetching nearby trees.', err, dispatch);
+		showErrorToast('Error fetching nearby trees.');
 	}
 };
 
 export const updateTree = (treeId, updatedTree) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
+	if (checkIfOutOfRange(getState)) {
+		return;
+	}
 	try {
 		await apiClient({
 			method: 'put',
@@ -99,22 +106,16 @@ export const updateTree = (treeId, updatedTree) => async (dispatch, getState) =>
 		});
 
 		NavigationUtil.navigate('Home');
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error updating a tree.', err, dispatch);
+		showErrorToast('Error updating a tree.');
 	}
 };
 
 export const waterTree = (tree) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
+	if (checkIfOutOfRange(getState)) {
+		return;
+	}
 	try {
 		const { _id } = tree;
 		const url = `/tree/${_id}/water`;
@@ -135,22 +136,16 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 
 		NavigationUtil.navigate('Home');
 
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error watering the trees', err, dispatch);
+		showErrorToast('Error watering the trees');
 	}
 };
 
 export const waterTreeGroup = (tree) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
+	if (checkIfOutOfRange(getState)) {
+		return;
+	}
 	try {
 		const { id } = tree;
 		const url = `/tree_group/${id}/water`;
@@ -170,23 +165,13 @@ export const waterTreeGroup = (tree) => async (dispatch, getState) => {
 		});
 
 		NavigationUtil.navigate('Home');
-
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error watering the trees', err, dispatch);
+		showErrorToast('Error watering the trees');
 	}
 };
 
 export const deleteTree = (tree) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const { _id } = tree;
 		const url = `/tree/${_id}`;
@@ -207,23 +192,13 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 		});
 
 		NavigationUtil.navigate('Home');
-
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error deleting the tree.', err, dispatch);
+		showErrorToast('Error deleting the tree.');
 	}
 };
 
 export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const { id } = treeGroup;
 		const url = `/tree_group/${id}`;
@@ -245,23 +220,13 @@ export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 
 		NavigationUtil.navigate('Home');
 
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error deleting the tree.', err, dispatch);
+		showErrorToast('Error deleting the tree.');
 	}
 };
 
 export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispatch, getState) => {
-	const state = getState();
-
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const url = `/tree_group/${treeGroupId}/mod-action`;
 		await apiClient({
@@ -282,23 +247,13 @@ export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispa
 
 		NavigationUtil.navigate('Home');
 
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error taking action', err, dispatch);
+		showErrorToast('Error taking action');
 	}
 };
 
 export const takeModActionForTree = (treeId, approval) => async (dispatch, getState) => {
-	const state = getState();
-
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const url = `/tree/${treeId}/mod-action`;
 		await apiClient({
@@ -318,14 +273,9 @@ export const takeModActionForTree = (treeId, approval) => async (dispatch, getSt
 		});
 
 		NavigationUtil.navigate('Home');
-
-		dispatch(
-			fetchTreeGroups({
-				...userLocation,
-			})
-		);
+		dispatchFetchTreeGroupsAction(dispatch, getState);
 	} catch (err) {
-		showErrorToast('Error taking action', err, dispatch);
+		showErrorToast('Error taking action');
 	}
 };
 

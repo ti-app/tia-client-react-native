@@ -103,7 +103,12 @@ const Spot = ({ coordinate, onPress, notApproved, deleteNotApproved, health, tre
 	};
 
 	return (
-		<Marker tracksViewChanges={tracksViewChanges} coordinate={coordinate} onPress={onPress}>
+		<Marker
+			anchor={{ x: 0.5, y: 0.5 }}
+			tracksViewChanges={tracksViewChanges}
+			coordinate={coordinate}
+			onPress={onPress}
+		>
 			{renderMarker()}
 		</Marker>
 	);

@@ -4,22 +4,35 @@ import apiClient from '../../utils/apiClient';
 
 import showErrorToast from '../../utils/errorToasts';
 import NavigationUtil from '../../utils/navigation';
+import { checkIfOutOfRange } from '../../utils/geo';
 
 export const ADD_PLANTATION_SITE = 'ADD_PLANTATION_SITE';
 export const FETCH_PLANTATION_SITES = 'FETCH_PLANTATION_SITES';
 export const FETCH_PLANTATION_SITES_SUCCESS = 'FETCH_PLANTATION_SITES_SUCCESS';
 export const SET_SELECTED_PLANTATION_SITE = 'SET_SELECTED_PLANTATION_SITE';
 
+const dispatchFetchSiteAction = (dispatch, getState) => {
+	const state = getState();
+	const {
+		location: { homeMapCenter },
+		ui: { currentRangeFilter },
+	} = state;
+
+	dispatch(
+		fetchPlanatationSites(
+			{
+				...homeMapCenter,
+			},
+			currentRangeFilter * 1000
+		)
+	);
+};
+
 /**
  * Accepts parameter treeGroup which should be a FormData including an Image.
  * @param {FormData} plantationSite
  */
 export const addPlantationSite = (plantationSite) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		await apiClient({
 			method: 'post',
@@ -32,11 +45,7 @@ export const addPlantationSite = (plantationSite) => async (dispatch, getState) 
 		});
 
 		NavigationUtil.navigate('Home');
-		dispatch(
-			fetchPlanatationSites({
-				...userLocation,
-			})
-		);
+		dispatchFetchSiteAction(dispatch, getState);
 	} catch (err) {
 		showErrorToast('Error adding a plantation site.', err, dispatch);
 	}
@@ -72,11 +81,6 @@ export const fetchPlanatationSites = (location, radius = 500) => async (dispatch
 };
 
 export const deletePlantationSite = (plantationSite) => async (dispatch, getState) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const { id } = plantationSite;
 		const url = `/site/${id}`;
@@ -97,12 +101,7 @@ export const deletePlantationSite = (plantationSite) => async (dispatch, getStat
 		});
 
 		NavigationUtil.navigate('Home');
-
-		dispatch(
-			fetchPlanatationSites({
-				...userLocation,
-			})
-		);
+		dispatchFetchSiteAction(dispatch, getState);
 	} catch (err) {
 		showErrorToast('Error deleting the plantation site.', err, dispatch);
 	}
@@ -112,11 +111,9 @@ export const updatePlantationSite = (siteId, updatedPlantationSite) => async (
 	dispatch,
 	getState
 ) => {
-	const state = getState();
-	const {
-		location: { userLocation },
-	} = state;
-
+	if (checkIfOutOfRange(getState)) {
+		return;
+	}
 	try {
 		await apiClient({
 			method: 'put',
@@ -129,23 +126,13 @@ export const updatePlantationSite = (siteId, updatedPlantationSite) => async (
 		});
 
 		NavigationUtil.navigate('Home');
-		dispatch(
-			fetchPlanatationSites({
-				...userLocation,
-			})
-		);
+		dispatchFetchSiteAction(dispatch, getState);
 	} catch (err) {
 		showErrorToast('Error updating site.', err, dispatch);
 	}
 };
 
 export const takeModActionForSite = (siteId, approval) => async (dispatch, getState) => {
-	const state = getState();
-
-	const {
-		location: { userLocation },
-	} = state;
-
 	try {
 		const url = `/site/${siteId}/mod-action`;
 		await apiClient({
@@ -166,11 +153,7 @@ export const takeModActionForSite = (siteId, approval) => async (dispatch, getSt
 
 		NavigationUtil.navigate('Home');
 
-		dispatch(
-			fetchPlanatationSites({
-				...userLocation,
-			})
-		);
+		dispatchFetchSiteAction(dispatch, getState);
 	} catch (err) {
 		showErrorToast('Error taking action', err, dispatch);
 	}

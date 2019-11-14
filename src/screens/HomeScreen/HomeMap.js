@@ -15,25 +15,31 @@ import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteMo
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
-import { selectUserLocation } from '../../store/reducers/location.reducer';
+import { selectHomeMapCenter } from '../../store/reducers/location.reducer';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
 import { selectPlantationSites } from '../../store/reducers/plantation-site.reducer';
 import { selectUserRole } from '../../store/reducers/auth.reducer';
+import {
+	selectCurrentStatusList,
+	selectCurrentRangeFilter,
+} from '../../store/reducers/ui-interactions.reducer';
 
-const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad }) => {
+const HomeMap = ({ navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
 
-	const userLocation = useSelector(selectUserLocation);
+	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
 	const plantationSites = useSelector(selectPlantationSites);
 	const userRole = useSelector(selectUserRole);
+	const currentStatusList = useSelector(selectCurrentStatusList);
+	const currentRangeFilter = useSelector(selectCurrentRangeFilter);
 
 	const prevCurrentStatusList = usePrevious(currentStatusList);
 	const prevCurrentRangeFilter = usePrevious(currentRangeFilter);
-	const prevUserLocation = usePrevious(userLocation);
+	const prevHomeMapCenterLocation = usePrevious(homeMapCenterLocation);
 
 	const dispatch = useDispatch();
 	const fetchTreeGroups = useCallback(
@@ -62,26 +68,31 @@ const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad 
 		let locationChanged = false;
 		let rangeChanged = false;
 
-		const { latitude: userLatitude, longitude: userLongitude } = userLocation;
+		const { latitude: centerLatitude, longitude: centerLongitude } = homeMapCenterLocation;
 
-		if (!prevUserLocation || !prevCurrentStatusList || !prevCurrentRangeFilter) {
+		if (!prevHomeMapCenterLocation || !prevCurrentStatusList || !prevCurrentRangeFilter) {
 			forcedUpdate = true;
 		} else {
-			const { latitude: prevUserLat, longitude: prevUserLng } = prevUserLocation;
+			const { latitude: prevUserLat, longitude: prevUserLng } = prevHomeMapCenterLocation;
 
 			healthFilterChanged =
 				JSON.stringify(prevCurrentStatusList) !== JSON.stringify(currentStatusList);
-			locationChanged = userLatitude !== prevUserLat || userLongitude !== prevUserLng;
+			locationChanged = centerLatitude !== prevUserLat || centerLongitude !== prevUserLng;
 			rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
 		}
 
+		console.log('here', currentStatusList);
 		if ((forcedUpdate || locationChanged || rangeChanged || healthFilterChanged) && mapRef) {
-			fetchTreeGroups(userLocation, currentRangeFilter * 1000, currentStatusList.join(','));
+			fetchTreeGroups(
+				homeMapCenterLocation,
+				currentRangeFilter * 1000,
+				currentStatusList.join(',')
+			);
 
-			fetchPlanatationSites(userLocation, currentRangeFilter * 1000);
+			fetchPlanatationSites(homeMapCenterLocation, currentRangeFilter * 1000);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userLocation, currentStatusList, currentRangeFilter]);
+	}, [homeMapCenterLocation, currentStatusList, currentRangeFilter]);
 
 	const selectTree = (tree) => {
 		const deleteObject = tree.delete;
@@ -230,7 +241,7 @@ const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad 
 		);
 	};
 
-	const { latitude, longitude } = userLocation;
+	const { latitude, longitude } = homeMapCenterLocation;
 
 	const treeData = treeGroups.map((_treeGroup) => {
 		const { _id, health, location, ...rest } = _treeGroup;
@@ -267,7 +278,6 @@ const HomeMap = ({ currentRangeFilter, currentStatusList, navigation, onMapLoad 
 					longitudeDelta: 0.010652057826519012,
 				}}
 				showsUserLocation
-				followsUserLocation
 				showsCompass={false}
 				showsMyLocationButton={false}
 			>

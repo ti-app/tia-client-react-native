@@ -5,10 +5,10 @@ import { space } from '../../styles/variables';
 import * as colors from '../../styles/colors';
 
 const FormInput = (props) => {
-	const { icon, secondaryIcon, secondaryIconPress } = props;
+	const { icon, secondaryIcon, secondaryIconPress, style } = props;
 
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, style]}>
 			<View style={styles.icon}>{icon}</View>
 			<TextInput {...props} placeholderTextColor={colors.gray} style={styles.input} />
 			<TouchableOpacity style={styles.secondaryIcon} onPress={secondaryIconPress}>

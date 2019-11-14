@@ -299,4 +299,5 @@ const styles = StyleSheet.create({
 });
 
 SetTreeLocations.navigationOptions = () => ({ header: null });
+
 export default SetTreeLocations;

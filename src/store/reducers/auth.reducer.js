@@ -10,7 +10,7 @@ const authReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case UPDATE_USER_STATUS: {
 			const { user, isLoggedIn } = action.payload;
-			return { user, isLoggedIn };
+			return { ...state, user, isLoggedIn };
 		}
 
 		case UPDATE_USER_ROLE: {

@@ -111,15 +111,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state) => ({
-	userLocation: state.location.userLocation,
-	newTreeGroup: state.tree.newTreeGroup,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-	setNewTreeGroupData: (...params) => dispatch(setNewTreeGroupData(...params)),
-});
-
 SetPhoto.navigationOptions = () => ({ header: null });
 
 export default SetPhoto;

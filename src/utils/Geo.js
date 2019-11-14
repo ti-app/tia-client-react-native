@@ -1,4 +1,45 @@
 import destination from '@turf/destination';
+import config from '../config/common';
+import { showErrorToast } from './preDefinedToasts';
+
+export const checkIfOutOfRange = (getState) => {
+	const state = getState();
+	const {
+		location: { userLocation, homeMapCenter },
+	} = state;
+	if (isDistanceLessThan(userLocation, homeMapCenter)) {
+		return false;
+	} else {
+		showErrorToast(
+			`Action can only be performed within ${config.maxProximityDistance} meters of your location.`
+		);
+		return true;
+	}
+};
+
+export const goToMapLocation = (mapRef, location) => {
+	if (mapRef) {
+		const { latitude, longitude } = location;
+		const mapLocation = {
+			latitude,
+			longitude,
+			latitudeDelta: 0.011582007226706992,
+			longitudeDelta: 0.010652057826519012,
+		};
+
+		mapRef.animateToRegion(mapLocation, 2000);
+	}
+};
+
+export const isDistanceLessThan = (
+	firstLocation,
+	secondLocation,
+	threshold = config.maxProximityDistance
+) => {
+	const distance = getDistanceFromLatLon([firstLocation, secondLocation]);
+	return distance < threshold;
+};
+
 /**
  * Returns a distance in meters
  * @param {Array.<{latitude: Number, longitude: Number}>} endpoints
@@ -14,7 +55,7 @@ export const getDistanceFromLatLon = (endpoints) => {
 		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	const d = R * c; // Distance in km
-	return d * 1000;
+	return d * 1000; // Distance in meters
 };
 
 /**
