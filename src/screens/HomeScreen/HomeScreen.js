@@ -11,11 +11,7 @@ import AddActionButton from '../../shared/AddActionButton/AddActionButton';
 import * as locationActions from '../../store/actions/location.action';
 import * as uiInteractionActions from '../../store/actions/ui-interactions.action';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
-import {
-	selectIsFilterOpen,
-	selectCurrentStatusList,
-	selectCurrentRangeFilter,
-} from '../../store/reducers/ui-interactions.reducer';
+import { selectIsFilterOpen } from '../../store/reducers/ui-interactions.reducer';
 import * as colors from '../../styles/colors';
 import * as variables from '../../styles/variables';
 import { usePrevious, useKeyboardHideHook } from '../../utils/customHooks';
@@ -71,6 +67,7 @@ const HomeScreen = (props) => {
 			dispatch(locationActions.setHomeMapCenterByGooglePlaceId(_searchQuery, _mapRef, _cb)),
 		[dispatch]
 	);
+	const toggleFilter = useCallback(() => dispatch(uiInteractionActions.toggleFilter()), [dispatch]);
 
 	const setDefaultNavigationBar = (nearbyTreesCount = 0) => {
 		navigation.setParams({
@@ -120,6 +117,7 @@ const HomeScreen = (props) => {
 	const handleFilterChange = ({ range, selectedStatusList: statusList }) => {
 		setCurrentRangeFilter(range);
 		setCurrentStatusList(statusList);
+		toggleFilter();
 	};
 
 	const handleAutoCompleteSearch = (searchQuery) => {

@@ -65,7 +65,7 @@ export const fetchPlanatationSites = (location, radius = 500) => async (dispatch
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			noloading: true,
+			data: { noloading: true },
 		});
 		dispatch(fetchPlantationSiteSuccess(response.data));
 		Toast.show({
@@ -90,7 +90,7 @@ export const deletePlantationSite = (plantationSite) => async (dispatch, getStat
 				'Content-Type': 'application/json',
 			},
 			method: 'DELETE',
-			noloading: true,
+			data: { noloading: true },
 		});
 		Toast.show({
 			text: 'Plantation site was successfully deleted.',

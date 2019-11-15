@@ -74,7 +74,7 @@ export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState)
 	try {
 		const response = await Axios({
 			url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?location=${location}&input=${searchQuery}&key=${placesApiKey}`,
-			noloading: true,
+			data: { noloading: true },
 		});
 		dispatch(fetchSearchedLocationSuccess(response.data));
 	} catch (err) {
@@ -88,7 +88,6 @@ export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => as
 	try {
 		const response = await Axios({
 			url: `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${geocodeApiKey}`,
-			noloading: true,
 		});
 
 		const { results } = response.data;

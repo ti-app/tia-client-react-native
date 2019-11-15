@@ -12,7 +12,7 @@ export const initializeAxiosInterceptors = (
 ) => {
 	axios.interceptors.request.use(
 		(config) => {
-			const { headers, noloading, ...rest } = config;
+			const { headers, ...rest } = config;
 			requestInterceptorCB(config);
 
 			return {

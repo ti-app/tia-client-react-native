@@ -74,7 +74,7 @@ export const fetchTreeGroups = (
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			noloading: true,
+			data: { noloading: true },
 		});
 		dispatch(fetchTreeGroupsSuccess(response.data));
 		dispatch(resetNewTreeGroupData());
@@ -124,7 +124,6 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Successfully updated watering details',
@@ -154,7 +153,6 @@ export const waterTreeGroup = (tree) => async (dispatch, getState) => {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Successfully updated watered tree group',
@@ -181,7 +179,6 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 				'Content-Type': 'application/json',
 			},
 			method: 'DELETE',
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Tree was successfully deleted',
@@ -208,7 +205,6 @@ export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 				'Content-Type': 'application/json',
 			},
 			method: 'DELETE',
-			noloading: true,
 		});
 		Toast.show({
 			text: 'Tree group was successfully deleted',

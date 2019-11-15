@@ -277,7 +277,6 @@ AddNewSpotScreen.navigationOptions = ({ navigation }) => {
 					label: 'Cancel',
 					action: () => {
 						navigation.navigate('Home');
-						console.log(navigation.state.params);
 						navigation.state.params.resetNewTreeGroupData();
 					},
 				}}

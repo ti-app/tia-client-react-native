@@ -64,9 +64,12 @@ const AppContent = () => {
 
 	const initializeInterceptors = useCallback(
 		(accessToken) => {
-			const requestInterceptor = ({ noloading }) => {
-				if (!noloading) {
-					setLoading(true);
+			const requestInterceptor = ({ data }) => {
+				if (data) {
+					const { noloading } = data;
+					if (!noloading) {
+						setLoading(true);
+					}
 				}
 			};
 			const responseInterceptor = () => setLoading(false);

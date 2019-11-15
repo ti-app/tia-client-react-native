@@ -81,7 +81,6 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 			rangeChanged = currentRangeFilter !== prevCurrentRangeFilter;
 		}
 
-		console.log('here', currentStatusList);
 		if ((forcedUpdate || locationChanged || rangeChanged || healthFilterChanged) && mapRef) {
 			fetchTreeGroups(
 				homeMapCenterLocation,
