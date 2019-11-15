@@ -1,10 +1,10 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'TIA' do
+target 'tiapp' do
   permissions_path = '../node_modules/react-native-permissions/ios'
 
-  # Pods for TIA
+  # Pods for tiapp
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -42,11 +42,11 @@ target 'TIA' do
 
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
 
+  # pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  target 'TIATests' do
+  target 'tiappTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -62,12 +62,28 @@ target 'TIA' do
   use_native_modules!
 end
 
-target 'TIA-tvOS' do
-  # Pods for TIA-tvOS
+target 'tiapp-tvOS' do
+  # Pods for tiapp-tvOS
 
-  target 'TIA-tvOSTests' do
+  target 'tiapp-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
 
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == 'react-native-config'
+      phase = target.project.new(Xcodeproj::Project::Object::PBXShellScriptBuildPhase)
+      phase.shell_script = "cd ../../"\
+                            " && RNC_ROOT=./node_modules/react-native-config/"\
+                            " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
+                            " && export BUILD_DIR=$RNC_ROOT/ios/ReactNativeConfig"\
+                            " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
+
+      target.build_phases << phase
+      target.build_phases.move(phase,0)
+    end
+  end
 end

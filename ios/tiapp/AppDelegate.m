@@ -21,7 +21,7 @@
   [GMSServices provideAPIKey:@"AIzaSyCqBtTe79hnKyQqdgGICXEzKs2Xe-nG3qk"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"TIA"
+                                                   moduleName:@"tiapp"
                                             initialProperties:nil];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
@@ -31,6 +31,8 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+  didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 
@@ -43,15 +45,15 @@
 #endif
 }
 
-- (BOOL)application:(UIApplication *)application 
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+// - (BOOL)application:(UIApplication *)application 
+//     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
-  // You can skip this line if you have the latest version of the SDK installed
-  [[FBSDKApplicationDelegate sharedInstance] application:application
-    didFinishLaunchingWithOptions:launchOptions];
-  // Add any custom logic here.
-  return YES;
-}
+//   // You can skip this line if you have the latest version of the SDK installed
+//   [[FBSDKApplicationDelegate sharedInstance] application:application
+//     didFinishLaunchingWithOptions:launchOptions];
+//   // Add any custom logic here.
+//   return YES;
+// }
 
 - (BOOL)application:(UIApplication *)application 
             openURL:(NSURL *)url 
