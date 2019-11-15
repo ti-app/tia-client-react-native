@@ -1,6 +1,6 @@
 import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/preDefinedToasts';
+import showErrorToast from '../../utils/predefinedToasts';
 
 export const FETCH_LEADERBOARD_SUCCESS = 'FETCH_LEADERBOARD_SUCCESS';
 

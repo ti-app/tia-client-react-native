@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* tiappTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* tiappTests.m */; };
 		025719605305479C8BF80D6B /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 101B01C698944D4F9D17C5B2 /* rubicon-icon-font.ttf */; };
@@ -15,6 +14,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		178E1C0503CBFEBDBBC16E5E /* libPods-tiappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A47311D6FAE188B732AF71 /* libPods-tiappTests.a */; };
 		1DB8542CC7D44BAB902135DA /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E20C20F9203149439687C356 /* EvilIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -24,18 +24,18 @@
 		54274432BC624C3880E184BD /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0554B3460E90495F92206099 /* Zocial.ttf */; };
 		5992637327D344B889C20464 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68BEB3FAAE71411DAD6B58DF /* MaterialIcons.ttf */; };
 		5BEB6A101DED4490ABB57918 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B05599BDD73C4E4BBFD1E51E /* Fontisto.ttf */; };
-		7DCD094922434826E2364172 /* libPods-tiapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1CB887403BEE14B7EFB9D2 /* libPods-tiapp.a */; };
+		5EFDAC99F9E4069E766F0DB3 /* libPods-tiapp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B8F59E832D5F57F1E1DB16 /* libPods-tiapp-tvOS.a */; };
 		830FAA03681242DF97A7D14A /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 078E79CBABBC482B96147F06 /* Roboto_medium.ttf */; };
 		8455688EA7AE41209F7260E5 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF9C1F1624A34C3EAC4C980F /* FontAwesome5_Brands.ttf */; };
 		896D0E91E4C74D118C875917 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39A21483AC0D4660BDE6185A /* Feather.ttf */; };
 		8F26E33F12D948E69A1F2B86 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 76A79C5BE1D844FFB83268C0 /* Foundation.ttf */; };
+		904D3C26C12FBA880FA9D5AC /* libPods-tiapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B97BFF36B8BD4D2C4352688 /* libPods-tiapp.a */; };
 		97F510B96370478EBE79E858 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A17162FBE56541E19DD59C54 /* Octicons.ttf */; };
 		A2E3CACF801D49F89BC8A553 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3093D02AA49644AB901F2BD9 /* FontAwesome5_Regular.ttf */; };
-		C5918BD3722E0E033FF161FA /* libPods-tiapp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D86F061F662DD6F7325A8DFC /* libPods-tiapp-tvOS.a */; };
+		A924DD4FE53C68D371345BF6 /* libPods-tiapp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C913C10BFEBBBD89C1737F /* libPods-tiapp-tvOSTests.a */; };
+		BA7D9981237EFB7400895904 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BA7D9980237EFB7400895904 /* GoogleService-Info.plist */; };
 		D54DA1F158AA450DACB72817 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C557DCD33C6A4209B717BABA /* AntDesign.ttf */; };
 		D8D1C210197840F2B5D34175 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9DA73C69AD7B4DD185181747 /* MaterialCommunityIcons.ttf */; };
-		DDEAE16606D8BEDA7B3ED931 /* libPods-tiapp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28DE7B9A91168FD620D1C174 /* libPods-tiapp-tvOSTests.a */; };
-		E396A3EC205E1A65D78020F2 /* libPods-tiappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEE5FD9236A9C86B3CDE9A3 /* libPods-tiappTests.a */; };
 		F59F1F2EA5B4425D9044AB75 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C30049821CB042EC8D071B14 /* Roboto.ttf */; };
 		F8D6B593A88844F0876EE1C2 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48A9CB0F79E343F38D32ADC5 /* Entypo.ttf */; };
 		FFCC521E4FDB4FFA8A67F2C4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB3514989206456D93C595EE /* SimpleLineIcons.ttf */; };
@@ -59,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00020204B6FA64C6CA22293B /* Pods-tiapp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOSTests/Pods-tiapp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* tiappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tiappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,53 +74,53 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = tiapp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = tiapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = tiapp/main.m; sourceTree = "<group>"; };
+		14A47311D6FAE188B732AF71 /* libPods-tiappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1626A084DD4243CFA23C9823 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		184E47182E4B47369F3E5FCA /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		199B6E7C2C2B43869A728402 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		28DE7B9A91168FD620D1C174 /* libPods-tiapp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B97BFF36B8BD4D2C4352688 /* libPods-tiapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* tiapp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tiapp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* tiapp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tiapp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3023935089884BCB84B00CF7 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		3031B0C622FAE471193CD5C6 /* Pods-tiapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp.debug.xcconfig"; path = "Target Support Files/Pods-tiapp/Pods-tiapp.debug.xcconfig"; sourceTree = "<group>"; };
 		3093D02AA49644AB901F2BD9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		3294DCA51E7041F0BBD55BC3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		37E2907757125E169A360130 /* Pods-tiapp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOSTests/Pods-tiapp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		39A21483AC0D4660BDE6185A /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		3F37AF5A99114100934D4FF8 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		41392F99ADF7453BBC581B98 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		48A9CB0F79E343F38D32ADC5 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		495C048D2BE5139F8524DCE9 /* Pods-tiapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp.release.xcconfig"; path = "Target Support Files/Pods-tiapp/Pods-tiapp.release.xcconfig"; sourceTree = "<group>"; };
 		4C3976A2E4B64EF2A0B695E8 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		5F5436F848251DE37C24A32D /* Pods-tiappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiappTests.release.xcconfig"; path = "Target Support Files/Pods-tiappTests/Pods-tiappTests.release.xcconfig"; sourceTree = "<group>"; };
+		50C913C10BFEBBBD89C1737F /* libPods-tiapp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62E3911A14F848DAA981FE43 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		665B5DC6065D4B53A5C61BDD /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		68BEB3FAAE71411DAD6B58DF /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		69B453660F4A4ECCAA4B11AF /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		76A79C5BE1D844FFB83268C0 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		77A26DBB419C49CA9D6985BE /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		7E34514E8B4BF13EA1FB4020 /* Pods-tiapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp.debug.xcconfig"; path = "Target Support Files/Pods-tiapp/Pods-tiapp.debug.xcconfig"; sourceTree = "<group>"; };
+		813E312AD7A3A218D9D63CC2 /* Pods-tiappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiappTests.debug.xcconfig"; path = "Target Support Files/Pods-tiappTests/Pods-tiappTests.debug.xcconfig"; sourceTree = "<group>"; };
+		81A73747D97141306F320ABD /* Pods-tiapp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOSTests/Pods-tiapp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		83600EDD88FE49FCBB1EB3D6 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		912662E86DA26D3A4EDCE4BD /* Pods-tiapp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOS/Pods-tiapp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		8C49EEBB1533E9BD99E1FE95 /* Pods-tiapp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOS/Pods-tiapp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		957EAE57373944B18C387CC1 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		9AA87A7122344F13A3480181 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		9DA73C69AD7B4DD185181747 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		A08A77666BD442559D71C099 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		A17162FBE56541E19DD59C54 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		ADA8F0F0D6964C539AE2D8A0 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		AF2330D4AB81256DBE70CE8C /* Pods-tiapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp.release.xcconfig"; path = "Target Support Files/Pods-tiapp/Pods-tiapp.release.xcconfig"; sourceTree = "<group>"; };
 		B05599BDD73C4E4BBFD1E51E /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		BA14F12A85AACC1D29B40737 /* Pods-tiappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiappTests.debug.xcconfig"; path = "Target Support Files/Pods-tiappTests/Pods-tiappTests.debug.xcconfig"; sourceTree = "<group>"; };
-		BE1CB887403BEE14B7EFB9D2 /* libPods-tiapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1D8E673EAC7CFA4C712897A /* Pods-tiapp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOS/Pods-tiapp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		BA7D9980237EFB7400895904 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C30049821CB042EC8D071B14 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
-		C4725E956D2421649477D1B8 /* Pods-tiapp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOS/Pods-tiapp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C557DCD33C6A4209B717BABA /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		CC3A599D62EF4F5CAD3EC6D0 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
-		D86F061F662DD6F7325A8DFC /* libPods-tiapp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DCEE5FD9236A9C86B3CDE9A3 /* libPods-tiappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E20C20F9203149439687C356 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		E29EA2D01BD746658DB4DC5D /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		E6B8F59E832D5F57F1E1DB16 /* libPods-tiapp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiapp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB3514989206456D93C595EE /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		FA57B41046EC05691A52D3DB /* Pods-tiapp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiapp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-tiapp-tvOSTests/Pods-tiapp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F481310CEC54A810B0A937F2 /* Pods-tiappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tiappTests.release.xcconfig"; path = "Target Support Files/Pods-tiappTests/Pods-tiappTests.release.xcconfig"; sourceTree = "<group>"; };
 		FF9C1F1624A34C3EAC4C980F /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,7 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E396A3EC205E1A65D78020F2 /* libPods-tiappTests.a in Frameworks */,
+				178E1C0503CBFEBDBBC16E5E /* libPods-tiappTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DCD094922434826E2364172 /* libPods-tiapp.a in Frameworks */,
+				904D3C26C12FBA880FA9D5AC /* libPods-tiapp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5918BD3722E0E033FF161FA /* libPods-tiapp-tvOS.a in Frameworks */,
+				5EFDAC99F9E4069E766F0DB3 /* libPods-tiapp-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDEAE16606D8BEDA7B3ED931 /* libPods-tiapp-tvOSTests.a in Frameworks */,
+				A924DD4FE53C68D371345BF6 /* libPods-tiapp-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +180,7 @@
 		13B07FAE1A68108700A75B9A /* tiapp */ = {
 			isa = PBXGroup;
 			children = (
+				BA7D9980237EFB7400895904 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -195,10 +197,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				BE1CB887403BEE14B7EFB9D2 /* libPods-tiapp.a */,
-				D86F061F662DD6F7325A8DFC /* libPods-tiapp-tvOS.a */,
-				28DE7B9A91168FD620D1C174 /* libPods-tiapp-tvOSTests.a */,
-				DCEE5FD9236A9C86B3CDE9A3 /* libPods-tiappTests.a */,
+				1B97BFF36B8BD4D2C4352688 /* libPods-tiapp.a */,
+				E6B8F59E832D5F57F1E1DB16 /* libPods-tiapp-tvOS.a */,
+				50C913C10BFEBBBD89C1737F /* libPods-tiapp-tvOSTests.a */,
+				14A47311D6FAE188B732AF71 /* libPods-tiappTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -206,16 +208,15 @@
 		806BFCCF7FF844A905DBA357 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3031B0C622FAE471193CD5C6 /* Pods-tiapp.debug.xcconfig */,
-				495C048D2BE5139F8524DCE9 /* Pods-tiapp.release.xcconfig */,
-				912662E86DA26D3A4EDCE4BD /* Pods-tiapp-tvOS.debug.xcconfig */,
-				C4725E956D2421649477D1B8 /* Pods-tiapp-tvOS.release.xcconfig */,
-				FA57B41046EC05691A52D3DB /* Pods-tiapp-tvOSTests.debug.xcconfig */,
-				37E2907757125E169A360130 /* Pods-tiapp-tvOSTests.release.xcconfig */,
-				BA14F12A85AACC1D29B40737 /* Pods-tiappTests.debug.xcconfig */,
-				5F5436F848251DE37C24A32D /* Pods-tiappTests.release.xcconfig */,
+				7E34514E8B4BF13EA1FB4020 /* Pods-tiapp.debug.xcconfig */,
+				AF2330D4AB81256DBE70CE8C /* Pods-tiapp.release.xcconfig */,
+				8C49EEBB1533E9BD99E1FE95 /* Pods-tiapp-tvOS.debug.xcconfig */,
+				B1D8E673EAC7CFA4C712897A /* Pods-tiapp-tvOS.release.xcconfig */,
+				00020204B6FA64C6CA22293B /* Pods-tiapp-tvOSTests.debug.xcconfig */,
+				81A73747D97141306F320ABD /* Pods-tiapp-tvOSTests.release.xcconfig */,
+				813E312AD7A3A218D9D63CC2 /* Pods-tiappTests.debug.xcconfig */,
+				F481310CEC54A810B0A937F2 /* Pods-tiappTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -302,7 +303,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "tiappTests" */;
 			buildPhases = (
-				DB39C753DF690D4EB2EA8D2E /* [CP] Check Pods Manifest.lock */,
+				550DF2345CEBE87583D1CC05 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -321,13 +322,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "tiapp" */;
 			buildPhases = (
-				D9B0DE7F3D9A55BEA69DF989 /* [CP] Check Pods Manifest.lock */,
+				BA39AC7C90E77BEFBEEEF793 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				B141DFAFA21290B447DAC47D /* [CP] Copy Pods Resources */,
+				3B872A4AFC8D169CD01765B6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -342,7 +343,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tiapp-tvOS" */;
 			buildPhases = (
-				A271D41D2F30D67DB5562A9D /* [CP] Check Pods Manifest.lock */,
+				405CEE315F70A1B5F5685A36 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -362,7 +363,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "tiapp-tvOSTests" */;
 			buildPhases = (
-				CF2525838472CFB92D409775 /* [CP] Check Pods Manifest.lock */,
+				01A0539D697F11D0A924EB21 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -454,6 +455,7 @@
 				830FAA03681242DF97A7D14A /* Roboto_medium.ttf in Resources */,
 				F59F1F2EA5B4425D9044AB75 /* Roboto.ttf in Resources */,
 				025719605305479C8BF80D6B /* rubicon-icon-font.ttf in Resources */,
+				BA7D9981237EFB7400895904 /* GoogleService-Info.plist in Resources */,
 				FFCC521E4FDB4FFA8A67F2C4 /* SimpleLineIcons.ttf in Resources */,
 				54274432BC624C3880E184BD /* Zocial.ttf in Resources */,
 			);
@@ -491,21 +493,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		A271D41D2F30D67DB5562A9D /* [CP] Check Pods Manifest.lock */ = {
+		01A0539D697F11D0A924EB21 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -520,14 +508,28 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tiapp-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-tiapp-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B141DFAFA21290B447DAC47D /* [CP] Copy Pods Resources */ = {
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		3B872A4AFC8D169CD01765B6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -553,7 +555,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-tiapp/Pods-tiapp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CF2525838472CFB92D409775 /* [CP] Check Pods Manifest.lock */ = {
+		405CEE315F70A1B5F5685A36 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -568,36 +570,14 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tiapp-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-tiapp-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D9B0DE7F3D9A55BEA69DF989 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-tiapp-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DB39C753DF690D4EB2EA8D2E /* [CP] Check Pods Manifest.lock */ = {
+		550DF2345CEBE87583D1CC05 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -613,6 +593,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-tiappTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BA39AC7C90E77BEFBEEEF793 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-tiapp-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -724,7 +726,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BA14F12A85AACC1D29B40737 /* Pods-tiappTests.debug.xcconfig */;
+			baseConfigurationReference = 813E312AD7A3A218D9D63CC2 /* Pods-tiappTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -747,7 +749,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F5436F848251DE37C24A32D /* Pods-tiappTests.release.xcconfig */;
+			baseConfigurationReference = F481310CEC54A810B0A937F2 /* Pods-tiappTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -767,7 +769,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3031B0C622FAE471193CD5C6 /* Pods-tiapp.debug.xcconfig */;
+			baseConfigurationReference = 7E34514E8B4BF13EA1FB4020 /* Pods-tiapp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -787,7 +789,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 495C048D2BE5139F8524DCE9 /* Pods-tiapp.release.xcconfig */;
+			baseConfigurationReference = AF2330D4AB81256DBE70CE8C /* Pods-tiapp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -806,7 +808,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 912662E86DA26D3A4EDCE4BD /* Pods-tiapp-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 8C49EEBB1533E9BD99E1FE95 /* Pods-tiapp-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -834,7 +836,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4725E956D2421649477D1B8 /* Pods-tiapp-tvOS.release.xcconfig */;
+			baseConfigurationReference = B1D8E673EAC7CFA4C712897A /* Pods-tiapp-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -862,7 +864,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FA57B41046EC05691A52D3DB /* Pods-tiapp-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 00020204B6FA64C6CA22293B /* Pods-tiapp-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -889,7 +891,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 37E2907757125E169A360130 /* Pods-tiapp-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 81A73747D97141306F320ABD /* Pods-tiapp-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

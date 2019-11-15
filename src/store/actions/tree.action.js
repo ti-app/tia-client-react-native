@@ -1,7 +1,7 @@
 import { Toast } from 'native-base';
 
 import apiClient from '../../utils/apiClient';
-import { showErrorToast } from '../../utils/preDefinedToasts';
+import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
 

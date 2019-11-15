@@ -1,6 +1,6 @@
 import destination from '@turf/destination';
 import config from '../config/common';
-import { showErrorToast } from './preDefinedToasts';
+import { showErrorToast } from './predefinedToasts';
 
 export const checkIfOutOfRange = (getState) => {
 	const state = getState();
