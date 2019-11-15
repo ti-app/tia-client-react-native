@@ -14,6 +14,7 @@ import TreeGroupDetails from '../screens/TreeGroupDetails/TreeGroupDetails';
 import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
 import UserActivity from '../screens/UserActivity/UserActivity';
 import TreeActivity from '../screens/TreeActivity/TreeActivity';
+import Leaderboard from '../screens/Leaderboard/Leaderboard';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -52,6 +53,9 @@ const MainNavigator = createStackNavigator(
 		},
 		TreeActivity: {
 			screen: TreeActivity,
+		},
+		Leaderboard: {
+			screen: Leaderboard,
 		},
 	},
 	{

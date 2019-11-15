@@ -8,7 +8,7 @@ const initialState = {
 	user: [],
 };
 
-const treeReducer = (state = initialState, action) => {
+const activityReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case FETCH_TREE_ACTIVITIES_SUCCESS: {
 			return { ...state, tree: action.payload ? action.payload.activities : [] };
@@ -27,7 +27,7 @@ const treeReducer = (state = initialState, action) => {
 	}
 };
 
-export default treeReducer;
+export default activityReducer;
 
 export const selectTreeActivities = (state) => state.activity.tree;
 export const selectUserActivities = (state) => state.activity.user;

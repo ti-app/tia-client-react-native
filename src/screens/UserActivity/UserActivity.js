@@ -13,7 +13,7 @@ import { getActivityDetails } from '../../utils/misc';
 
 const UserActivity = ({ navigation }) => {
 	const activities = useSelector(selectUserActivities);
-	const user = useSelector(selectUser);
+	const currentUser = useSelector(selectUser);
 
 	const dispatch = useDispatch();
 	const fetchActivities = useCallback(
@@ -22,11 +22,14 @@ const UserActivity = ({ navigation }) => {
 	);
 
 	useEffect(() => {
-		if (user && user.uid) {
-			fetchActivities(user.uid);
+		const userId = navigation.getParam('userId', null);
+		if (userId) {
+			fetchActivities(userId);
+		} else if (!userId && currentUser && currentUser.uid) {
+			fetchActivities(currentUser.uid);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
+	}, [currentUser]);
 
 	const data = (activities || []).map((anActivity) => {
 		const { activity, date: activityTimestamp } = anActivity.activity;

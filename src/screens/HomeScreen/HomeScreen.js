@@ -164,6 +164,15 @@ const HomeScreen = (props) => {
 				</TouchableOpacity>
 			)}
 
+			{!isSearchOpen && !isFilterOpen && (
+				<TouchableOpacity
+					style={styles.leaderboardIconContainer}
+					onPress={() => navigation.navigate('Leaderboard')}
+				>
+					<Icon type="AntDesign" style={[styles.leaderboardIcon]} name="barschart" />
+				</TouchableOpacity>
+			)}
+
 			{!isKeyboardOpen && <AddActionButton {...props} mapRef={mapRef} />}
 			{!isKeyboardOpen && (
 				<Icon
@@ -205,6 +214,23 @@ const styles = StyleSheet.create({
 	},
 	searchIcon: {
 		fontSize: 20,
+		color: colors.white.toString(),
+	},
+	leaderboardIconContainer: {
+		position: 'absolute',
+		width: variables.space.xxl,
+		height: variables.space.xxl,
+		borderRadius: variables.space.xxl / 8,
+		top: headerHeight + variables.space.base,
+		left: variables.space.base,
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: colors.purple.toString(),
+	},
+	leaderboardIcon: {
+		fontSize: 25,
 		color: colors.white.toString(),
 	},
 	myLocationIcon: {

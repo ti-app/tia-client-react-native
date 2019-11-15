@@ -5,11 +5,13 @@ import authReducer from './auth.reducer';
 import treeReducer from './tree.reducer';
 import plantationSiteReducer from './plantation-site.reducer';
 import activityReducer from './activity.reducer';
+import leaderBoardReducer from './leaderboard.reducer';
 
 // Root Reducer
 const rootReducer = combineReducers({
 	ui: uiInteractionsReducer,
 	location: locationReducer,
+	leaderboard: leaderBoardReducer,
 	auth: authReducer,
 	tree: treeReducer,
 	plantationSite: plantationSiteReducer,

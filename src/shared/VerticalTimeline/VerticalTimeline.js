@@ -21,7 +21,6 @@ const VerticalTimeline = ({ data }) => {
 	);
 
 	const _renderTime = (rowData) => {
-		console.log(rowData.time);
 		return (
 			<View style={styles.timeContainer}>
 				<Text style={styles.time}>{rowData.time}</Text>
