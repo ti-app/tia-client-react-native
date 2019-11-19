@@ -46,6 +46,8 @@ target 'tiapp' do
 
   pod 'react-native-config', :path => '../node_modules/react-native-config'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'tiappTests' do
     inherit! :search_paths
     # Pods for testing
