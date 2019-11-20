@@ -13,6 +13,8 @@
 	"dependencies": {
 		"@react-native-community/async-storage": "^1.6.2",
 		"@react-native-community/google-signin": "^3.0.1",
+		"@react-native-community/netinfo": "^4.6.1",
+		"@redux-offline/redux-offline": "^2.5.2-native.1",
 		"@turf/destination": "^6.0.1",
 		"axios": "^0.19.0",
 		"base-64": "^0.1.0",
