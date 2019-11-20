@@ -9,7 +9,7 @@ export const fetchTreeActivities = (treeId) => async (dispatch) => {
 	try {
 		const response = await apiClient({
 			url: `/tree/${treeId}/activity`,
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'content-type': 'application/json' },
 		});
 
 		dispatch(fetchTreeActivitiesSuccess(response.data));

@@ -40,7 +40,7 @@ export const addPlantationSite = (plantationSite) => async (dispatch, getState) 
 			data: plantationSite,
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'multipart/form-data',
+				'content-type': 'multipart/form-data',
 			},
 		});
 
@@ -63,7 +63,7 @@ export const fetchPlanatationSites = (location, radius = 500) => async (dispatch
 				radius,
 			},
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			data: { noloading: true },
 		});
@@ -87,7 +87,7 @@ export const deletePlantationSite = (plantationSite) => async (dispatch, getStat
 		await apiClient({
 			url,
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			method: 'DELETE',
 			data: { noloading: true },
@@ -121,7 +121,7 @@ export const updatePlantationSite = (siteId, updatedPlantationSite) => async (
 			data: updatedPlantationSite,
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'multipart/form-data',
+				'content-type': 'multipart/form-data',
 			},
 		});
 
@@ -139,7 +139,7 @@ export const takeModActionForSite = (siteId, approval) => async (dispatch, getSt
 			url,
 			method: 'patch',
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			data: approval,
 		});

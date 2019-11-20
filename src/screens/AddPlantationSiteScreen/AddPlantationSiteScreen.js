@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, CheckBox, Image, Platform } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, CheckBox, Image } from 'react-native';
 import { Container, View, Text, Button } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -14,6 +14,7 @@ import * as plantationSiteActions from '../../store/actions/plantation-site.acti
 import * as locationActions from '../../store/actions/location.action';
 import * as colors from '../../styles/colors';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
+import { createFormData } from '../../utils/misc';
 import { useKeyboardHideHook } from '../../utils/customHooks';
 
 const centerBias = 0.00015;
@@ -62,37 +63,20 @@ const AddPlantationSiteScreen = () => {
 	const handleAddSite = () => {
 		const { latitude, longitude } = userLocation;
 
-		const formData = createFormData(photo, {
-			siteDisplayName,
-			numberOfPlants: plants,
-			lat: latitude,
-			lng: longitude,
-			type,
-			wateringNearBy,
-			soilQuality,
-		});
+		const formData = createFormData(
+			{
+				siteDisplayName,
+				numberOfPlants: plants,
+				lat: latitude,
+				lng: longitude,
+				type,
+				wateringNearBy,
+				soilQuality,
+			},
+			photo
+		);
 
 		addPlantationSite(formData);
-	};
-
-	const createFormData = (_uri, _body) => {
-		const _data = new FormData();
-		if (_uri) {
-			const _filename = _uri.split('/').pop();
-			const _type = _filename.split('.').pop();
-
-			_data.append('photo', {
-				_uri: Platform.OS === 'android' ? _uri : _uri.replace('file://', ''),
-				_type: `image/${_type}`,
-				name: _filename,
-			});
-		}
-
-		Object.keys(_body).forEach((_key) => {
-			_data.append(_key, _body[_key]);
-		});
-
-		return _data;
 	};
 
 	const handleOnWateringNearbyChange = () => {

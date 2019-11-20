@@ -4,6 +4,7 @@ import apiClient from '../../utils/apiClient';
 import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
+import { createFormData } from '../../utils/misc';
 import uuid from '../../utils/uuid';
 
 export const ADD_TREE_GROUP = 'ADD_TREE_GROUP';
@@ -48,7 +49,7 @@ const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
 // 			data: treeGroup,
 // 			headers: {
 // 				Accept: 'application/json',
-// 				'Content-Type': 'multipart/form-data',
+// 				'content-type': 'multipart/form-data',
 // 			},
 // 		});
 
@@ -59,20 +60,31 @@ const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
 // 	}
 // };
 
-export const addGroup = (treeGroup) => (dispatch, getState) => {
+export const addGroup = () => (dispatch, getState) => {
 	const _uuid = uuid();
 	const { role, user } = getState().auth;
+	const { newTreeGroup } = getState().tree;
+
 	NavigationUtil.navigate('Home');
+
+	const { trees } = newTreeGroup;
+
+	const treeGroupData = {
+		...newTreeGroup,
+		trees: JSON.stringify(
+			trees.map(({ latitude, longitude }) => ({ lat: latitude, lng: longitude }))
+		),
+	};
 
 	dispatch({
 		type: ADD_TREE_GROUP,
-		payload: { treeGroup, tempUuid: _uuid, user, role },
+		payload: { treeGroup: newTreeGroup, tempUuid: _uuid, user, role },
 		meta: {
 			offline: {
 				effect: {
 					method: 'post',
 					url: '/tree_group',
-					data: treeGroup,
+					data: treeGroupData,
 					headers: {
 						Accept: 'application/json',
 						'content-type': 'multipart/form-data',
@@ -102,7 +114,7 @@ export const fetchTreeGroups = (
 				health,
 			},
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			data: { noloading: true },
 		});
@@ -131,7 +143,7 @@ export const updateTree = (treeId, updatedTree) => async (dispatch, getState) =>
 			data: updatedTree,
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'multipart/form-data',
+				'content-type': 'multipart/form-data',
 			},
 		});
 
@@ -152,7 +164,7 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 		await apiClient({
 			url,
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 		});
 		Toast.show({
@@ -181,7 +193,7 @@ export const waterTreeGroup = (tree) => async (dispatch, getState) => {
 		await apiClient({
 			url,
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 		});
 		Toast.show({
@@ -206,7 +218,7 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 		await apiClient({
 			url,
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			method: 'DELETE',
 		});
@@ -232,7 +244,7 @@ export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 		await apiClient({
 			url,
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			method: 'DELETE',
 		});
@@ -259,7 +271,7 @@ export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispa
 			url,
 			method: 'patch',
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			data: approval,
 		});
@@ -286,7 +298,7 @@ export const takeModActionForTree = (treeId, approval) => async (dispatch, getSt
 			url,
 			method: 'patch',
 			headers: {
-				'Content-Type': 'application/json',
+				'content-type': 'application/json',
 			},
 			data: approval,
 		});

@@ -8,7 +8,7 @@ export const fetchLeaderboard = (treeId, limit = 10) => async (dispatch) => {
 	try {
 		const response = await apiClient({
 			url: `/top-users?limit=${limit}`,
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'content-type': 'application/json' },
 		});
 
 		dispatch(fetchLeaderboardSuccess(response.data));

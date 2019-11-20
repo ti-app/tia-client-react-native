@@ -1,13 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	StyleSheet,
-	ScrollView,
-	TouchableOpacity,
-	CheckBox,
-	Platform,
-	ImageBackground,
-} from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, CheckBox, ImageBackground } from 'react-native';
 import { Container, View, Text, Button } from 'native-base';
 import MapView from 'react-native-maps';
 import { RESULTS, PERMISSIONS, request } from 'react-native-permissions';
@@ -23,6 +16,7 @@ import { selectSelectedPlantationSite } from '../../store/reducers/plantation-si
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { useKeyboardHideHook } from '../../utils/customHooks';
 import SelectButton from '../../shared/SelectButton/SelectButton';
+import { createFormData } from '../../utils/misc';
 
 const centerBias = 0.00015;
 
@@ -110,7 +104,7 @@ const EditPlantationSiteScreen = () => {
 	// TODO: Check Api for location and update following method to support updated location
 	// FIXME: It's sending photo value as null. Use updated photo logic as implemeneted in edit tree details page
 	const handleUpdateSite = () => {
-		const formData = createFormData(null, {
+		const formData = createFormData({
 			siteDisplayName,
 			numberOfPlants,
 			type,
@@ -119,26 +113,6 @@ const EditPlantationSiteScreen = () => {
 		});
 
 		updatePlantationSite(id, formData);
-	};
-
-	const createFormData = (uri, body) => {
-		const data = new FormData();
-		if (uri) {
-			const filename = uri.split('/').pop();
-			const type = filename.split('.').pop();
-
-			data.append('photo', {
-				uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
-				type: `image/${type}`,
-				name: filename,
-			});
-		}
-
-		Object.keys(body).forEach((key) => {
-			data.append(key, body[key]);
-		});
-
-		return data;
 	};
 
 	const handleOnWateringNearbyChange = () => {

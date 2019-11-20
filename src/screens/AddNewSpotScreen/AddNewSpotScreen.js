@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import { useSelector, useDispatch } from 'react-redux';
-import { SafeAreaView, Animated, Easing, TouchableOpacity, Platform } from 'react-native';
+import { SafeAreaView, Animated, Easing, TouchableOpacity } from 'react-native';
 import { View, Icon } from 'native-base';
 
 import Step1SetTreeDistribution from './SetTreeDistribution';
@@ -163,39 +163,7 @@ const AddNewSpotScreen = ({ navigation }) => {
 	};
 
 	const handleOnDone = () => {
-		const { distribution, trees, health, plantType, waterCycle, photo } = newTreeGroup;
-
-		const formData = createFormData(photo, {
-			distribution,
-			trees: JSON.stringify(
-				trees.map(({ latitude, longitude }) => ({ lat: latitude, lng: longitude }))
-			),
-			health,
-			plantType,
-			waterCycle,
-		});
-
-		addGroup(formData);
-	};
-
-	const createFormData = (uri, body) => {
-		const data = new FormData();
-		if (uri) {
-			const filename = uri.split('/').pop();
-			const type = filename.split('.').pop();
-
-			data.append('photo', {
-				uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
-				type: `image/${type}`,
-				name: filename,
-			});
-		}
-
-		Object.keys(body).forEach((key) => {
-			data.append(key, body[key]);
-		});
-
-		return data;
+		addGroup();
 	};
 
 	const isNextDisabled = () => {
@@ -277,7 +245,10 @@ AddNewSpotScreen.navigationOptions = ({ navigation }) => {
 					label: 'Cancel',
 					action: () => {
 						navigation.navigate('Home');
-						navigation.state.params.resetNewTreeGroupData();
+						const { params } = navigation.state;
+						if (params && params.resetNewTreeGroupData) {
+							params.resetNewTreeGroupData();
+						}
 					},
 				}}
 			/>

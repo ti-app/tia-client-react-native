@@ -1,13 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-	StyleSheet,
-	ImageBackground,
-	ScrollView,
-	TouchableOpacity,
-	Platform,
-	CheckBox,
-} from 'react-native';
+import { StyleSheet, ImageBackground, ScrollView, TouchableOpacity, CheckBox } from 'react-native';
 import { View, Text, Container, Button } from 'native-base';
 import MapView from 'react-native-maps';
 import { RESULTS, PERMISSIONS, request } from 'react-native-permissions';
@@ -22,6 +15,7 @@ import * as treeActions from '../../store/actions/tree.action';
 import { selectSelectedTree } from '../../store/reducers/tree.reducer';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import * as colors from '../../styles/colors';
+import { createFormData } from '../../utils/misc';
 import { useKeyboardHideHook } from '../../utils/customHooks';
 
 const centerBias = 0.00015;
@@ -83,33 +77,16 @@ const EditTreeDetails = () => {
 
 	// TODO: Check Api for location and update following method to support updated location
 	const handleUpdateTree = () => {
-		const formData = createFormData(updatedPhoto, {
-			plantType,
-			healthCycle,
-			health,
-		});
+		const formData = createFormData(
+			{
+				plantType,
+				healthCycle,
+				health,
+			},
+			updatedPhoto
+		);
 
 		updateTree(id, formData);
-	};
-
-	const createFormData = (uri, body) => {
-		const data = new FormData();
-		if (uri) {
-			const filename = uri.split('/').pop();
-			const type = filename.split('.').pop();
-
-			data.append('photo', {
-				uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
-				type: `image/${type}`,
-				name: filename,
-			});
-		}
-
-		Object.keys(body).forEach((key) => {
-			data.append(key, body[key]);
-		});
-
-		return data;
 	};
 
 	const handlePlantType = (_plantType) => setPlantType(_plantType);

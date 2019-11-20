@@ -26,3 +26,14 @@ export const initializeFirebase = () => {
 		firebase.initializeApp(firebaseConfig);
 	}
 };
+
+export const getFirebaseToken = () => {
+	return firebase.auth().currentUser.getIdToken();
+};
+
+export const isFirebaseInitialized = () => {
+	if (!firebase.apps.length) {
+		return false;
+	}
+	return true;
+};

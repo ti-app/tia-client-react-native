@@ -39,30 +39,12 @@ const omitForTempUuid = (_state, _tempUuid) => {
 };
 
 /**
- * Makes tree group object as we get in treeGroup array from treegroup formdata and tempUuid
+ * Makes tree group object as we get in treeGroup array from treeGroupData
  */
-const makeTreeGroupFromFD = (treeGroupFD, tempUuid, user, role) => {
+const makeTreeGroupFromFD = (treeGroupData, tempUuid, user, role) => {
 	const { displayName, uid: userUid } = user;
-	const treeGroupJson = {};
 
-	const treeGroupKeyValue = treeGroupFD._parts;
-
-	treeGroupKeyValue.forEach(([key, value]) => {
-		if (!treeGroupJson.hasOwnProperty(key)) {
-			treeGroupJson[key] = value;
-			return;
-		}
-		if (!Array.isArray(treeGroupJson[key])) {
-			treeGroupJson[key] = [treeGroupJson[key]];
-		}
-		treeGroupJson[key].push(value);
-	});
-
-	console.log(treeGroupJson);
-
-	const { trees: stringifiedTrees, health, plantType, waterCycle } = treeGroupJson;
-
-	const trees = JSON.parse(stringifiedTrees);
+	const { trees, health, plantType, waterCycle } = treeGroupData;
 
 	const treeGroup = {
 		tempUuid,
@@ -81,11 +63,11 @@ const makeTreeGroupFromFD = (treeGroupFD, tempUuid, user, role) => {
 		},
 		location: {
 			type: 'Point',
-			coordinates: [trees[0].lng, trees[0].lat],
+			coordinates: [trees[0].longitude, trees[0].latitude],
 		},
 		moderatorApproved: config.roles.MODERATOR === role,
 		committed: false,
-		trees: trees.map(({ lng, lat }, idx) => {
+		trees: trees.map(({ latitude, longitude }, idx) => {
 			return {
 				tempUuid: `${tempUuid}-${idx}`,
 				photo: '',
@@ -104,7 +86,7 @@ const makeTreeGroupFromFD = (treeGroupFD, tempUuid, user, role) => {
 				groupTempUuid: tempUuid,
 				location: {
 					type: 'Point',
-					coordinates: [lng, lat],
+					coordinates: [longitude, latitude],
 				},
 				committed: false,
 			};
