@@ -196,13 +196,14 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 			return (
 				<Tree
-					key={_data.trees[0]._id}
+					key={!_data.trees[0].committed ? _data.trees[0].tempUuid : _data.trees[0]._id}
 					coordinate={_data.location}
 					onPress={() => {
 						selectTree(_data.trees[0]);
 					}}
 					status={_data.trees[0].health}
 					deleteNotApproved={deleteNotApproved}
+					commited={_data.trees[0].committed}
 				/>
 			);
 		}
@@ -211,7 +212,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 		return (
 			<Spot
-				key={_data.id}
+				key={!_data.committed ? _data.tempUuid : _data._id}
 				coordinate={_data.location}
 				onPress={() => {
 					selectTreeGroup(_data);
@@ -220,6 +221,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				treeCount={_data.trees.length}
 				notApproved={!_data.moderatorApproved}
 				deleteNotApproved={deleteNotApproved}
+				commited={_data.committed}
 			/>
 		);
 	};

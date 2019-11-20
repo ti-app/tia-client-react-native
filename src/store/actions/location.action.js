@@ -42,7 +42,7 @@ export const fetchUserLocation = (mapRef) => {
 						}
 					},
 					(error) => {
-						console.err('Error while getting current position', error);
+						console.log('Error while getting current position', error);
 					},
 					{
 						enableHighAccuracy: true,
@@ -52,7 +52,7 @@ export const fetchUserLocation = (mapRef) => {
 				);
 			});
 		} catch (err) {
-			console.err('Error while asking for permisssion', err);
+			console.log('Error while asking for permisssion', err);
 		}
 	};
 };

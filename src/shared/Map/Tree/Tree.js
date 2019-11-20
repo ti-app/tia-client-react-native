@@ -5,7 +5,7 @@ import * as colors from '../../../styles/colors';
 import { getColorByTreeStatus } from '../../../utils/colorMapping';
 import { usePrevious } from '../../../utils/customHooks';
 
-const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status }) => {
+const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status, commited = true }) => {
 	const [tracksViewChanges, setTrackViewChanges] = useState(true);
 	const [blinkOpacity] = useState(new Animated.Value(0.01));
 
@@ -75,6 +75,7 @@ const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status }) =
 				}}
 			>
 				<View style={styles.innerCircle} />
+				{!commited && <View style={styles.notCommitedDot} />}
 			</View>
 		);
 	};
@@ -126,6 +127,15 @@ const styles = StyleSheet.create({
 		width: 10,
 		height: 10,
 		borderRadius: 5,
+	},
+	notCommitedDot: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		backgroundColor: colors.red,
+		width: 7,
+		height: 7,
+		borderRadius: 3.5,
 	},
 });
 

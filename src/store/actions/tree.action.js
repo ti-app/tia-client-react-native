@@ -4,7 +4,11 @@ import apiClient from '../../utils/apiClient';
 import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
+import uuid from '../../utils/uuid';
 
+export const ADD_TREE_GROUP = 'ADD_TREE_GROUP';
+export const ADD_TREE_GROUP_COMMIT = 'ADD_TREE_GROUP_COMMIT';
+export const ADD_TREE_GROUP_ROLLBACK = 'ADD_TREE_GROUP_ROLLBACK';
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
@@ -32,27 +36,53 @@ const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
 	);
 };
 
-/**
- * Accepts parameter treeGroup which should be a FormData including an Image.
- * @param {FormData} treeGroup
- */
-export const addGroup = (treeGroup) => async (dispatch, getState) => {
-	try {
-		await apiClient({
-			method: 'post',
-			url: '/tree_group',
-			data: treeGroup,
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'multipart/form-data',
-			},
-		});
+// /**
+//  * Accepts parameter treeGroup which should be a FormData including an Image.
+//  * @param {FormData} treeGroup
+//  */
+// export const addGroup = (treeGroup) => async (dispatch, getState) => {
+// 	try {
+// 		await apiClient({
+// 			method: 'post',
+// 			url: '/tree_group',
+// 			data: treeGroup,
+// 			headers: {
+// 				Accept: 'application/json',
+// 				'Content-Type': 'multipart/form-data',
+// 			},
+// 		});
 
-		NavigationUtil.navigate('Home');
-		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error adding a tree group.');
-	}
+// 		NavigationUtil.navigate('Home');
+// 		dispatchFetchTreeGroupsAction(dispatch, getState);
+// 	} catch (err) {
+// 		showErrorToast('Error adding a tree group.');
+// 	}
+// };
+
+export const addGroup = (treeGroup) => (dispatch, getState) => {
+	const _uuid = uuid();
+	const { role, user } = getState().auth;
+	NavigationUtil.navigate('Home');
+
+	dispatch({
+		type: ADD_TREE_GROUP,
+		payload: { treeGroup, tempUuid: _uuid, user, role },
+		meta: {
+			offline: {
+				effect: {
+					method: 'post',
+					url: '/tree_group',
+					data: treeGroup,
+					headers: {
+						Accept: 'application/json',
+						'content-type': 'multipart/form-data',
+					},
+				},
+				commit: { type: ADD_TREE_GROUP_COMMIT, meta: { tempUuid: _uuid } },
+				rollback: { type: ADD_TREE_GROUP_ROLLBACK, meta: { tempUuid: _uuid } },
+			},
+		},
+	});
 };
 
 export const fetchTreeGroups = (
