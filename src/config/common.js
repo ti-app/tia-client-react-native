@@ -69,4 +69,10 @@ export default {
 		},
 	},
 	maxProximityDistance: 50, // in meters
+	notificationAppState: {
+		foreground: 'FOREGROUND',
+		background: 'BACKGROUND',
+		killed: 'KILLED',
+		// dataOnly: 'DATA_ONLY',
+	},
 };
