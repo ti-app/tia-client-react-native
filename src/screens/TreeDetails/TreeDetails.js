@@ -248,11 +248,6 @@ const styles = StyleSheet.create({
 	},
 	weekStatus: { display: 'flex', flexDirection: 'row' },
 	weekDot: { marginRight: 4, width: 12, height: 12, borderRadius: 6 },
-	healthy: { backgroundColor: colors.green },
-	adequate: { backgroundColor: colors.linkBlue },
-	average: { backgroundColor: colors.yellow },
-	weak: { backgroundColor: colors.orange },
-	almostDead: { backgroundColor: colors.red },
 	lastWateredText: { fontSize: 12, color: colors.gray },
 	waterButtonContainer: {
 		position: 'absolute',

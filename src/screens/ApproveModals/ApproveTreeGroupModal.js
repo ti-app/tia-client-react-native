@@ -166,11 +166,6 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: colors.gray,
 	},
-	healthy: { color: colors.green },
-	adequate: { color: colors.linkBlue },
-	average: { color: colors.yellow },
-	weak: { color: colors.orange },
-	almostDead: { color: colors.red },
 	actionButtonContainer: {
 		position: 'absolute',
 		left: 10,

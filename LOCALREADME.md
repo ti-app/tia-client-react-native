@@ -1,19 +1,13 @@
 TODO:
 
 High Priority:
-Think something of filter tree wala flow
 Replace usePrevios with react.usememo
 Try to abstract out repritive things
-use native0base properly or use material or other theming
-eslint configure
 make sure to Use spacing,fotn,color from variables
 Use optionsbar correctly, find a way to use it globally somewhere
-Use prefix "\_" wherever scope mismatch is there
 
 Low Priority:
 Push notification
-Restrict map to particular radius
-import eslint plugin not working
 
 Flows:
 

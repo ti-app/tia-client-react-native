@@ -194,25 +194,34 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		if (_data.trees.length === 1) {
 			const deleteNotApproved = getDeleteStatus(_data);
 
+			// We add commited flag on client side for offline functionality
+			// So not having commited flag means it is already commited. Thoughts for improvement 🤔?
+			const commitedStatus =
+				_data.trees[0].commited === undefined || _data.trees[0].commited === null
+					? true
+					: _data.trees[0].committed;
+
 			return (
 				<Tree
-					key={!_data.trees[0].committed ? _data.trees[0].tempUuid : _data.trees[0]._id}
+					key={commitedStatus ? _data.trees[0]._id : _data.trees[0].tempUuid}
 					coordinate={_data.location}
 					onPress={() => {
 						selectTree(_data.trees[0]);
 					}}
 					status={_data.trees[0].health}
 					deleteNotApproved={deleteNotApproved}
-					commited={_data.trees[0].committed}
+					commited={commitedStatus}
 				/>
 			);
 		}
 
 		const deleteNotApproved = getDeleteStatus(_data);
+		const commitedStatus =
+			_data.commited === undefined || _data.commited === null ? true : _data.committed;
 
 		return (
 			<Spot
-				key={!_data.committed ? _data.tempUuid : _data._id}
+				key={commitedStatus ? _data.id : _data.tempUuid}
 				coordinate={_data.location}
 				onPress={() => {
 					selectTreeGroup(_data);
@@ -221,7 +230,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				treeCount={_data.trees.length}
 				notApproved={!_data.moderatorApproved}
 				deleteNotApproved={deleteNotApproved}
-				commited={_data.committed}
+				commited={commitedStatus}
 			/>
 		);
 	};

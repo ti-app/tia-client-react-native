@@ -11,6 +11,9 @@ import {
 	RESET_SELECTED_TREE_GROUP,
 	SET_NEW_TREE_GROUP,
 	RESET_NEW_TREE_GROUP,
+	WATER_TREE,
+	WATER_TREE_COMMIT,
+	WATER_TREE_ROLLBACK,
 } from '../actions/tree.action';
 
 const initialState = {
@@ -28,8 +31,11 @@ const initialState = {
 	},
 };
 
+/**
+ * Returns list of items minus the 'item with tempUuid' from 'notCommitedTreeGroups'
+ */
 const omitForTempUuid = (_state, _tempUuid) => {
-	return _state.notCommitedTreeGroups.filter(({ tempUuid, commited }) => {
+	return _state.notCommitedTreeGroups.filter(({ tempUuid }) => {
 		if (tempUuid === _tempUuid) {
 			return false;
 		}
@@ -96,6 +102,34 @@ const makeTreeGroupFromFD = (treeGroupData, tempUuid, user, role) => {
 	return treeGroup;
 };
 
+/**
+ * Returns updated list of treeGroups by merging the data for specified item with treeGroupId and treeId
+ * If treeId is present tree item will be updated with the data provided
+ * If treeGroupId is present treeGroup item will be updated with the data provided.
+ */
+const getUpdatedTreeGroups = (state, { treeGroupId: _treeGroupId, treeId: _treeId, data }) => {
+	return state.treeGroups.map((_treeGroup) => {
+		const { _id: treeGroupId } = _treeGroup;
+		if (treeGroupId === _treeGroupId) {
+			if (_treeId) {
+				return {
+					..._treeGroup,
+					trees: _treeGroup.trees.map((tree) => {
+						const { _id: treeId } = tree;
+						if (treeId === _treeId) {
+							return { ...tree, ...data };
+						}
+						return tree;
+					}),
+				};
+			} else {
+				return { ..._treeGroup, ...data };
+			}
+		}
+		return _treeGroup;
+	});
+};
+
 const treeReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case FETCH_TREE_GROUP_SUCCESS: {
@@ -119,6 +153,30 @@ const treeReducer = (state = initialState, action) => {
 
 		case ADD_TREE_GROUP_ROLLBACK: {
 			return { ...state, notCommitedTreeGroups: omitForTempUuid(state, action.meta.tempUuid) };
+		}
+
+		case WATER_TREE: {
+			const { treeGroupId, treeId } = action.payload;
+			return {
+				...state,
+				treeGroups: getUpdatedTreeGroups(state, {
+					treeGroupId,
+					treeId,
+					data: { health: 'healthy' },
+				}),
+			};
+		}
+
+		case WATER_TREE_ROLLBACK: {
+			const { treeGroupId, treeId, prevHealth } = action.meta;
+			return {
+				...state,
+				treeGroups: getUpdatedTreeGroups(state, {
+					treeGroupId,
+					treeId,
+					data: { health: prevHealth },
+				}),
+			};
 		}
 
 		case SET_SELECTED_TREE_DETAILS: {

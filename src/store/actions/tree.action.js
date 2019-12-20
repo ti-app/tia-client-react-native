@@ -4,12 +4,13 @@ import apiClient from '../../utils/apiClient';
 import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
-import { createFormData } from '../../utils/misc';
 import uuid from '../../utils/uuid';
 
 export const ADD_TREE_GROUP = 'ADD_TREE_GROUP';
 export const ADD_TREE_GROUP_COMMIT = 'ADD_TREE_GROUP_COMMIT';
 export const ADD_TREE_GROUP_ROLLBACK = 'ADD_TREE_GROUP_ROLLBACK';
+export const WATER_TREE = 'WATER_TREE';
+export const WATER_TREE_ROLLBACK = 'WATER_TREE_ROLLBACK';
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
@@ -19,7 +20,7 @@ export const RESET_SELECTED_TREE_DETAILS = 'RESET_SELECTED_TREE_DETAILS';
 export const SET_SELECTED_TREE_GROUP = 'SET_SELECTED_TREE_GROUP';
 export const RESET_SELECTED_TREE_GROUP = 'RESET_SELECTED_TREE_GROUP';
 
-const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
+export const dispatchFetchTreeGroupsAction = (dispatch, getState) => {
 	const state = getState();
 	const {
 		location: { homeMapCenter },
@@ -158,29 +159,35 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 	if (checkIfOutOfRange(getState)) {
 		return;
 	}
-	try {
-		const { _id } = tree;
-		const url = `/tree/${_id}/water`;
-		await apiClient({
-			url,
-			headers: {
-				'content-type': 'application/json',
-			},
-		});
-		Toast.show({
-			text: 'Successfully updated watering details',
-			duration: 1000,
-			textStyle: {
-				textAlign: 'center',
-			},
-		});
 
-		NavigationUtil.navigate('Home');
+	const { _id: treeId, health, groupId: treeGroupId } = tree;
 
-		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error watering the trees');
-	}
+	NavigationUtil.navigate('Home');
+
+	Toast.show({
+		text: 'Successfully updated watering details',
+		duration: 1000,
+		textStyle: {
+			textAlign: 'center',
+		},
+	});
+
+	dispatch({
+		type: WATER_TREE,
+		payload: { treeGroupId, treeId },
+		meta: {
+			offline: {
+				effect: {
+					method: 'get',
+					url: `/tree/${treeId}/water`,
+					headers: {
+						Accept: 'application/json',
+					},
+				},
+				rollback: { type: WATER_TREE_ROLLBACK, meta: { treeGroupId, treeId, prevHealth: health } },
+			},
+		},
+	});
 };
 
 export const waterTreeGroup = (tree) => async (dispatch, getState) => {

@@ -57,7 +57,7 @@ const EditTreeDetails = () => {
 		setHealth(_health);
 		setCurrentLocation(_location);
 		setUpdatedLocation(_location);
-		setPlantType(_plantType);
+		setPlantType(_plantType || '');
 		setHealthCycle(_healthCycle);
 		setPhotoURL(_photoURL);
 	}, [selectedTree]);
@@ -95,7 +95,7 @@ const EditTreeDetails = () => {
 
 	const handleSelectedStatusChange = (_status) => {
 		const { value } = _status;
-		setHealth({ health: value });
+		setHealth(value);
 	};
 
 	const handlePlantLocationChange = () => {
@@ -122,23 +122,21 @@ const EditTreeDetails = () => {
 
 	return (
 		<Container style={styles.container}>
-			<View style={styles.mapView}>
-				<MapView
-					style={styles.mapView}
-					initialRegion={{
-						latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
-						longitude,
-						latitudeDelta: 0.000882007226706992,
-						longitudeDelta: 0.000752057826519012,
-					}}
-					scrollEnabled={false}
-					pitchEnabled={false}
-					rotateEnabled={false}
-					zoomEnabled={false}
-				>
-					<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
-				</MapView>
-			</View>
+			<MapView
+				style={styles.mapView}
+				initialRegion={{
+					latitude: latitude + centerBias, // Added bias for center of map to align it properly in the viewport, temporary solution. TODO: Think of better way.
+					longitude,
+					latitudeDelta: 0.000882007226706992,
+					longitudeDelta: 0.000752057826519012,
+				}}
+				scrollEnabled={false}
+				pitchEnabled={false}
+				rotateEnabled={false}
+				zoomEnabled={false}
+			>
+				<Tree coordinate={{ latitude, longitude }} status={health || 'healthy'} />
+			</MapView>
 
 			<View style={styles.formContainer}>
 				<ScrollView contentContainerStyle={styles.form}>
@@ -170,9 +168,24 @@ const EditTreeDetails = () => {
 						<View style={styles.paddingBottomTen}>
 							<SelectButton
 								presetData={[
-									{ value: 'healthy', label: 'HEALTHY', status: 'success' },
-									{ value: 'weak', label: 'WEAK', status: 'warning' },
-									{ value: 'almostDead', label: 'ALMOST DEAD', status: 'danger' },
+									{
+										value: 'healthy',
+										label: 'HEALTHY',
+										status: 'success',
+										selected: selectedTree.health === 'healthy',
+									},
+									{
+										value: 'weak',
+										label: 'WEAK',
+										status: 'warning',
+										selected: selectedTree.health === 'weak',
+									},
+									{
+										value: 'almostDead',
+										label: 'ALMOST DEAD',
+										status: 'danger',
+										selected: selectedTree.health === 'almostDead',
+									},
 								]}
 								onSelectedItemChange={handleSelectedStatusChange}
 								equallySpaced={false}

@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default React.memo(SelectButton);
+export default SelectButton;

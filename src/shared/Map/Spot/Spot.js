@@ -10,42 +10,33 @@ const Spot = ({ coordinate, onPress, notApproved, deleteNotApproved, health, tre
 	const [blinkOpacity] = useState(new Animated.Value(0.01));
 
 	const prevCoordinate = usePrevious(coordinate);
+	const prevHealth = usePrevious(health);
 
 	useEffect(() => {
-		let forceUpdate;
-		let prevLatitude;
-		let prevLongitude;
 		if (!prevCoordinate) {
-			forceUpdate = true;
-		} else {
-			prevLatitude = prevCoordinate.latitude;
-			prevLongitude = prevCoordinate.longitude;
+			return;
 		}
+
+		const { latitude: prevLatitude, longitude: prevLongitude } = prevCoordinate;
+
 		const { latitude, longitude } = coordinate;
-		if (forceUpdate || latitude !== prevLatitude || longitude !== prevLongitude) {
+		if (latitude !== prevLatitude || longitude !== prevLongitude || prevHealth !== health) {
 			setTrackViewChanges(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [coordinate]);
+	}, [coordinate, health]);
 
 	useEffect(() => {
 		if (notApproved || deleteNotApproved) {
 			startBlinking();
 			return;
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [notApproved, deleteNotApproved]);
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => {
-		if (notApproved || deleteNotApproved) {
-			return;
-		}
 
 		if (tracksViewChanges) {
 			setTrackViewChanges(false);
 		}
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [notApproved, deleteNotApproved, health]);
 
 	const startBlinking = () => {
 		Animated.loop(

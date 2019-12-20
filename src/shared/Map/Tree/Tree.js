@@ -10,6 +10,7 @@ const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status, com
 	const [blinkOpacity] = useState(new Animated.Value(0.01));
 
 	const prevCoordinate = usePrevious(coordinate);
+	const prevStatus = usePrevious(status);
 
 	useEffect(() => {
 		if (!prevCoordinate) {
@@ -17,11 +18,11 @@ const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status, com
 		}
 		const { latitude: prevLatitude, longitude: prevLongitude } = prevCoordinate;
 		const { latitude, longitude } = coordinate;
-		if (latitude !== prevLatitude || longitude !== prevLongitude) {
+		if (latitude !== prevLatitude || longitude !== prevLongitude || prevStatus !== status) {
 			setTrackViewChanges(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [coordinate]);
+	}, [coordinate, status]);
 
 	useEffect(() => {
 		if (notApproved || deleteNotApproved) {
@@ -33,7 +34,7 @@ const Tree = ({ coordinate, onPress, notApproved, deleteNotApproved, status, com
 			setTrackViewChanges(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [notApproved, deleteNotApproved]);
+	}, [notApproved, deleteNotApproved, status]);
 
 	const startBlinking = () => {
 		Animated.loop(
