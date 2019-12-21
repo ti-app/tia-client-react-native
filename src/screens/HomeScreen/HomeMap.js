@@ -14,7 +14,7 @@ import ApproveTreeGroupModal from '../ApproveModals/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
 import config from '../../config/common';
-import { showNeedApproval } from '../../utils/predefinedToasts';
+import { showNeedApproval, showZoomInMore } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
 import { selectHomeMapCenter } from '../../store/reducers/location.reducer';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
@@ -32,6 +32,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
+	const [mapRegion, setMapRegion] = useState(null);
 
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
@@ -100,7 +101,26 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [homeMapCenterLocation, currentStatusList, currentRangeFilter]);
 
+	const handleOnRegionChange = (_region) => {
+		setMapRegion(_region);
+	};
+
+	const checkIfZoomedEnough = () => {
+		if (mapRegion) {
+			const { latitudeDelta, longitudeDelta } = mapRegion;
+			if (latitudeDelta > 0.0015 || longitudeDelta > 0.0015) {
+				showZoomInMore();
+				return false;
+			}
+			return true;
+		}
+	};
+
 	const selectTree = (tree) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const deleteObject = tree.delete;
 		const deleteNotApproved =
 			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
@@ -120,6 +140,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const selectTreeGroup = (_treeGroup) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const { moderatorApproved } = _treeGroup;
 		const deleteObject = _treeGroup.delete;
 		const deleteNotApproved =
@@ -144,6 +168,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const selectPlantationSite = (_plantationSite) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const { moderatorApproved } = _plantationSite;
 		const deleteObject = _plantationSite.delete;
 		const deleteNotApproved =
@@ -311,6 +339,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				showsUserLocation
 				showsCompass={false}
 				showsMyLocationButton={false}
+				onRegionChangeComplete={handleOnRegionChange}
 			>
 				{treeData.map((_treeGroup) => renderTrees(_treeGroup))}
 				{plantationSiteData.map((_site) => renderPlantationSites(_site))}
