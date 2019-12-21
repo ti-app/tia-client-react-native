@@ -5,7 +5,7 @@ import { SafeAreaView, Animated, Easing, TouchableOpacity } from 'react-native';
 import { View, Icon } from 'native-base';
 
 import Step1SetTreeDistribution from './SetTreeDistribution';
-import Step2SetTreeLocations from './SetTreeLocations';
+import Step2SetTreeLocationsByLine from './SetTreeLocationsByLine';
 import Step3SetTreeDetails from './SetTreeDetails';
 import Step4SetPhoto from './SetPhoto';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
@@ -101,7 +101,7 @@ const SNavigator = createStackNavigator(
 			screen: Step1SetTreeDistribution,
 		},
 		[addSpotSteps.addTrees]: {
-			screen: Step2SetTreeLocations,
+			screen: Step2SetTreeLocationsByLine,
 		},
 		[addSpotSteps.treeDetails]: {
 			screen: Step3SetTreeDetails,
@@ -137,7 +137,7 @@ const AddNewSpotScreen = ({ navigation }) => {
 		navigation.setParams({
 			resetNewTreeGroupData,
 		});
-	}, []);
+	}, [navigation, resetNewTreeGroupData]);
 
 	const handleOnBack = () => {
 		if (currentStep === 0) {
