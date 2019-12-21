@@ -1,13 +1,8 @@
 TODO:
-
-High Priority:
-Replace usePrevios with react.usememo
-Try to abstract out repritive things
-make sure to Use spacing,fotn,color from variables
-Use optionsbar correctly, find a way to use it globally somewhere
-
-Low Priority:
-Push notification
+Site addition offline
+Panic addition offline
+panic ka notification nearby users keliye
+add flag in fetch trees api for user’s current location or not
 
 Flows:
 

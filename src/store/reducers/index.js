@@ -6,6 +6,7 @@ import treeReducer from './tree.reducer';
 import plantationSiteReducer from './plantation-site.reducer';
 import activityReducer from './activity.reducer';
 import leaderBoardReducer from './leaderboard.reducer';
+import panicReducer from './panic.reducer';
 
 // Root Reducer
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
 	tree: treeReducer,
 	plantationSite: plantationSiteReducer,
 	activity: activityReducer,
+	panic: panicReducer,
 });
 
 export default rootReducer;

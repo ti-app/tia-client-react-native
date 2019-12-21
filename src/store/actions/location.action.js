@@ -62,9 +62,16 @@ export const fetchUserLocationSuccess = (locationData) => ({
 	payload: locationData,
 });
 
-export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState) => {
+export const callGoogleAutoComplete = (location, searchQuery) => {
 	const placesApiKey = GOOGLE_PLACES_API_KEY;
 
+	return Axios({
+		url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?location=${location}&input=${searchQuery}&key=${placesApiKey}`,
+		data: { noloading: true },
+	});
+};
+
+export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState) => {
 	const { userLocation } = getState().location;
 
 	const { latitude, longitude } = userLocation || {};
@@ -72,23 +79,24 @@ export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState)
 	const location = `${latitude},${longitude}`;
 
 	try {
-		const response = await Axios({
-			url: `https://maps.googleapis.com/maps/api/place/autocomplete/json?location=${location}&input=${searchQuery}&key=${placesApiKey}`,
-			data: { noloading: true },
-		});
+		const response = await callGoogleAutoComplete(location, searchQuery);
 		dispatch(fetchSearchedLocationSuccess(response.data));
 	} catch (err) {
 		showErrorToast('Error searching.', err, dispatch);
 	}
 };
 
-export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => async (dispatch) => {
+export const callGooglePlacesApi = async (placeId) => {
 	const geocodeApiKey = GOOGLE_GEOCODING_API_KEY;
 
+	return Axios({
+		url: `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${geocodeApiKey}`,
+	});
+};
+
+export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => async (dispatch) => {
 	try {
-		const response = await Axios({
-			url: `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}&key=${geocodeApiKey}`,
-		});
+		const response = await callGooglePlacesApi(placeId);
 
 		const { results } = response.data;
 

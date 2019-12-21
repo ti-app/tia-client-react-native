@@ -9,6 +9,7 @@ import Spot from '../../shared/Map/Spot/Spot';
 import PlantationSite from '../../shared/Map/PlantationSite/PlantationSite';
 import * as treeActions from '../../store/actions/tree.action';
 import * as plantationSiteActions from '../../store/actions/plantation-site.action';
+import * as panicActions from '../../store/actions/panic.action';
 import ApproveTreeGroupModal from '../ApproveModals/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
@@ -18,11 +19,13 @@ import { usePrevious } from '../../utils/customHooks';
 import { selectHomeMapCenter } from '../../store/reducers/location.reducer';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
 import { selectPlantationSites } from '../../store/reducers/plantation-site.reducer';
+import { selectPanic } from '../../store/reducers/panic.reducer';
 import { selectUserRole } from '../../store/reducers/auth.reducer';
 import {
 	selectCurrentStatusList,
 	selectCurrentRangeFilter,
 } from '../../store/reducers/ui-interactions.reducer';
+import PanicMarker from '../../shared/Map/PanicMarker/PanicMarker';
 
 const HomeMap = ({ navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
@@ -33,6 +36,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
 	const plantationSites = useSelector(selectPlantationSites);
+	const panics = useSelector(selectPanic);
 	const userRole = useSelector(selectUserRole);
 	const currentStatusList = useSelector(selectCurrentStatusList);
 	const currentRangeFilter = useSelector(selectCurrentRangeFilter);
@@ -61,6 +65,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		(site) => dispatch(plantationSiteActions.setSelectedPlantationSite(site)),
 		[dispatch]
 	);
+	const fetchPanic = useCallback((...param) => dispatch(panicActions.fetchPanic(...param)), [
+		dispatch,
+	]);
 
 	useEffect(() => {
 		let forcedUpdate = false;
@@ -87,8 +94,8 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				currentRangeFilter * 1000,
 				currentStatusList.join(',')
 			);
-
 			fetchPlanatationSites(homeMapCenterLocation, currentRangeFilter * 1000);
+			fetchPanic(homeMapCenterLocation, currentRangeFilter * 1000);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [homeMapCenterLocation, currentStatusList, currentRangeFilter]);
@@ -251,6 +258,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		);
 	};
 
+	const renderPanic = (_panic) => {
+		return <PanicMarker key={_panic.id} coordinate={_panic.location} />;
+	};
+
 	const { latitude, longitude } = homeMapCenterLocation;
 
 	const treeData = treeGroups.map((_treeGroup) => {
@@ -265,6 +276,16 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	});
 
 	const plantationSiteData = plantationSites.map((_site) => {
+		const { _id, location, ...rest } = _site;
+		const { coordinates } = location;
+		return {
+			id: _id,
+			location: { longitude: coordinates[0], latitude: coordinates[1] },
+			...rest,
+		};
+	});
+
+	const panicData = panics.map((_site) => {
 		const { _id, location, ...rest } = _site;
 		const { coordinates } = location;
 		return {
@@ -291,8 +312,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				showsCompass={false}
 				showsMyLocationButton={false}
 			>
-				{treeData.map((treeGroup) => renderTrees(treeGroup))}
-				{plantationSiteData.map((site) => renderPlantationSites(site))}
+				{treeData.map((_treeGroup) => renderTrees(_treeGroup))}
+				{plantationSiteData.map((_site) => renderPlantationSites(_site))}
+				{panicData.map((_panic) => renderPanic(_panic))}
 			</Map>
 
 			{approveTreeGroupModal.show && (

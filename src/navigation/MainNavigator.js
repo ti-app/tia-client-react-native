@@ -15,6 +15,7 @@ import AddNewSpotScreen from '../screens/AddNewSpotScreen/AddNewSpotScreen';
 import UserActivity from '../screens/UserActivity/UserActivity';
 import TreeActivity from '../screens/TreeActivity/TreeActivity';
 import Leaderboard from '../screens/Leaderboard/Leaderboard';
+import CreatePanicScreen from '../screens/CreatePanicScreen/CreatePanicScreen';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -56,6 +57,9 @@ const MainNavigator = createStackNavigator(
 		},
 		Leaderboard: {
 			screen: Leaderboard,
+		},
+		CreatePanic: {
+			screen: CreatePanicScreen,
 		},
 	},
 	{

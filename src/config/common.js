@@ -10,6 +10,7 @@ export default {
 	distributions: {
 		SINGLE: 'single',
 		LINE: 'line',
+		RANDOM: 'random',
 	},
 	launchStatus: {
 		initial: 'INITIAL',
