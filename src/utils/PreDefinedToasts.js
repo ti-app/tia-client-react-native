@@ -64,3 +64,13 @@ export const showErrorToast = (errorMessage) => {
 		style: { backgroundColor: colors.red },
 	});
 };
+
+export const showZoomInMore = () => {
+	Toast.show({
+		text: 'Please zoom in more to select',
+		duration: 2000,
+		textStyle: {
+			textAlign: 'center',
+		},
+	});
+};

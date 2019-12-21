@@ -13,8 +13,9 @@ import { View, Text, Button } from 'native-base';
 import * as colors from '../../styles/colors';
 
 const PanicModal = ({ data, visible, onClose }) => {
-	console.log('TCL: PanicModal -> data', data);
-	const dispatch = useDispatch();
+	if (!data) return null;
+
+	const { photo, googlePlaceName, owner, panicType } = data;
 
 	return (
 		<Modal animationType="slide" transparent visible={visible} onRequestClose={() => onClose()}>
@@ -31,9 +32,11 @@ const PanicModal = ({ data, visible, onClose }) => {
 						</View>
 						<View style={styles.panicDetailsContainer}>
 							<ScrollView contentContainerStyle={styles.treeDetails}>
-								{/* <Text style={styles.plantInfo}>No. of plants: {trees.length}</Text> */}
+								<Text>Location:{googlePlaceName}</Text>
+								<Text>Panic raised by: {owner.displayName}</Text>
+								<Text>Panic type: {panicType}</Text>
 
-								{/* {photo && photo.length > 0 ? (
+								{photo && photo.length > 0 ? (
 									<Image
 										source={{
 											uri: photo,
@@ -45,7 +48,7 @@ const PanicModal = ({ data, visible, onClose }) => {
 									<View style={styles.imageNotFound}>
 										<Text style={styles.imageNotFoundText}>No Image.</Text>
 									</View>
-								)} */}
+								)}
 							</ScrollView>
 						</View>
 						<View style={styles.actionButtonContainer}>
@@ -94,8 +97,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 16,
 	},
 	heading: {
-		position: 'absolute',
-		top: 0,
+		// position: 'absolute',
+		// top: 0,
 		display: 'flex',
 		flexDirection: 'row',
 		paddingRight: 16,
@@ -105,8 +108,8 @@ const styles = StyleSheet.create({
 		textAlignVertical: 'center',
 		fontSize: 20,
 	},
-	plantInfo: {
-		fontSize: 12,
+	panicLocation: {
+		fontSize: 16,
 		color: colors.gray,
 	},
 	actionButtonContainer: {

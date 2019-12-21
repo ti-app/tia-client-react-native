@@ -19,7 +19,6 @@ const PanicMarker = ({ coordinate, data, onPress }) => {
 				coordinate={coordinate}
 				anchor={{ x: 0.5, y: 0.5 }}
 				onPress={() => {
-					console.log('TCL: PanicMarker -> onPress');
 					onPress(data);
 				}}
 			>

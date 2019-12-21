@@ -15,7 +15,7 @@ import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
 import PanicModal from '../PanicModal/PanicModal';
 import config from '../../config/common';
-import { showNeedApproval } from '../../utils/predefinedToasts';
+import { showNeedApproval, showZoomInMore } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
 import { selectHomeMapCenter } from '../../store/reducers/location.reducer';
 import { selectTreeGroups } from '../../store/reducers/tree.reducer';
@@ -34,8 +34,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
-	const [showPanicModal, setShowPanicModal] = useState(true);
+	const [showPanicModal, setShowPanicModal] = useState(false);
 	const [selectedPanicData, setSelectedPanicData] = useState(null);
+	const [mapRegion, setMapRegion] = useState(null);
 
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
@@ -106,7 +107,8 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 	useEffect(() => {
 		createNotificationListeners((appState, data) => {
-			// showAlert(data.title, data.body);
+			// if notification type is of panic,
+			// set panic data and show panic modal
 		});
 
 		return () => {
@@ -114,7 +116,26 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		};
 	}, []);
 
+	const handleOnRegionChange = (_region) => {
+		setMapRegion(_region);
+	};
+
+	const checkIfZoomedEnough = () => {
+		if (mapRegion) {
+			const { latitudeDelta, longitudeDelta } = mapRegion;
+			if (latitudeDelta > 0.0015 || longitudeDelta > 0.0015) {
+				showZoomInMore();
+				return false;
+			}
+			return true;
+		}
+	};
+
 	const selectTree = (tree) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const deleteObject = tree.delete;
 		const deleteNotApproved =
 			deleteObject && deleteObject.deleted && !deleteObject.isModeratorApproved;
@@ -134,6 +155,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const selectTreeGroup = (_treeGroup) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const { moderatorApproved } = _treeGroup;
 		const deleteObject = _treeGroup.delete;
 		const deleteNotApproved =
@@ -158,6 +183,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const selectPlantationSite = (_plantationSite) => {
+		if (!checkIfZoomedEnough()) {
+			return;
+		}
+
 		const { moderatorApproved } = _plantationSite;
 		const deleteObject = _plantationSite.delete;
 		const deleteNotApproved =
@@ -280,9 +309,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				data={_panic}
 				onPress={(data) => {
 					console.log('TCL: renderPanic -> data', data);
-
-					setSelectedPanicData(data);
-					showPanicModal(true);
+					if (checkIfZoomedEnough()) {
+						setSelectedPanicData(data);
+						setShowPanicModal(true);
+					}
 				}}
 			/>
 		);
@@ -337,6 +367,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				showsUserLocation
 				showsCompass={false}
 				showsMyLocationButton={false}
+				onRegionChangeComplete={handleOnRegionChange}
 			>
 				{treeData.map((_treeGroup) => renderTrees(_treeGroup))}
 				{plantationSiteData.map((_site) => renderPlantationSites(_site))}
@@ -363,6 +394,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 			{showPanicModal && (
 				<PanicModal
 					visible={showPanicModal}
+					data={selectedPanicData}
 					onClose={() => {
 						setShowPanicModal(!showPanicModal);
 					}}
