@@ -72,7 +72,6 @@ const SetTreeLocationsByLine = () => {
 			type,
 			endpoints,
 		});
-		console.log(treeCoords);
 		setNewTreeGroupData({ trees: treeCoords });
 	};
 

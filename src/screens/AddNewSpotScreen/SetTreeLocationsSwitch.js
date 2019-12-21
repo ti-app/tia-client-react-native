@@ -9,7 +9,6 @@ const SetTreeLocationsSwitch = () => {
 	const newTreeGroup = useSelector(selectNewTreeGroup);
 	const { distribution } = newTreeGroup;
 
-	console.log(distribution);
 	switch (distribution) {
 		case config.distributions.LINE:
 			return <SetTreeLocationsByLine />;

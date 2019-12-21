@@ -104,9 +104,16 @@ export const fetchTreeGroups = (
 	location,
 	radius = 500,
 	health = 'healthy,adequate,average,weak,almostDead'
-) => async (dispatch) => {
+) => async (dispatch, getState) => {
 	try {
 		const { latitude: lat, longitude: lng } = location;
+
+		const state = getState();
+		const {
+			location: { userLocation },
+		} = state;
+
+		const { latitude: userLat, longitude: userLng } = userLocation;
 
 		const response = await apiClient({
 			url: '/tree_group',
@@ -115,6 +122,7 @@ export const fetchTreeGroups = (
 				lng,
 				radius,
 				health,
+				user_location: userLat === lat && userLng === lng,
 			},
 			headers: {
 				'content-type': 'application/json',

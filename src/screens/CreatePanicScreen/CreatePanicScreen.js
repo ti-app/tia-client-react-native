@@ -152,7 +152,6 @@ const CreatePanicScreen = () => {
 	};
 
 	const isPanicButtonDisabled = () => {
-		console.log(panicSiteName, type, numOfPlantsAffected);
 		return !(panicSiteName && type && numOfPlantsAffected);
 	};
 

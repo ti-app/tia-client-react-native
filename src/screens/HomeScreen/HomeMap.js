@@ -295,8 +295,6 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		};
 	});
 
-	console.log(panicData);
-
 	return (
 		<Container style={styles.container}>
 			<Map

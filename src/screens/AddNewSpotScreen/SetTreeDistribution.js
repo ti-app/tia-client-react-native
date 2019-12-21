@@ -34,7 +34,6 @@ const SetTreeDistributions = () => {
 	const handleDistributionChange = (distribution) => {
 		const { value } = distribution;
 
-		console.log(value);
 		switch (value) {
 			case distributions.SINGLE:
 				const { latitude, longitude } = userLocation;
