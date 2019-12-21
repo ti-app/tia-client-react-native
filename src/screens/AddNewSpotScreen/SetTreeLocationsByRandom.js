@@ -10,8 +10,8 @@ import * as treeActions from '../../store/actions/tree.action';
 import { selectUserLocation } from '../../store/reducers/location.reducer';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import * as colors from '../../styles/colors';
+import * as variables from '../../styles/variables';
 import { getLatLngDeltaForDistance } from '../../utils/geo';
-import config from '../../config/common';
 
 const renderTrees = (coordinates) =>
 	(coordinates || []).map((aCoord, idx) => <Tree key={idx} coordinate={aCoord} status="healthy" />);
@@ -20,6 +20,7 @@ const centerBias = 0.000015;
 
 const SetTreeLocationsByRandom = () => {
 	const [numberOfPlants, setNumberOfPlants] = useState(0);
+	const [showError, setShowError] = useState(false);
 
 	const userLocation = useSelector(selectUserLocation);
 	const newTreeGroup = useSelector(selectNewTreeGroup);
@@ -33,8 +34,7 @@ const SetTreeLocationsByRandom = () => {
 	const { latitude, longitude } = userLocation;
 	const { trees } = newTreeGroup;
 
-	const clearanceDistance = 2; // in meters
-	const mapViewDistanceFromCenter = config.maxProximityDistance + clearanceDistance;
+	const mapViewDistanceFromCenter = 10;
 	const { latitudeDelta, longitudeDelta } = getLatLngDeltaForDistance(
 		userLocation,
 		mapViewDistanceFromCenter
@@ -42,7 +42,22 @@ const SetTreeLocationsByRandom = () => {
 
 	const handleNumberOfPlantsChange = (_numberOfPlants) => {
 		setNumberOfPlants(_numberOfPlants);
+		const division = 360 / _numberOfPlants;
+		const radius = 0.00003;
 		const treeCoords = [];
+
+		for (let i = 0; i < _numberOfPlants; i++) {
+			const modifiedLng = longitude + Math.cos(division * (i + 1) * (Math.PI / 180)) * radius;
+			const modifiedLat = latitude + Math.sin(division * (i + 1) * (Math.PI / 180)) * radius;
+			treeCoords.push({ longitude: modifiedLng, latitude: modifiedLat });
+		}
+
+		if (_numberOfPlants > 5) {
+			setShowError(true);
+		} else {
+			setShowError(false);
+		}
+
 		setNewTreeGroupData({ trees: treeCoords });
 	};
 
@@ -70,6 +85,7 @@ const SetTreeLocationsByRandom = () => {
 			<View style={styles.formContainer}>
 				<Text style={styles.formTitle}> Select Tree Locations </Text>
 				<ScrollView contentContainerStyle={styles.form}>
+					<Text>Number of plants:</Text>
 					<FormInput
 						style={styles.textInput}
 						keyboardType="number-pad"
@@ -77,6 +93,7 @@ const SetTreeLocationsByRandom = () => {
 						onChangeText={handleNumberOfPlantsChange}
 						value={String(numberOfPlants)}
 					/>
+					{showError && <Text style={styles.errorText}>Please don't add more than 5.</Text>}
 				</ScrollView>
 			</View>
 		</Container>
@@ -87,23 +104,9 @@ const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
 	},
-	mapViewContainer: { height: '70%', position: 'relative' },
-	instruction: {
-		position: 'absolute',
-		bottom: 0,
-		width: '60%',
-		alignSelf: 'center',
-		textAlign: 'center',
-		fontWeight: 'bold',
-		color: colors.blue,
-	},
-	resetButton: {
-		position: 'absolute',
-		top: 90,
-		right: 10,
-	},
+	mapViewContainer: { height: '80%', position: 'relative' },
 	mapView: { height: '100%' },
-	formContainer: { height: '30%' },
+	formContainer: { height: '20%' },
 	formTitle: {
 		fontSize: 25,
 	},
@@ -114,6 +117,10 @@ const styles = StyleSheet.create({
 	},
 	paddingBottomTen: {
 		paddingBottom: 10,
+	},
+	errorText: {
+		color: colors.red,
+		fontSize: variables.font.base,
 	},
 });
 

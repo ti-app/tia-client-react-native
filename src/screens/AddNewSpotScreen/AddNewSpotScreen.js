@@ -5,7 +5,6 @@ import { SafeAreaView, Animated, Easing, TouchableOpacity } from 'react-native';
 import { View, Icon } from 'native-base';
 
 import Step1SetTreeDistribution from './SetTreeDistribution';
-import Step2SetTreeLocationsByLine from './SetTreeLocationsByLine';
 import Step3SetTreeDetails from './SetTreeDetails';
 import Step4SetPhoto from './SetPhoto';
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
@@ -13,6 +12,7 @@ import * as colors from '../../styles/colors';
 import * as treeActions from '../../store/actions/tree.action';
 import { selectNewTreeGroup } from '../../store/reducers/tree.reducer';
 import constants from '../../config/common';
+import Step2SetTreeLocationsSwitch from './SetTreeLocationsSwitch';
 
 const { distributions } = constants;
 
@@ -101,7 +101,7 @@ const SNavigator = createStackNavigator(
 			screen: Step1SetTreeDistribution,
 		},
 		[addSpotSteps.addTrees]: {
-			screen: Step2SetTreeLocationsByLine,
+			screen: Step2SetTreeLocationsSwitch,
 		},
 		[addSpotSteps.treeDetails]: {
 			screen: Step3SetTreeDetails,
@@ -137,7 +137,7 @@ const AddNewSpotScreen = ({ navigation }) => {
 		navigation.setParams({
 			resetNewTreeGroupData,
 		});
-	}, [navigation, resetNewTreeGroupData]);
+	}, []);
 
 	const handleOnBack = () => {
 		if (currentStep === 0) {
@@ -188,7 +188,7 @@ const AddNewSpotScreen = ({ navigation }) => {
 	};
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={styles.container}>
 			<SNavigator navigation={navigation} />
 			<Controller
 				onNext={currentStep < maxSteps - 1 ? handleOnNext : null}
@@ -203,9 +203,7 @@ const AddNewSpotScreen = ({ navigation }) => {
 
 const styles = {
 	container: {
-		backgroundColor: colors.white,
 		flex: 1,
-		width: '100%',
 	},
 	safeAreaView: {
 		display: 'flex',
