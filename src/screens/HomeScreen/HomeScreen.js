@@ -196,6 +196,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		top: headerHeight + variables.space.base,
 		display: 'flex',
+		paddingLeft: variables.space.base,
+		paddingRight: variables.space.base,
 	},
 	searchActionIconContainer: {
 		position: 'absolute',

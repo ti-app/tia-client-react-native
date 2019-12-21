@@ -1,4 +1,3 @@
-/* eslint-disable react/prefer-stateless-function */
 import React, { useState, useEffect } from 'react';
 import { Marker } from 'react-native-maps';
 import { StyleSheet, View, Animated } from 'react-native';
@@ -13,19 +12,17 @@ const PlantationSite = ({ coordinate, onPress, notApproved, deleteNotApproved })
 	const prevCoordinate = usePrevious(coordinate);
 
 	useEffect(() => {
-		let forceUpdate;
-		let prevLatitude;
-		let prevLongitude;
 		if (!prevCoordinate) {
-			forceUpdate = true;
-		} else {
-			prevLatitude = prevCoordinate.latitude;
-			prevLongitude = prevCoordinate.longitude;
+			return;
 		}
+
+		const { latitude: prevLatitude, longitude: prevLongitude } = prevCoordinate;
 		const { latitude, longitude } = coordinate;
-		if (forceUpdate || latitude !== prevLatitude || longitude !== prevLongitude) {
+
+		if (latitude !== prevLatitude || longitude !== prevLongitude) {
 			setTrackViewChanges(true);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [coordinate]);
 
 	useEffect(() => {
@@ -33,8 +30,10 @@ const PlantationSite = ({ coordinate, onPress, notApproved, deleteNotApproved })
 			startBlinking();
 			return;
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [notApproved, deleteNotApproved]);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (notApproved || deleteNotApproved) {
 			return;

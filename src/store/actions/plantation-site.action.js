@@ -13,6 +13,7 @@ export const SET_SELECTED_PLANTATION_SITE = 'SET_SELECTED_PLANTATION_SITE';
 
 const dispatchFetchSiteAction = (dispatch, getState) => {
 	const state = getState();
+
 	const {
 		location: { homeMapCenter },
 		ui: { currentRangeFilter },

@@ -6,15 +6,9 @@ const styles = StyleSheet.create({
 	autoCompleteSearchContainer: {
 		width: '100%',
 	},
-	searchContainer: {
-		paddingLeft: variables.space.base,
-		paddingRight: variables.space.base,
-	},
-	searchInput: { borderColor: colors.green.toString(), borderWidth: 1 },
-	resultsContainer: {
-		paddingLeft: variables.space.base,
-		paddingRight: variables.space.base,
-	},
+	searchContainer: {},
+	searchInputBorder: { borderColor: colors.green.toString(), borderWidth: 1 },
+	resultsContainer: {},
 	results: {
 		width: '100%',
 		backgroundColor: colors.white.toString(),

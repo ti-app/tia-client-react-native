@@ -14,6 +14,10 @@ const AddActionButton = ({ navigation }) => {
 		navigation.navigate('AddPlantationSite');
 	};
 
+	const handleOnPanicPress = () => {
+		navigation.navigate('CreatePanic');
+	};
+
 	return (
 		<ActionButton
 			buttonColor={colors.green.toString()}
@@ -31,6 +35,13 @@ const AddActionButton = ({ navigation }) => {
 				onPress={() => {}}
 			>
 				<Icon type="FontAwesome5" name="question" style={styles.icon} />
+			</ActionButton.Item>
+			<ActionButton.Item
+				buttonColor={colors.red.toString()}
+				title="Report Panic"
+				onPress={handleOnPanicPress}
+			>
+				<Icon type="MaterialIcons" name="report-problem" style={styles.icon} />
 			</ActionButton.Item>
 			<ActionButton.Item
 				buttonColor={colors.gray.toString()}
