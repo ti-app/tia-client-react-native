@@ -11,6 +11,8 @@ export const ADD_TREE_GROUP_COMMIT = 'ADD_TREE_GROUP_COMMIT';
 export const ADD_TREE_GROUP_ROLLBACK = 'ADD_TREE_GROUP_ROLLBACK';
 export const WATER_TREE = 'WATER_TREE';
 export const WATER_TREE_ROLLBACK = 'WATER_TREE_ROLLBACK';
+export const WATER_TREE_GROUP = 'WATER_TREE_GROUP';
+export const WATER_TREE_GROUP_ROLLBACK = 'WATER_TREE_GROUP_ROLLBACK';
 export const SET_NEW_TREE_GROUP = 'SET_NEW_TREE_GROUP';
 export const RESET_NEW_TREE_GROUP = 'RESET_NEW_TREE_GROUP';
 export const FETCH_TREE = 'FETCH_TREE';
@@ -190,32 +192,41 @@ export const waterTree = (tree) => async (dispatch, getState) => {
 	});
 };
 
-export const waterTreeGroup = (tree) => async (dispatch, getState) => {
+export const waterTreeGroup = (treeGroup) => async (dispatch, getState) => {
 	if (checkIfOutOfRange(getState)) {
 		return;
 	}
-	try {
-		const { id } = tree;
-		const url = `/tree_group/${id}/water`;
-		await apiClient({
-			url,
-			headers: {
-				'content-type': 'application/json',
-			},
-		});
-		Toast.show({
-			text: 'Successfully updated watered tree group',
-			duration: 1000,
-			textStyle: {
-				textAlign: 'center',
-			},
-		});
 
-		NavigationUtil.navigate('Home');
-		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error watering the trees');
-	}
+	const { id: treeGroupId, health } = treeGroup;
+
+	console.log(treeGroup);
+
+	Toast.show({
+		text: 'Successfully updated watered tree group',
+		duration: 1000,
+		textStyle: {
+			textAlign: 'center',
+		},
+	});
+
+	NavigationUtil.navigate('Home');
+
+	dispatch({
+		type: WATER_TREE_GROUP,
+		payload: { treeGroupId },
+		meta: {
+			offline: {
+				effect: {
+					method: 'get',
+					url: `/tree_group/${treeGroupId}/water`,
+					headers: {
+						Accept: 'application/json',
+					},
+				},
+				rollback: { type: WATER_TREE_GROUP_ROLLBACK, meta: { treeGroupId, prevHealth: health } },
+			},
+		},
+	});
 };
 
 export const deleteTree = (tree) => async (dispatch, getState) => {
