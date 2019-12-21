@@ -12,6 +12,7 @@ import * as plantationSiteActions from '../../store/actions/plantation-site.acti
 import ApproveTreeGroupModal from '../ApproveModals/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
+import PanicModal from '.../PanicModal/PanicModal';
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
@@ -29,6 +30,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
+	const [showPanicModal, setShowPanicModal] = useState(true);
 
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
@@ -310,6 +312,14 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 					visible={approveSiteModal.show}
 					approveType={approveSiteModal.type}
 					onClose={closeApproveSiteModal}
+				/>
+			)}
+			{showPanicModal && (
+				<PanicModal
+					visible={approveSiteModal.show}
+					onClose={() => {
+						setShowPanicModal(!showPanicModal);
+					}}
 				/>
 			)}
 		</Container>
