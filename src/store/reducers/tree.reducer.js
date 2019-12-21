@@ -12,8 +12,9 @@ import {
 	SET_NEW_TREE_GROUP,
 	RESET_NEW_TREE_GROUP,
 	WATER_TREE,
-	WATER_TREE_COMMIT,
 	WATER_TREE_ROLLBACK,
+	WATER_TREE_GROUP,
+	WATER_TREE_GROUP_ROLLBACK,
 } from '../actions/tree.action';
 
 const initialState = {
@@ -174,6 +175,28 @@ const treeReducer = (state = initialState, action) => {
 				treeGroups: getUpdatedTreeGroups(state, {
 					treeGroupId,
 					treeId,
+					data: { health: prevHealth },
+				}),
+			};
+		}
+
+		case WATER_TREE_GROUP: {
+			const { treeGroupId } = action.payload;
+			return {
+				...state,
+				treeGroups: getUpdatedTreeGroups(state, {
+					treeGroupId,
+					data: { health: 'healthy' },
+				}),
+			};
+		}
+
+		case WATER_TREE_GROUP_ROLLBACK: {
+			const { treeGroupId, prevHealth } = action.meta;
+			return {
+				...state,
+				treeGroups: getUpdatedTreeGroups(state, {
+					treeGroupId,
 					data: { health: prevHealth },
 				}),
 			};

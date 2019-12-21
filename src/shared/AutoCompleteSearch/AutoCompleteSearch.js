@@ -16,7 +16,15 @@ const ResultRow = ({ value, onPress, isLast }) => {
 	);
 };
 
-const SearchPlaces = ({ onSearch, results, onResultPress, onClose }) => {
+const SearchPlaces = ({
+	onSearch,
+	results,
+	onResultPress,
+	onClose,
+	showClose,
+	showBorder = true,
+	...props
+}) => {
 	return (
 		<View style={styles.autoCompleteSearchContainer}>
 			<View style={styles.searchContainer}>
@@ -26,14 +34,17 @@ const SearchPlaces = ({ onSearch, results, onResultPress, onClose }) => {
 					keyboardType="default"
 					onChangeText={onSearch}
 					secondaryIcon={
-						<Icon
-							type="Entypo"
-							style={[styles.searchActionIcon, globalStyles.inputIcon]}
-							name="cross"
-						/>
+						showClose && (
+							<Icon
+								type="Entypo"
+								style={[styles.searchActionIcon, globalStyles.inputIcon]}
+								name="cross"
+							/>
+						)
 					}
 					secondaryIconPress={onClose}
-					style={styles.searchInput}
+					style={showBorder && styles.searchInputBorder}
+					{...props}
 				/>
 			</View>
 			{results && results.length ? (

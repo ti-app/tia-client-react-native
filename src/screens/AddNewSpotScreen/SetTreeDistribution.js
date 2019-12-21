@@ -33,14 +33,17 @@ const SetTreeDistributions = () => {
 
 	const handleDistributionChange = (distribution) => {
 		const { value } = distribution;
-		if (value === distributions.SINGLE) {
-			const { latitude, longitude } = userLocation;
-			setNewTreeGroupData({
-				trees: [{ latitude, longitude }],
-				distribution: distributions.SINGLE,
-			});
-		} else {
-			setNewTreeGroupData({ trees: [], distribution: distributions.LINE });
+
+		switch (value) {
+			case distributions.SINGLE:
+				const { latitude, longitude } = userLocation;
+				setNewTreeGroupData({
+					trees: [{ latitude, longitude }],
+					distribution: distributions.SINGLE,
+				});
+				break;
+			default:
+				setNewTreeGroupData({ trees: [], distribution: value });
 		}
 	};
 
@@ -82,6 +85,7 @@ const SetTreeDistributions = () => {
 							presetData={[
 								{ selected: true, value: distributions.SINGLE, label: 'SINGLE' },
 								{ value: distributions.LINE, label: 'LINE' },
+								{ value: distributions.RANDOM, label: 'NOT SURE' },
 							]}
 							onSelectedItemChange={handleDistributionChange}
 							orientation="vertical"

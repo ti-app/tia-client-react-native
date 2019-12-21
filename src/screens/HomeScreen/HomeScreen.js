@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Icon } from 'native-base';
+import { View, Icon, Button, Text } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 
 import HomeMap from './HomeMap';
@@ -16,6 +16,7 @@ import * as colors from '../../styles/colors';
 import * as variables from '../../styles/variables';
 import { usePrevious, useKeyboardHideHook } from '../../utils/customHooks';
 import { selectSearchedLocations } from '../../store/reducers/location.reducer';
+import { selectPanic } from '../../store/reducers/panic.reducer';
 
 const headerHeight = 80;
 const defaultHeaderOptions = {
@@ -35,11 +36,13 @@ const HomeScreen = (props) => {
 	const { navigation } = props;
 	const [mapRef, setMapRef] = useState(null);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const [currentPanicNavigationNumber, setCurrentPanicNavigationNumber] = useState(null);
 
 	const [isKeyboardOpen] = useKeyboardHideHook();
 
 	const isFilterOpen = useSelector(selectIsFilterOpen);
 	const treeGroups = useSelector(selectTreeGroups);
+	const panics = useSelector(selectPanic);
 	const searchedLocations = useSelector(selectSearchedLocations);
 
 	const prevIsFilterOpen = usePrevious(isFilterOpen);
@@ -131,6 +134,25 @@ const HomeScreen = (props) => {
 		});
 	};
 
+	const handlePanicNavigatorPress = () => {
+		if (mapRef) {
+			const [longitude, latitude] = panics[currentPanicNavigationNumber || 0].location.coordinates;
+			const mapLocation = {
+				latitude,
+				longitude,
+				latitudeDelta: 0.000882007226706992,
+				longitudeDelta: 0.000752057826519012,
+			};
+
+			mapRef.animateToRegion(mapLocation, 2000);
+			if (!currentPanicNavigationNumber || currentPanicNavigationNumber < panics.length - 1) {
+				setCurrentPanicNavigationNumber((currentPanicNavigationNumber || 0) + 1);
+			} else {
+				setCurrentPanicNavigationNumber(0);
+			}
+		}
+	};
+
 	return (
 		<>
 			{isFilterOpen ? (
@@ -171,6 +193,17 @@ const HomeScreen = (props) => {
 				</TouchableOpacity>
 			)}
 
+			{panics && panics.length > 0 && (
+				<View style={styles.panicNavigatorButtonContainer}>
+					<Button danger style={styles.panicNavigatorButton} onPress={handlePanicNavigatorPress}>
+						<Text style={styles.panicInfoText}>There has been panic reported nearby</Text>
+						<Text style={styles.takeMetoPanicText}>
+							{currentPanicNavigationNumber !== null ? 'Take me to the next' : 'Take me there'}
+						</Text>
+					</Button>
+				</View>
+			)}
+
 			{!isKeyboardOpen && <AddActionButton {...props} mapRef={mapRef} />}
 			{!isKeyboardOpen && (
 				<Icon
@@ -196,6 +229,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		top: headerHeight + variables.space.base,
 		display: 'flex',
+		paddingLeft: variables.space.base,
+		paddingRight: variables.space.base,
 	},
 	searchActionIconContainer: {
 		position: 'absolute',
@@ -237,6 +272,24 @@ const styles = StyleSheet.create({
 		left: 20,
 		fontSize: 40,
 		color: colors.black.toString(),
+	},
+	panicNavigatorButtonContainer: {
+		position: 'absolute',
+		bottom: variables.space.base,
+		alignSelf: 'center',
+	},
+	panicNavigatorButton: { display: 'flex', flexDirection: 'column' },
+	panicInfoText: {
+		width: '100%',
+		textAlign: 'center',
+		color: colors.white,
+		fontSize: variables.font.small,
+	},
+	takeMetoPanicText: {
+		width: '100%',
+		textAlign: 'center',
+		color: colors.white,
+		fontSize: variables.font.base,
 	},
 });
 

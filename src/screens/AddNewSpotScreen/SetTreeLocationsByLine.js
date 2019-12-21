@@ -24,7 +24,7 @@ const renderTrees = (coordinates) =>
 
 const centerBias = 0.000015;
 
-const SetTreeLocations = () => {
+const SetTreeLocationsByLine = () => {
 	const [type, setType] = useState('spacing'); // should be one of 'spacing' or 'numberOfPlants'
 	const [spacing, setSpacing] = useState(0);
 	const [numberOfPlants, setNumberOfPlants] = useState(0);
@@ -298,6 +298,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-SetTreeLocations.navigationOptions = () => ({ header: null });
+SetTreeLocationsByLine.navigationOptions = () => ({ header: null });
 
-export default SetTreeLocations;
+export default SetTreeLocationsByLine;
