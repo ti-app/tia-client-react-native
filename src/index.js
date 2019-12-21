@@ -52,9 +52,9 @@ const AppContent = () => {
 			}
 		});
 
-		return () => {
-			stopNotificationListeners();
-		};
+		// return () => {
+		// 	stopNotificationListeners();
+		// };
 	}, []);
 
 	const checkNotificationPermissions = async () => {
@@ -78,9 +78,9 @@ const AppContent = () => {
 			registerDeviceFCMToken(fcmToken);
 		}
 
-		createNotificationListeners((appState, data) => {
-			showAlert(data.title, data.body);
-		});
+		// createNotificationListeners((appState, data) => {
+		// 	showAlert(data.title, data.body);
+		// });
 	};
 
 	const requestNotificationPermission = async () => {

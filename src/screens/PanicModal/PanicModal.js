@@ -11,10 +11,9 @@ import {
 import { View, Text, Button } from 'native-base';
 
 import * as colors from '../../styles/colors';
-import * as treeActions from '../../store/actions/tree.action';
-import { selectSelectedTreeGroup } from '../../store/reducers/tree.reducer';
 
-const PanicModal = ({ visible, approveType, onClose }) => {
+const PanicModal = ({ data, visible, onClose }) => {
+	console.log('TCL: PanicModal -> data', data);
 	const dispatch = useDispatch();
 
 	return (
@@ -27,7 +26,41 @@ const PanicModal = ({ visible, approveType, onClose }) => {
 			>
 				<TouchableWithoutFeedback>
 					<View style={styles.content}>
-						<View style={styles.heading}></View>
+						<View style={styles.heading}>
+							<Text>Panic</Text>
+						</View>
+						<View style={styles.panicDetailsContainer}>
+							<ScrollView contentContainerStyle={styles.treeDetails}>
+								{/* <Text style={styles.plantInfo}>No. of plants: {trees.length}</Text> */}
+
+								{/* {photo && photo.length > 0 ? (
+									<Image
+										source={{
+											uri: photo,
+										}}
+										resizeMode="contain"
+										style={styles.image}
+									/>
+								) : (
+									<View style={styles.imageNotFound}>
+										<Text style={styles.imageNotFoundText}>No Image.</Text>
+									</View>
+								)} */}
+							</ScrollView>
+						</View>
+						<View style={styles.actionButtonContainer}>
+							<Button
+								style={{
+									...styles.actionButton,
+								}}
+								success
+								onPress={() => {
+									onClose();
+								}}
+							>
+								<Text style={styles.actionButtonText}>OK</Text>
+							</Button>
+						</View>
 					</View>
 				</TouchableWithoutFeedback>
 			</TouchableOpacity>
@@ -49,7 +82,7 @@ const styles = StyleSheet.create({
 		height: '50%',
 		width: '90%',
 		display: 'flex',
-		justifyContent: 'center',
+		// justifyContent: 'space-around',
 	},
 	treeDetails: {
 		display: 'flex',
@@ -61,6 +94,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 16,
 	},
 	heading: {
+		position: 'absolute',
+		top: 0,
 		display: 'flex',
 		flexDirection: 'row',
 		paddingRight: 16,

@@ -13,7 +13,7 @@ import * as panicActions from '../../store/actions/panic.action';
 import ApproveTreeGroupModal from '../ApproveModals/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
-import PanicModal from '.../PanicModal/PanicModal';
+import PanicModal from '../PanicModal/PanicModal';
 import config from '../../config/common';
 import { showNeedApproval } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
@@ -27,6 +27,7 @@ import {
 	selectCurrentRangeFilter,
 } from '../../store/reducers/ui-interactions.reducer';
 import PanicMarker from '../../shared/Map/PanicMarker/PanicMarker';
+import { createNotificationListeners, stopNotificationListeners } from '../../utils/notification';
 
 const HomeMap = ({ navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
@@ -34,6 +35,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
 	const [showPanicModal, setShowPanicModal] = useState(true);
+	const [selectedPanicData, setSelectedPanicData] = useState(null);
 
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
 	const treeGroups = useSelector(selectTreeGroups);
@@ -101,6 +103,16 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [homeMapCenterLocation, currentStatusList, currentRangeFilter]);
+
+	useEffect(() => {
+		createNotificationListeners((appState, data) => {
+			// showAlert(data.title, data.body);
+		});
+
+		return () => {
+			stopNotificationListeners();
+		};
+	}, []);
 
 	const selectTree = (tree) => {
 		const deleteObject = tree.delete;
@@ -261,7 +273,19 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const renderPanic = (_panic) => {
-		return <PanicMarker key={_panic.id} coordinate={_panic.location} />;
+		return (
+			<PanicMarker
+				key={_panic.id}
+				coordinate={_panic.location}
+				data={_panic}
+				onPress={(data) => {
+					console.log('TCL: renderPanic -> data', data);
+
+					setSelectedPanicData(data);
+					showPanicModal(true);
+				}}
+			/>
+		);
 	};
 
 	const { latitude, longitude } = homeMapCenterLocation;
@@ -338,7 +362,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 			)}
 			{showPanicModal && (
 				<PanicModal
-					visible={approveSiteModal.show}
+					visible={showPanicModal}
 					onClose={() => {
 						setShowPanicModal(!showPanicModal);
 					}}
