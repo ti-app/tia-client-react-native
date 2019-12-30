@@ -145,6 +145,11 @@ const HomeScreen = (props) => {
 			};
 
 			mapRef.animateToRegion(mapLocation, 2000);
+
+			if (panics.length === 1) {
+				return;
+			}
+
 			if (!currentPanicNavigationNumber || currentPanicNavigationNumber < panics.length - 1) {
 				setCurrentPanicNavigationNumber((currentPanicNavigationNumber || 0) + 1);
 			} else {
