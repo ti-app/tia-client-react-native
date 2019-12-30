@@ -13,6 +13,7 @@ import * as panicActions from '../../store/actions/panic.action';
 import ApproveTreeGroupModal from '../ApproveModals/ApproveTreeGroupModal';
 import DeleteApproveTreeModal from '../ApproveModals/DeleteApproveTreeModal';
 import ApprovePlantationSiteModal from '../ApproveModals/ApprovePlantationSiteModal';
+import PanicModal from '../PanicModal/PanicModal';
 import config from '../../config/common';
 import { showNeedApproval, showZoomInMore } from '../../utils/predefinedToasts';
 import { usePrevious } from '../../utils/customHooks';
@@ -26,12 +27,15 @@ import {
 	selectCurrentRangeFilter,
 } from '../../store/reducers/ui-interactions.reducer';
 import PanicMarker from '../../shared/Map/PanicMarker/PanicMarker';
+import { createNotificationListeners, stopNotificationListeners } from '../../utils/notification';
 
 const HomeMap = ({ navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
 	const [approveTreeGroupModal, setApproveTreeGroupModal] = useState({ show: false, type: 'ADD' });
 	const [approveTreeModal, setApproveTreeModal] = useState({ show: false, type: 'DELETE' });
 	const [approveSiteModal, setApproveSiteModal] = useState({ show: false, type: 'ADD' });
+	const [showPanicModal, setShowPanicModal] = useState(false);
+	const [selectedPanicData, setSelectedPanicData] = useState(null);
 	const [mapRegion, setMapRegion] = useState(null);
 
 	const homeMapCenterLocation = useSelector(selectHomeMapCenter);
@@ -100,6 +104,17 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [homeMapCenterLocation, currentStatusList, currentRangeFilter]);
+
+	useEffect(() => {
+		createNotificationListeners((appState, data) => {
+			// if notification type is of panic,
+			// set panic data and show panic modal
+		});
+
+		return () => {
+			stopNotificationListeners();
+		};
+	}, []);
 
 	const handleOnRegionChange = (_region) => {
 		setMapRegion(_region);
@@ -287,7 +302,20 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	};
 
 	const renderPanic = (_panic) => {
-		return <PanicMarker key={_panic.id} coordinate={_panic.location} />;
+		return (
+			<PanicMarker
+				key={_panic.id}
+				coordinate={_panic.location}
+				data={_panic}
+				onPress={(data) => {
+					console.log('TCL: renderPanic -> data', data);
+					if (checkIfZoomedEnough()) {
+						setSelectedPanicData(data);
+						setShowPanicModal(true);
+					}
+				}}
+			/>
+		);
 	};
 
 	const { latitude, longitude } = homeMapCenterLocation;
@@ -361,6 +389,15 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 					visible={approveSiteModal.show}
 					approveType={approveSiteModal.type}
 					onClose={closeApproveSiteModal}
+				/>
+			)}
+			{showPanicModal && (
+				<PanicModal
+					visible={showPanicModal}
+					data={selectedPanicData}
+					onClose={() => {
+						setShowPanicModal(!showPanicModal);
+					}}
 				/>
 			)}
 		</Container>

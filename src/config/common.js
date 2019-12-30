@@ -2,7 +2,8 @@ import * as colors from '../styles/colors';
 
 export default {
 	api: {
-		base: 'https://tia-server.herokuapp.com/v1',
+		base: 'http://localhost:3000/v1',
+		// base: 'https://tia-server.herokuapp.com/v1',
 	},
 	roles: {
 		MODERATOR: 'moderator',
@@ -70,4 +71,10 @@ export default {
 		},
 	},
 	maxProximityDistance: 50, // in meters
+	notificationAppState: {
+		foreground: 'FOREGROUND',
+		background: 'BACKGROUND',
+		killed: 'KILLED',
+		// dataOnly: 'DATA_ONLY',
+	},
 };
