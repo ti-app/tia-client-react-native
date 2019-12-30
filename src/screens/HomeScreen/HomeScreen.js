@@ -206,6 +206,15 @@ const HomeScreen = (props) => {
 							{currentPanicNavigationNumber !== null ? 'Take me to the next' : 'Take me there'}
 						</Text>
 					</Button>
+					<Button
+						danger
+						onPress={() => {
+							navigation.navigate('PanicList', { homeMapRef: mapRef });
+						}}
+						style={styles.panicListButton}
+					>
+						<Text>Panic List</Text>
+					</Button>
 				</View>
 			)}
 
@@ -283,7 +292,12 @@ const styles = StyleSheet.create({
 		bottom: variables.space.base,
 		alignSelf: 'center',
 	},
-	panicNavigatorButton: { display: 'flex', flexDirection: 'column' },
+	panicNavigatorButton: {
+		display: 'flex',
+		flexDirection: 'column',
+		marginBottom: variables.space.small,
+	},
+	panicListButton: { display: 'flex', flexDirection: 'row', justifyContent: 'center' },
 	panicInfoText: {
 		width: '100%',
 		textAlign: 'center',

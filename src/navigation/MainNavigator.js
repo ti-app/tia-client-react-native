@@ -16,6 +16,7 @@ import UserActivity from '../screens/UserActivity/UserActivity';
 import TreeActivity from '../screens/TreeActivity/TreeActivity';
 import Leaderboard from '../screens/Leaderboard/Leaderboard';
 import CreatePanicScreen from '../screens/CreatePanicScreen/CreatePanicScreen';
+import PanicListScreen from '../screens/PanicListScreen/PanicListScreen';
 
 const MainNavigator = createStackNavigator(
 	{
@@ -60,6 +61,9 @@ const MainNavigator = createStackNavigator(
 		},
 		CreatePanic: {
 			screen: CreatePanicScreen,
+		},
+		PanicList: {
+			screen: PanicListScreen,
 		},
 	},
 	{

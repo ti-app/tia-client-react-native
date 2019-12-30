@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import config from '../../config/common';
 import * as colors from '../../styles/colors';
+import * as variables from '../../styles/variables';
 import * as panicActions from '../../store/actions/panic.action';
 import { selectUserRole } from '../../store/reducers/auth.reducer';
 
@@ -59,13 +60,13 @@ const PanicModal = ({ data, visible, onClose, mapRef }) => {
 				<TouchableWithoutFeedback>
 					<View style={styles.content}>
 						<View style={styles.heading}>
-							<Text>Panic</Text>
+							<Text style={styles.headingText}>Panic</Text>
 						</View>
 						<View style={styles.panicDetailsContainer}>
 							<ScrollView contentContainerStyle={styles.treeDetails}>
-								<Text>Location:{googlePlaceName}</Text>
+								<Text>Location: {googlePlaceName}</Text>
 								<Text>Panic raised by: {owner.displayName}</Text>
-								<Text>Panic type: {panicType}</Text>
+								<Text>Panic type: {panicType.toUpperCase()}</Text>
 
 								{photo && photo.length > 0 ? (
 									<Image
@@ -136,13 +137,12 @@ const styles = StyleSheet.create({
 		paddingBottom: 16,
 	},
 	heading: {
-		// position: 'absolute',
-		// top: 0,
 		display: 'flex',
 		flexDirection: 'row',
 		paddingRight: 16,
 		paddingLeft: 16,
 	},
+	headingText: { fontSize: variables.font.large },
 	plantType: {
 		textAlignVertical: 'center',
 		fontSize: 20,
