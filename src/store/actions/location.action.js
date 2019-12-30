@@ -94,6 +94,15 @@ export const callGooglePlacesApi = async (placeId) => {
 	});
 };
 
+export const callGoogleNearbyApi = async (location, radius = 100) => {
+	const placesApiKey = GOOGLE_PLACES_API_KEY;
+	const { latitude, longitude } = location;
+
+	return Axios({
+		url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&key=${placesApiKey}&radius=${radius}&rankby=prominence`,
+	});
+};
+
 export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => async (dispatch) => {
 	try {
 		const response = await callGooglePlacesApi(placeId);

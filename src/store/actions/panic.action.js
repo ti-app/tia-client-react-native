@@ -28,7 +28,7 @@ const dispatchFetchPanicAction = (dispatch, getState) => {
 
 /**
  * Accepts parameter treeGroup which should be a FormData including an Image.
- * @param {FormData} plantationSite
+ * @param {FormData} panicData
  */
 export const createPanic = (panicData) => async (dispatch, getState) => {
 	try {
@@ -46,6 +46,27 @@ export const createPanic = (panicData) => async (dispatch, getState) => {
 		dispatchFetchPanicAction(dispatch, getState);
 	} catch (err) {
 		showErrorToast('Error creating a panic', err, dispatch);
+	}
+};
+
+/**
+ * Accepts parameter treeGroup which should be a FormData including an Image.
+ * @param {String} panicId
+ */
+export const resolvePanic = (panicId) => async (dispatch, getState) => {
+	try {
+		await apiClient({
+			method: 'delete',
+			url: `/panic/${panicId}`,
+			headers: {
+				Accept: 'application/json',
+			},
+		});
+
+		NavigationUtil.navigate('Home');
+		dispatchFetchPanicAction(dispatch, getState);
+	} catch (err) {
+		showErrorToast('Error resolving a panic', err, dispatch);
 	}
 };
 

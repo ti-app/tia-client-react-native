@@ -59,7 +59,7 @@ buck-out/
 /ios/Pods/
 
 # Local Readme file which you can use for your comments/todos etc. You got the point right.
-./LOCALREADME.md
+/LOCALREADME.md
 
 # VSCode
 .vscode

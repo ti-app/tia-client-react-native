@@ -2,7 +2,8 @@ import * as colors from '../styles/colors';
 
 export default {
 	api: {
-		base: 'https://tia-server.herokuapp.com/v1',
+		// base: 'https://tia-server.herokuapp.com/v1',
+		base: 'http://localhost:3000/v1',
 	},
 	roles: {
 		MODERATOR: 'moderator',

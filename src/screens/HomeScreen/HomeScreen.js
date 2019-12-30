@@ -201,7 +201,7 @@ const HomeScreen = (props) => {
 			{panics && panics.length > 0 && (
 				<View style={styles.panicNavigatorButtonContainer}>
 					<Button danger style={styles.panicNavigatorButton} onPress={handlePanicNavigatorPress}>
-						<Text style={styles.panicInfoText}>There has been panic reported nearby</Text>
+						<Text style={styles.panicInfoText}>PANIC HAS BEEN REPORTED NEARBY</Text>
 						<Text style={styles.takeMetoPanicText}>
 							{currentPanicNavigationNumber !== null ? 'Take me to the next' : 'Take me there'}
 						</Text>

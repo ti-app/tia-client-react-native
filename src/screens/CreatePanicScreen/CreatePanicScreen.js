@@ -50,9 +50,28 @@ const CreatePanicScreen = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// useEffect(() => {
-	// 	setPanicLocation(userLocation);
-	// }, [userLocation]);
+	useEffect(() => {
+		if (!userLocation) {
+			return;
+		}
+
+		const setInitialPlace = async (_userLocation) => {
+			const response = await locationActions.callGoogleNearbyApi(_userLocation);
+
+			const { results } = response.data;
+
+			if (results && results.length && results[0] && results[0].name) {
+				const intialPlaceName = results[0].name;
+				const intialPlaceId = results[0].place_id;
+
+				setGooglePlaceId(intialPlaceId);
+				setPanicSiteName(intialPlaceName);
+				setPanicLocation(userLocation);
+			}
+		};
+
+		setInitialPlace(userLocation);
+	}, [userLocation]);
 
 	const takePhoto = async () => {
 		const result = await request(PERMISSIONS.ANDROID.CAMERA);
@@ -194,7 +213,10 @@ const CreatePanicScreen = () => {
 					<View style={styles.paddingBottomTen}>
 						<Text style={styles.paddingBottomTen}> Type </Text>
 						<SelectButton
-							data={[{ value: 'fire', label: 'FIRE', selected: true }]}
+							data={[
+								{ value: 'fire', label: 'FIRE', selected: true },
+								{ value: 'other', label: 'OTHER' },
+							]}
 							onSelectedItemChange={handlePanicTypeChange}
 							atleastOneSelected
 						/>

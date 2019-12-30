@@ -107,8 +107,16 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 	useEffect(() => {
 		createNotificationListeners((appState, data) => {
-			// if notification type is of panic,
-			// set panic data and show panic modal
+			if (data.type === 'panic') {
+				const { location } = data;
+				const { latitude, longitude } = location;
+				const panicData = {
+					...data,
+					location: { latitude: parseFloat(latitude), longitude: parseFloat(longitude) },
+				};
+				setShowPanicModal(true);
+				setSelectedPanicData(panicData);
+			}
 		});
 
 		return () => {
@@ -304,11 +312,10 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const renderPanic = (_panic) => {
 		return (
 			<PanicMarker
-				key={_panic.id}
+				key={_panic._id}
 				coordinate={_panic.location}
 				data={_panic}
 				onPress={(data) => {
-					console.log('TCL: renderPanic -> data', data);
 					if (checkIfZoomedEnough()) {
 						setSelectedPanicData(data);
 						setShowPanicModal(true);
@@ -342,10 +349,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	});
 
 	const panicData = panics.map((_site) => {
-		const { _id, location, ...rest } = _site;
+		const { location, ...rest } = _site;
 		const { coordinates } = location;
 		return {
-			id: _id,
 			location: { longitude: coordinates[0], latitude: coordinates[1] },
 			...rest,
 		};
@@ -395,6 +401,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				<PanicModal
 					visible={showPanicModal}
 					data={selectedPanicData}
+					mapRef={mapRef}
 					onClose={() => {
 						setShowPanicModal(!showPanicModal);
 					}}

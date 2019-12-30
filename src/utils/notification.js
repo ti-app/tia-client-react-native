@@ -16,9 +16,8 @@ export const createNotificationListeners = async (callback) => {
 	 * Triggered when a particular notification has been received in foreground
 	 * */
 	notificationListenerRef = rnFirebase.notifications().onNotification((notification) => {
-		console.log('TCL: createNotificationListeners -> notificationListenerRef', notification);
 		const { data } = notification;
-		callback(config.notificationAppState.foreground, data);
+		callback(config.notificationAppState.foreground, JSON.parse(data.payload));
 	});
 
 	/*
@@ -29,7 +28,7 @@ export const createNotificationListeners = async (callback) => {
 		.onNotificationOpened((notificationOpen) => {
 			console.log('TCL: createNotificationListeners -> notificationOpen', notificationOpen);
 			const { data } = notificationOpen.notification;
-			callback(config.notificationAppState.background, data);
+			callback(config.notificationAppState.background, JSON.parse(data.payload));
 		});
 
 	/*
@@ -39,7 +38,7 @@ export const createNotificationListeners = async (callback) => {
 	if (notificationOpen) {
 		console.log('TCL: createNotificationListeners -> notificationOpen', notificationOpen);
 		const { data } = notificationOpen.notification;
-		callback(config.notificationAppState.killed, data);
+		callback(config.notificationAppState.killed, JSON.parse(data.payload));
 	}
 
 	/*

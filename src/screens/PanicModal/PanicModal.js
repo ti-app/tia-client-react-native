@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import {
 	StyleSheet,
 	Image,
@@ -9,13 +8,45 @@ import {
 	TouchableWithoutFeedback,
 } from 'react-native';
 import { View, Text, Button } from 'native-base';
+import { useDispatch, useSelector } from 'react-redux';
 
+import config from '../../config/common';
 import * as colors from '../../styles/colors';
+import * as panicActions from '../../store/actions/panic.action';
+import { selectUserRole } from '../../store/reducers/auth.reducer';
 
-const PanicModal = ({ data, visible, onClose }) => {
-	if (!data) return null;
+const PanicModal = ({ data, visible, onClose, mapRef }) => {
+	const userRole = useSelector(selectUserRole);
 
-	const { photo, googlePlaceName, owner, panicType } = data;
+	const dispatch = useDispatch();
+	const resolvePanic = useCallback((...param) => dispatch(panicActions.resolvePanic(...param)), [
+		dispatch,
+	]);
+
+	if (!data) {
+		return null;
+	}
+
+	const { photo, googlePlaceName, owner, panicType, location, _id } = data;
+
+	const { latitude, longitude } = location;
+
+	const onGoToLocationPress = () => {
+		const mapLocation = {
+			latitude,
+			longitude,
+			latitudeDelta: 0.000882007226706992,
+			longitudeDelta: 0.000752057826519012,
+		};
+
+		mapRef.animateToRegion(mapLocation, 2000);
+		onClose();
+	};
+
+	const onResolvePress = async () => {
+		await resolvePanic(_id);
+		onClose();
+	};
 
 	return (
 		<Modal animationType="slide" transparent visible={visible} onRequestClose={() => onClose()}>
@@ -56,13 +87,21 @@ const PanicModal = ({ data, visible, onClose }) => {
 								style={{
 									...styles.actionButton,
 								}}
-								success
-								onPress={() => {
-									onClose();
-								}}
+								onPress={onGoToLocationPress}
 							>
-								<Text style={styles.actionButtonText}>OK</Text>
+								<Text style={styles.actionButtonText}>GO TO LOCATION</Text>
 							</Button>
+							{userRole === config.roles.MODERATOR && (
+								<Button
+									style={{
+										...styles.actionButton,
+									}}
+									success
+									onPress={onResolvePress}
+								>
+									<Text style={styles.actionButtonText}>RESOLVE</Text>
+								</Button>
+							)}
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
