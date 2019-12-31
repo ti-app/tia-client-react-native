@@ -20,8 +20,8 @@ const effect = (_effect, _action) => {
 		// Two Assumtions: 'data' should be json and if contains image uri, it should be in 'photo' field.
 		let photoUri;
 
-		if (data.photo && data.photo.uri) {
-			photoUri = data.photo.uri;
+		if (data.photo) {
+			photoUri = data.photo;
 			delete data.photo;
 		}
 

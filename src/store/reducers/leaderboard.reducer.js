@@ -22,10 +22,10 @@ export const selectLeaderboard = (state) =>
 		return { _id, count, displayName, photoUrl };
 	});
 
-export const selectLeaderboardUserById = (id) => (state) => {
+export const selectLeaderboardUserById = (userId) => (state) => {
 	return state.leaderboard.find((aUser) => {
 		const { _id } = aUser;
-		if (_id === id) {
+		if (_id === userId) {
 			return true;
 		} else {
 			return false;

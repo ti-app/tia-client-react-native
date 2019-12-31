@@ -33,12 +33,12 @@ const dispatchFetchSiteAction = (dispatch, getState) => {
  * Accepts parameter treeGroup which should be a FormData including an Image.
  * @param {FormData} plantationSite
  */
-export const addPlantationSite = (plantationSite) => async (dispatch, getState) => {
+export const addPlantationSite = (_plantationSite) => async (dispatch, getState) => {
 	try {
 		await apiClient({
 			method: 'post',
 			url: '/site',
-			data: plantationSite,
+			data: _plantationSite,
 			headers: {
 				Accept: 'application/json',
 				'content-type': 'multipart/form-data',
@@ -83,8 +83,8 @@ export const fetchPlanatationSites = (location, radius = 500) => async (dispatch
 
 export const deletePlantationSite = (plantationSite) => async (dispatch, getState) => {
 	try {
-		const { id } = plantationSite;
-		const url = `/site/${id}`;
+		const { _id } = plantationSite;
+		const url = `/site/${_id}`;
 		await apiClient({
 			url,
 			headers: {

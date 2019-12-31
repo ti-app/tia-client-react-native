@@ -147,6 +147,7 @@ export const updateTree = (treeId, updatedTree) => async (dispatch, getState) =>
 	if (checkIfOutOfRange(getState)) {
 		return;
 	}
+
 	try {
 		await apiClient({
 			method: 'put',
@@ -205,7 +206,7 @@ export const waterTreeGroup = (treeGroup) => async (dispatch, getState) => {
 		return;
 	}
 
-	const { id: treeGroupId, health } = treeGroup;
+	const { _id: treeGroupId, health } = treeGroup;
 
 	console.log(treeGroup);
 
@@ -265,8 +266,8 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 
 export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 	try {
-		const { id } = treeGroup;
-		const url = `/tree_group/${id}`;
+		const { _id } = treeGroup;
+		const url = `/tree_group/${_id}`;
 		await apiClient({
 			url,
 			headers: {

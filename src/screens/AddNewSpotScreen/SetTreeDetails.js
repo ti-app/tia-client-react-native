@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, Alert } from 'react-native';
 import { View, Text, Container } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-maps';
@@ -23,12 +23,21 @@ const SetTreeDetails = () => {
 		[dispatch]
 	);
 
-	const handlePlantType = (plantType) => {
-		setNewTreeGroupData({ plantType });
+	const { waterCycle, plantType } = newTreeGroup;
+
+	const handlePlantType = (_plantType) => {
+		setNewTreeGroupData({ plantType: _plantType });
 	};
 
-	const handleWaterCycleChange = (waterCycle) => {
-		setNewTreeGroupData({ waterCycle });
+	const handleWaterCycleChange = (_waterCycle) => {
+		if (_waterCycle > 7) {
+			Alert.alert('Invalid Entry', 'Maximum number of days for water cycle is 7.', [
+				{ text: 'OK' },
+			]);
+			setNewTreeGroupData({ waterCycle });
+		} else {
+			setNewTreeGroupData({ waterCycle: _waterCycle });
+		}
 	};
 
 	const handleSelectedStatusChange = (status) => {
@@ -73,11 +82,18 @@ const SetTreeDetails = () => {
 						placeholder="Plant type"
 						keyboardType="default"
 						onChangeText={handlePlantType}
+						info="Specify plant type sucs as Neem, Mango etc."
+						maxLength={20}
+						value={String(plantType)}
 					/>
+
 					<FormInput
 						placeholder="Water cycle"
 						keyboardType="number-pad"
+						maxLength={1}
+						value={String(waterCycle)}
 						onChangeText={handleWaterCycleChange}
+						info="This field specifies the cycle of days the plant should be watered regularly."
 					/>
 					<View>
 						<Text style={styles.paddingBottomTen}> Health of plant(s) </Text>

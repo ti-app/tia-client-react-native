@@ -24,11 +24,11 @@ const ApproveTreeGroupModal = ({ visible, approveType, onClose }) => {
 	);
 
 	const handleModeratorAction = (approval) => {
-		const { id } = selectedTreeGroup;
+		const { _id } = selectedTreeGroup;
 		if (approveType === 'ADD') {
-			takeModActionForTreeGroup(id, { approve: approval });
+			takeModActionForTreeGroup(_id, { approve: approval });
 		} else if (approveType === 'DELETE') {
-			takeModActionForTreeGroup(id, { deleteApprove: approval });
+			takeModActionForTreeGroup(_id, { deleteApprove: approval });
 		} else {
 			console.warn("Pass 'approveType' as a prop.");
 		}

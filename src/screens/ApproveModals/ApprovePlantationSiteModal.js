@@ -24,11 +24,11 @@ const ApprovePlantataionSiteModal = ({ onClose, approveType, visible }) => {
 	);
 
 	const handleModeratorAction = (approval) => {
-		const { id } = selectedPlantationSite;
+		const { _id } = selectedPlantationSite;
 		if (approveType === 'ADD') {
-			takeModActionForSite(id, { approve: approval });
+			takeModActionForSite(_id, { approve: approval });
 		} else if (approveType === 'DELETE') {
-			takeModActionForSite(id, { deleteApprove: approval });
+			takeModActionForSite(_id, { deleteApprove: approval });
 		} else {
 			console.warn("Pass 'approveType' as a prop.");
 		}

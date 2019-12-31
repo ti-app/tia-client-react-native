@@ -279,7 +279,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 		return (
 			<Spot
-				key={commitedStatus ? _data.id : _data.tempUuid}
+				key={commitedStatus ? _data._id : _data.tempUuid}
 				coordinate={_data.location}
 				onPress={() => {
 					selectTreeGroup(_data);
@@ -298,7 +298,7 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 
 		return (
 			<PlantationSite
-				key={_site.id}
+				key={_site._id}
 				coordinate={_site.location}
 				onPress={() => {
 					selectPlantationSite(_site);
@@ -328,10 +328,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	const { latitude, longitude } = homeMapCenterLocation;
 
 	const treeData = treeGroups.map((_treeGroup) => {
-		const { _id, health, location, ...rest } = _treeGroup;
+		const { health, location, ...rest } = _treeGroup;
 		const { coordinates } = location;
 		return {
-			id: _id,
 			health,
 			location: { longitude: coordinates[0], latitude: coordinates[1] },
 			...rest,
@@ -339,10 +338,9 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 	});
 
 	const plantationSiteData = plantationSites.map((_site) => {
-		const { _id, location, ...rest } = _site;
+		const { location, ...rest } = _site;
 		const { coordinates } = location;
 		return {
-			id: _id,
 			location: { longitude: coordinates[0], latitude: coordinates[1] },
 			...rest,
 		};
