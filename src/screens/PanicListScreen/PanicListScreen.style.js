@@ -43,6 +43,7 @@ export default StyleSheet.create({
 	addedByPanicType: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between' },
 	addedByText: { fontSize: variables.font.base, color: colors.darkGray },
 	panitTypeText: { fontSize: variables.font.base, color: colors.darkGray },
+	panicDescText: { fontSize: variables.font.base, color: colors.darkGray },
 	actionButton: {
 		flex: 1,
 		display: 'flex',

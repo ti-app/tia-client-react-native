@@ -28,7 +28,7 @@ const PanicModal = ({ data, visible, onClose, mapRef }) => {
 		return null;
 	}
 
-	const { photo, googlePlaceName, owner, panicType, location, _id } = data;
+	const { photo, googlePlaceName, owner, panicType, location, _id, description } = data;
 
 	const { latitude, longitude } = location;
 
@@ -67,6 +67,7 @@ const PanicModal = ({ data, visible, onClose, mapRef }) => {
 								<Text>Location: {googlePlaceName}</Text>
 								<Text>Panic raised by: {owner.displayName}</Text>
 								<Text>Panic type: {panicType.toUpperCase()}</Text>
+								<Text>Description: {description}</Text>
 
 								{photo && photo.length > 0 ? (
 									<Image

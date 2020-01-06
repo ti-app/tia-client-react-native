@@ -57,8 +57,8 @@ const PlantationSiteDetails = ({ navigation }) => {
 	const getDeleteButton = () => (
 		<TouchableOpacity style={styles.deleteButton} onPress={showConfirmDeleteAlert}>
 			<Icon
-				type="FontAwesome5"
-				name="trash"
+				type="MaterialIcons"
+				name="delete"
 				style={{ color: colors.red.toString(), fontSize: 24 }}
 			/>
 		</TouchableOpacity>
@@ -67,8 +67,8 @@ const PlantationSiteDetails = ({ navigation }) => {
 	const getEditButton = () => (
 		<TouchableOpacity style={styles.editButton} onPress={editSite}>
 			<Icon
-				type="FontAwesome5"
-				name="pen"
+				type="MaterialIcons"
+				name="edit"
 				style={{ color: colors.black.toString(), fontSize: 24 }}
 			/>
 		</TouchableOpacity>
@@ -139,7 +139,9 @@ const PlantationSiteDetails = ({ navigation }) => {
 					<Text style={styles.siteInfoText}>Site Type: {type}</Text>
 					<Text style={styles.siteInfoText}>Soil Quality: {soilQuality}</Text>
 					<Text style={[styles.siteInfoText, styles.paddingBottomTen]}>
-						{wateringNearBy ? 'Watering is available nearby.' : 'Watering is not available nearby.'}
+						{wateringNearBy === 'true'
+							? 'Watering is available nearby.'
+							: 'Watering is not available nearby.'}
 					</Text>
 					{photo && photo.length > 0 ? (
 						<Image

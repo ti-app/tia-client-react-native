@@ -47,6 +47,7 @@ const EditPlantationSiteScreen = () => {
 	]);
 
 	useEffect(() => {
+		console.log(selectedPlantationSite);
 		const {
 			wateringNearBy: _wateringNearBy,
 			soilQuality: _soilQuality,
@@ -54,9 +55,10 @@ const EditPlantationSiteScreen = () => {
 			location: _location,
 			type: _type,
 			siteDisplayName: _siteDisplayName,
-			id: _id,
+			_id,
 			photo: _photoURL,
 		} = selectedPlantationSite;
+
 		setId(_id);
 		setSoilQuality(_soilQuality);
 		setNumOfPlants(_numberOfPlants);
@@ -132,14 +134,9 @@ const EditPlantationSiteScreen = () => {
 			setType('public');
 		}
 	};
+	const { coordinates } = updatedLocation || {};
 
-	const { longitude, latitude } = updatedLocation;
-
-	const presetSoilQuality = { good: false, bad: false };
-	presetSoilQuality[soilQuality] = true;
-
-	const presetType = { publicProperty: false, privateProppublicProperty: false };
-	presetType[type === 'public' ? 'publicProperty' : 'privateProperty'] = true;
+	const [longitude, latitude] = coordinates || [0, 0];
 
 	return (
 		<Container style={styles.container}>
@@ -185,7 +182,7 @@ const EditPlantationSiteScreen = () => {
 					<FormInput
 						placeholder="No. of plants in site?"
 						keyboardType="number-pad"
-						value={numberOfPlants}
+						value={String(numberOfPlants)}
 						onChangeText={handleNumberOfPlantsChange}
 					/>
 
@@ -207,8 +204,13 @@ const EditPlantationSiteScreen = () => {
 						<Text style={styles.paddingBottomTen}> Soil Quality </Text>
 						<SelectButton
 							presetData={[
-								{ value: 'good', label: 'GOOD', status: 'success' },
-								{ value: 'bad', label: 'BAD', status: 'danger' },
+								{
+									value: 'good',
+									label: 'GOOD',
+									status: 'success',
+									selected: soilQuality === 'good',
+								},
+								{ value: 'bad', label: 'BAD', status: 'danger', selected: soilQuality === 'bad' },
 							]}
 							onSelectedItemChange={handleSoilQualityChange}
 						/>
@@ -218,8 +220,8 @@ const EditPlantationSiteScreen = () => {
 						<Text style={styles.paddingBottomTen}> Property Type </Text>
 						<SelectButton
 							presetData={[
-								{ value: 'publicProperty', label: 'PUBLIC' },
-								{ value: 'privateProperty', label: 'PRIVATE' },
+								{ value: 'publicProperty', label: 'PUBLIC', selected: type === 'public' },
+								{ value: 'privateProperty', label: 'PRIVATE', selected: type === 'private' },
 							]}
 							onSelectedItemChange={handlePropertyTypeChange}
 						/>

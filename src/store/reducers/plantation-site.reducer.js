@@ -11,7 +11,7 @@ const initialState = {
 const plantationSiteReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case FETCH_PLANTATION_SITES_SUCCESS: {
-			return { plantationSites: action.payload };
+			return { ...state, plantationSites: action.payload };
 		}
 
 		case SET_SELECTED_PLANTATION_SITE: {

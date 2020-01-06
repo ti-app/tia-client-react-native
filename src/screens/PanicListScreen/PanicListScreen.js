@@ -19,7 +19,7 @@ const Panic = ({ navigation }) => {
 	]);
 
 	const renderPanicRow = ({ item, index }) => {
-		const { photo, googlePlaceName, owner, panicType, location, _id } = item;
+		const { photo, googlePlaceName, owner, panicType, location, _id, description } = item;
 
 		const { coordinates } = location;
 
@@ -75,6 +75,11 @@ const Panic = ({ navigation }) => {
 						<View style={styles.panicType}>
 							<Text style={styles.panitTypeText}>Panic type: {panicType.toUpperCase()}</Text>
 						</View>
+					</View>
+					<View>
+						<Text style={styles.panicDescText}>
+							Description: {description || 'Description not available'}{' '}
+						</Text>
 					</View>
 					<View style={styles.actionButtonContainer}>
 						<Button
