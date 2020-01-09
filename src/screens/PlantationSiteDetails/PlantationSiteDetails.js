@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { View, Text, Container, Icon } from 'native-base';
@@ -24,8 +24,7 @@ const PlantationSiteDetails = ({ navigation }) => {
 	);
 
 	const deleteSiteConfirmed = () => {
-		const siteToDelete = selectedPlantationSite;
-		deletePlantationSite(siteToDelete);
+		deletePlantationSite(selectedPlantationSite);
 	};
 
 	const editSite = () => {
@@ -44,9 +43,6 @@ const PlantationSiteDetails = ({ navigation }) => {
 				},
 				{
 					text: 'Cancel',
-					onPress: () => {
-						/** NOOP */
-					},
 					style: 'cancel',
 				},
 			],
