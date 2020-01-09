@@ -119,6 +119,11 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
+// Load keystore
+def releaseKeystorePropertiesFile = rootProject.file("release.keystore.properties");
+def releaseKeystoreProperties = new Properties()
+releaseKeystoreProperties.load(new FileInputStream(releaseKeystorePropertiesFile))
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -150,7 +155,7 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        release{
+        release {
             if (releaseKeystoreProperties['TIA_UPLOAD_STORE_FILE']) {
                     storeFile file(releaseKeystoreProperties['TIA_UPLOAD_STORE_FILE'])
                     storePassword releaseKeystoreProperties['TIA_UPLOAD_STORE_PASSWORD']

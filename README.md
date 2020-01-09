@@ -131,6 +131,12 @@ yarn install
 yarn install --unsafe-perm instead
 ```
 
+- Way to check signing details of the apk file
+
+```
+keytool -list -printcert -jarfile app-release.apk
+```
+
 # Samples
 
 (Yet To Add)
