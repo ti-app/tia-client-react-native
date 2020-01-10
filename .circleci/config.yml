@@ -68,19 +68,32 @@ jobs:
           command: |
             echo $KEYSTORE | base64 -d  > ${HOME}/tia-client-react-native/android/app/tiarelease.keystore
       - run:
-          name: Build debug APK and release APK
+          name: Build release APK
           command: |
             cd android
             ./gradlew assembleRelease
+      - run:
+          name: Build bundle (.aab file)
+          command: |
+            cd android
+            ./gradlew bundleRelease
       - store_test_results:
           path: android/app/build/outputs/apk/
           destination: apks/
+      - store_test_results:
+          path: android/app/build/outputs/bundle/
+          destination: bundles/
 
       - run:
           name: Upload to Slack
           command: |
             export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
-            curl -F file=@android/app/build/outputs/apk/release/app-release.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA build"  https://slack.com/api/files.upload
+            curl -F file=@android/app/build/outputs/apk/release/app-release.apk -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA relase build apk file"  https://slack.com/api/files.upload
+      - run:
+          name: Upload to Slack
+          command: |
+            export GIT_COMMIT_DESC=$(git log --format=oneline -n 1 | sed -E 's/^[^ ]+ (.*)$/\1/g')
+            curl -F file=@android/app/build/outputs/bundle/release/app.aab -F channels=$SLACK_CHANNEL -F token=$SLACK_API_TOKEN -F title="Here is new TIA release bundle file"  https://slack.com/api/files.upload
 
 workflows:
   version: 2

@@ -49,9 +49,9 @@ You can find the build here: `app/build/outputs/apk/`
 
 ## Release Build:
 
-1: Get `release.keystore.properties` from `https://ti-app.slack.com/files/UE5JTSF4Z/FM8GFQT6Y/release.keystore.properties` and put it in `./android` directory.
+1: Get `release.keystore.properties` from `https://ti-app.slack.com/files/UE5JTSF4Z/FS53VKJN7/release.keystore.properties` and put it in `./android` directory.
 
-2: Get `tiarelase.keystore` from `https://ti-app.slack.com/files/UE5JTSF4Z/FLXHA0YUT/tiarelease.keystore` and put it in `./android/app` directory.
+2: Get `tiarelase.keystore` from `https://ti-app.slack.com/files/UE5JTSF4Z/FSGHYL3KP/tiarelease.keystore` and put it in `./android/app` directory.
 
 3: Generate a release build.
 
