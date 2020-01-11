@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Icon, Button } from 'native-base';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import auth from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 
 import FormInput from '../../shared/FormInput/FormInput';
@@ -20,11 +21,11 @@ const ResetPasswordForm = ({ navigation }) => {
 	const setLoading = useCallback((flag) => dispatch(uiActions.setLoading(flag)), [dispatch]);
 
 	const onResetClick = () => {
-		const auth = firebase.auth();
+		// const auth = firebase.auth();
 
 		setLoading(true);
 
-		auth
+		auth()
 			.sendPasswordResetEmail(email)
 			.then(() => {
 				showEmailSuccessfullToast();

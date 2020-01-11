@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Platform, StatusBar, StyleSheet, View, ActivityIndicator, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
-import * as firebase from 'firebase';
-import rnFirebase from 'react-native-firebase';
+import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
+import analytics from '@react-native-firebase/analytics';
 
 import InitialLoadingScreen from './screens/InitialLoadingScreen/InitialLoadingScreen';
 import AuthNavigator from './navigation/AuthNavigator';
@@ -13,12 +14,11 @@ import * as uiActions from './store/actions/ui-interactions.action';
 import * as authActions from './store/actions/auth.action';
 import { registerFCMToken } from './store/actions/notification.action';
 import { showWelcomeLoginToast } from './utils/predefinedToasts';
-import { initializeFirebase } from './utils/firebase';
 import { parseJwt } from './utils/jwt';
 import * as colors from './styles/colors';
 import { initializeAxiosInterceptors } from './utils/apiClient';
 import { selectLoading } from './store/reducers/ui-interactions.reducer';
-import { createNotificationListeners, stopNotificationListeners } from './utils/notification';
+import { getFirebaseToken, getFirebaseUser } from './utils/firebase';
 
 const AppContent = () => {
 	const [authStatus, setAuthStatus] = useState('checking');
@@ -39,13 +39,11 @@ const AppContent = () => {
 	]);
 
 	useEffect(() => {
-		initializeFirebase();
-
 		setupFirebaseAuthChange();
 	}, [setupFirebaseAuthChange]);
 
 	useEffect(() => {
-		firebase.auth().onAuthStateChanged(async (user) => {
+		auth().onAuthStateChanged(async (user) => {
 			// get and register FCM token only after successful login
 			if (user) {
 				checkNotificationPermissions();
@@ -58,7 +56,7 @@ const AppContent = () => {
 	}, []);
 
 	const checkNotificationPermissions = async () => {
-		const enabled = await rnFirebase.messaging().hasPermission();
+		const enabled = await messaging().hasPermission();
 		if (enabled) {
 			await saveFCMTokenAndListen();
 		} else {
@@ -69,7 +67,7 @@ const AppContent = () => {
 	const saveFCMTokenAndListen = async () => {
 		let fcmToken = await AsyncStorage.getItem('fcmToken');
 		if (!fcmToken) {
-			fcmToken = await rnFirebase.messaging().getToken();
+			fcmToken = await messaging().getToken();
 			await AsyncStorage.setItem('fcmToken', fcmToken);
 		}
 
@@ -77,15 +75,11 @@ const AppContent = () => {
 		if (isTokenSavedOnServer !== 'true') {
 			registerDeviceFCMToken(fcmToken);
 		}
-
-		// createNotificationListeners((appState, data) => {
-		// 	showAlert(data.title, data.body);
-		// });
 	};
 
 	const requestNotificationPermission = async () => {
 		try {
-			await rnFirebase.messaging().requestPermission();
+			await messaging().requestPermission();
 			// User has authorized
 			console.log('Notification permission granted');
 			saveFCMTokenAndListen();
@@ -95,14 +89,10 @@ const AppContent = () => {
 		}
 	};
 
-	const showAlert = (title, body) => {
-		Alert.alert(title, body, [{ text: 'OK', onPress: () => console.log('OK Pressed') }], {
-			cancelable: false,
-		});
-	};
-
 	const setupFirebaseAuthChange = useCallback(() => {
-		firebase.auth().onAuthStateChanged(async (user) => {
+		// firebase.auth().onAuthStateChanged(async (user) => {
+		auth().onAuthStateChanged(async () => {
+			const user = getFirebaseUser();
 			setAuthStatus(user ? 'authenticated' : 'unauthenticated');
 
 			updateUser(!!user, user);
@@ -113,18 +103,24 @@ const AppContent = () => {
 
 			if (user) {
 				showWelcomeLoginToast();
-
 				// prettier-ignore
-				const { accessToken } = JSON.parse(JSON.stringify(user)).stsTokenManager;
-				console.log('Access Token:', accessToken);
-
+				const accessToken = await getFirebaseToken();
+				initializeAnalytics(user);
 				initializeInterceptors(accessToken);
-
 				const { role } = parseJwt(accessToken);
 				updateUserRole(role);
 			}
 		});
 	}, [initializeInterceptors, setLoading, updateUser, updateUserRole]);
+
+	const initializeAnalytics = async (user) => {
+		const setUserId = () => analytics().setUserId(user.uid);
+		try {
+			await Promise.all([setUserId()]);
+		} catch (error) {
+			console.log('Error registering user data in google analytics');
+		}
+	};
 
 	const initializeInterceptors = useCallback(
 		(accessToken) => {

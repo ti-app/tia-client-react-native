@@ -2,7 +2,8 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Toast, Text, List, ListItem, View, Icon } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import firebase from 'firebase';
+// import firebase from 'firebase';
+import auth from '@react-native-firebase/auth';
 
 import * as colors from '../../styles/colors';
 import { selectUser } from '../../store/reducers/auth.reducer';
@@ -14,7 +15,7 @@ const SideDrawerContent = ({ navigation }) => {
 	const deregisterDeviceFCMToken = useCallback(() => dispatch(deregisterFCMToken()), [dispatch]);
 	const logout = async () => {
 		try {
-			await firebase.auth().signOut();
+			await auth().signOut();
 			deregisterDeviceFCMToken();
 			navigation.navigate('login');
 			Toast.show({

@@ -137,6 +137,12 @@ yarn install --unsafe-perm instead
 keytool -list -printcert -jarfile app-release.apk
 ```
 
+- To check the android logs
+
+```
+adb logcat | grep 'com.tiapp'
+```
+
 # Samples
 
 (Yet To Add)

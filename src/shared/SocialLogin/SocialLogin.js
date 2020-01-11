@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken as FBAccessToken } from 'react-native-fbsdk';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import Config from 'react-native-config';
@@ -21,9 +22,9 @@ const SocialLogin = ({ style }) => {
 		if (!isCancelled) {
 			const { accessToken } = await FBAccessToken.getCurrentAccessToken();
 
-			const credential = firebase.auth.FacebookAuthProvider.credential(accessToken);
+			const credential = auth.FacebookAuthProvider.credential(accessToken);
 
-			await firebase.auth().signInWithCredential(credential);
+			await auth().signInWithCredential(credential);
 		}
 	};
 
@@ -31,12 +32,12 @@ const SocialLogin = ({ style }) => {
 		await GoogleSignin.hasPlayServices();
 		const googleUser = await GoogleSignin.signIn();
 
-		const credential = firebase.auth.GoogleAuthProvider.credential(
+		const credential = auth.GoogleAuthProvider.credential(
 			googleUser.idToken,
 			googleUser.accessToken
 		);
 
-		await firebase.auth().signInWithCredential(credential);
+		await auth().signInWithCredential(credential);
 	};
 
 	const handleFBSignIn = () => {

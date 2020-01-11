@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { View } from 'react-native';
 import { Icon, Button, Text } from 'native-base';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import auth from '@react-native-firebase/auth';
 
 import FormInput from '../../shared/FormInput/FormInput';
 import * as uiActions from '../../store/actions/ui-interactions.action';
@@ -29,13 +30,13 @@ const RegisterPasswordForm = ({ navigation }) => {
 	const registerWithFirebase = () => {
 		setLoading(true);
 
-		firebase
-			.auth()
+		// firebase
+		auth()
 			.createUserWithEmailAndPassword(email, password)
 			.then(
 				() => {
-					firebase
-						.auth()
+					// firebase
+					auth()
 						.currentUser.updateProfile({
 							location,
 						})

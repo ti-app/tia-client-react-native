@@ -3,7 +3,8 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text, Icon, Button } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useDispatch } from 'react-redux';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import auth from '@react-native-firebase/auth';
 
 import FormInput from '../../shared/FormInput/FormInput';
 import * as uiActions from '../../store/actions/ui-interactions.action';
@@ -32,8 +33,9 @@ const LoginForm = ({ style, navigation }) => {
 
 	const onLoginClick = async () => {
 		setLoading(true);
-		firebase
-			.auth()
+		// firebase
+		// 	.auth()
+		auth()
 			.signInWithEmailAndPassword(email, password)
 			.then(async (firebaseUser) => {
 				try {
