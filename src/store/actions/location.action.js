@@ -3,8 +3,9 @@ import Geolocation from 'react-native-geolocation-service';
 import Config from 'react-native-config';
 import Axios from 'axios';
 
-import showErrorToast from '../../utils/errorToasts';
+import { showErrorToast } from '../../utils/predefinedToasts';
 import { goToMapLocation } from '../../utils/geo';
+import logger from '../../utils/logger';
 
 const { GOOGLE_PLACES_API_KEY, GOOGLE_GEOCODING_API_KEY } = Config;
 
@@ -42,7 +43,7 @@ export const fetchUserLocation = (mapRef) => {
 						}
 					},
 					(error) => {
-						console.log('Error while getting current position', error);
+						logger.logError(error, 'Error while getting current position');
 					},
 					{
 						enableHighAccuracy: true,
@@ -51,8 +52,8 @@ export const fetchUserLocation = (mapRef) => {
 					}
 				);
 			});
-		} catch (err) {
-			console.log('Error while asking for permisssion', err);
+		} catch (error) {
+			logger.logError(error, 'Error while asking for permisssion');
 		}
 	};
 };
@@ -81,8 +82,9 @@ export const fetchSearchedLocation = (searchQuery) => async (dispatch, getState)
 	try {
 		const response = await callGoogleAutoComplete(location, searchQuery);
 		dispatch(fetchSearchedLocationSuccess(response.data));
-	} catch (err) {
-		showErrorToast('Error searching.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error searching.');
+		logger.logError(error, 'Error searching');
 	}
 };
 
@@ -116,8 +118,9 @@ export const setHomeMapCenterByGooglePlaceId = (placeId, mapRef, callback) => as
 			dispatch(setHomeMapCenter(location));
 			callback();
 		}
-	} catch (err) {
-		showErrorToast('Error searching.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error getting the location.');
+		logger.logError(error, 'Error calling google places api');
 	}
 };
 

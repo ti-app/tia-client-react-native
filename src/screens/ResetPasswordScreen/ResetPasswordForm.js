@@ -11,6 +11,7 @@ import {
 	showEmailSuccessfullToast,
 	showPasswordResetIssueToast,
 } from '../../utils/predefinedToasts';
+import logger from '../../utils/logger';
 import * as colors from '../../styles/colors';
 import * as uiActions from '../../store/actions/ui-interactions.action';
 
@@ -33,7 +34,7 @@ const ResetPasswordForm = ({ navigation }) => {
 				navigation.navigate('Home');
 			})
 			.catch((error) => {
-				console.log('Error while sending reset password mail', error);
+				logger.logError(error, 'Error while sending reset password mail');
 				showPasswordResetIssueToast();
 				setLoading(false);
 			});
@@ -45,7 +46,7 @@ const ResetPasswordForm = ({ navigation }) => {
 				icon={<Icon type="FontAwesome5" style={{ color: colors.black.toString() }} name="user" />}
 				placeholder="Email Address"
 				textContentType="emailAddress"
-				onChangeText={(email) => setEmail(email)}
+				onChangeText={(_email) => setEmail(_email)}
 			/>
 			<Button full success onPress={onResetClick}>
 				<Text>SEND PASSWORD RESET LINK</Text>

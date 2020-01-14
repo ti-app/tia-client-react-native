@@ -27,7 +27,7 @@ import {
 	selectCurrentRangeFilter,
 } from '../../store/reducers/ui-interactions.reducer';
 import PanicMarker from '../../shared/Map/PanicMarker/PanicMarker';
-import { createNotificationListeners, stopNotificationListeners } from '../../utils/notification';
+import { createNotificationListeners } from '../../utils/notification';
 
 const HomeMap = ({ navigation, onMapLoad }) => {
 	const [mapRef, setMapRef] = useState(null);
@@ -118,10 +118,6 @@ const HomeMap = ({ navigation, onMapLoad }) => {
 				setSelectedPanicData(panicData);
 			}
 		});
-
-		return () => {
-			stopNotificationListeners();
-		};
 	}, []);
 
 	const handleOnRegionChange = (_region) => {

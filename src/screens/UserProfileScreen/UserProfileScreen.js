@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import OptionsBar from '../../shared/NavigationBar/OptionsBar';
 import * as colors from '../../styles/colors';
+import logger from '../../utils/logger';
 
 const UserProfileScreen = () => {
 	const [currentUser, setCurrentUser] = useState('');
@@ -15,10 +16,10 @@ const UserProfileScreen = () => {
 	const getCurrentUser = async () => {
 		try {
 			const user = await AsyncStorage.getItem('USER');
-			const currentUser = JSON.parse(user) || 'INITIAL';
-			setCurrentUser(currentUser);
+			const _currentUser = JSON.parse(user) || 'INITIAL';
+			setCurrentUser(_currentUser);
 		} catch (error) {
-			console.log(error);
+			logger.logError(error, 'Error while sending reset password mail');
 			throw error;
 		}
 	};

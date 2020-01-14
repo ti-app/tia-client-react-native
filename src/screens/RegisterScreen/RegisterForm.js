@@ -12,6 +12,7 @@ import {
 	showSomethingBadToast,
 	showErrorToast,
 } from '../../utils/predefinedToasts';
+import logger from '../../utils/logger';
 import globalStyles from '../../styles/global';
 
 const RegisterPasswordForm = ({ navigation }) => {
@@ -52,14 +53,14 @@ const RegisterPasswordForm = ({ navigation }) => {
 							} catch (error) {
 								setLoading(false);
 								showSomethingBadToast();
-								console.log('Error while registering', error);
+								logger.logError(error, 'Error while registering');
 							}
 						});
 				},
 				(error) => {
 					setLoading(false);
 					showErrorToast(error.message);
-					console.log(error.message);
+					logger.logError(error, 'Error while creating user with email and password');
 				}
 			);
 	};

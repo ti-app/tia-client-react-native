@@ -2,8 +2,9 @@ import { Toast } from 'native-base';
 
 import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/errorToasts';
+import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
+import logger from '../../utils/logger';
 
 export const CREATE_PANIC_SITE = 'CREATE_PANIC_SITE';
 export const FETCH_PANIC = 'FETCH_PANIC';
@@ -44,8 +45,9 @@ export const createPanic = (panicData) => async (dispatch, getState) => {
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchPanicAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error creating a panic', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error creating a panic.');
+		logger.logError(error, 'Error creating a panic.');
 	}
 };
 
@@ -65,8 +67,9 @@ export const resolvePanic = (panicId) => async (dispatch, getState) => {
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchPanicAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error resolving a panic', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error resolving a panic');
+		logger.logError(error, 'Error resolving a panic');
 	}
 };
 
@@ -96,8 +99,9 @@ export const fetchPanic = (location, radius = 500) => async (dispatch) => {
 				textAlign: 'center',
 			},
 		});
-	} catch (err) {
-		showErrorToast('Error looking for panic nearby.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error looking for panic nearby.');
+		logger.logError(error, 'Error looking for panic nearby');
 	}
 };
 

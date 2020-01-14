@@ -2,9 +2,10 @@ import { Toast } from 'native-base';
 
 import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/errorToasts';
+import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
+import logger from '../../utils/logger';
 
 export const ADD_PLANTATION_SITE = 'ADD_PLANTATION_SITE';
 export const FETCH_PLANTATION_SITES = 'FETCH_PLANTATION_SITES';
@@ -47,8 +48,9 @@ export const addPlantationSite = (_plantationSite) => async (dispatch, getState)
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchSiteAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error adding a plantation site.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error adding a plantation site.');
+		logger.logError(error, 'Error adding a plantation site.');
 	}
 };
 
@@ -76,8 +78,9 @@ export const fetchPlanatationSites = (location, radius = 500) => async (dispatch
 				textAlign: 'center',
 			},
 		});
-	} catch (err) {
-		showErrorToast('Error fetching nearby plantation sites.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error fetching nearby plantation sites.');
+		logger.logError(error, 'Error fetching nearby plantation sites');
 	}
 };
 
@@ -103,8 +106,9 @@ export const deletePlantationSite = (plantationSite) => async (dispatch, getStat
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchSiteAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error deleting the plantation site.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error deleting the plantation site.');
+		logger.logError(error, 'Error deleting the plantation site');
 	}
 };
 
@@ -128,8 +132,9 @@ export const updatePlantationSite = (siteId, updatedPlantationSite) => async (
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchSiteAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error updating site.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error updating plantation site.');
+		logger.logError(error, 'Error updating plantation site');
 	}
 };
 
@@ -155,8 +160,9 @@ export const takeModActionForSite = (siteId, approval) => async (dispatch, getSt
 		NavigationUtil.navigate('Home');
 
 		dispatchFetchSiteAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error taking action', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error taking action');
+		logger.logError(error, 'Error taking moderator action for plantation site');
 	}
 };
 

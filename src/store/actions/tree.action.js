@@ -5,6 +5,7 @@ import { showErrorToast } from '../../utils/predefinedToasts';
 import NavigationUtil from '../../utils/navigation';
 import { checkIfOutOfRange } from '../../utils/geo';
 import uuid from '../../utils/uuid';
+import logger from '../../utils/logger';
 
 export const ADD_TREE_GROUP = 'ADD_TREE_GROUP';
 export const ADD_TREE_GROUP_COMMIT = 'ADD_TREE_GROUP_COMMIT';
@@ -138,8 +139,9 @@ export const fetchTreeGroups = (
 				textAlign: 'center',
 			},
 		});
-	} catch (err) {
+	} catch (error) {
 		showErrorToast('Error fetching nearby trees.');
+		logger.logError(error, 'Error fetching nearby trees');
 	}
 };
 
@@ -161,8 +163,9 @@ export const updateTree = (treeId, updatedTree) => async (dispatch, getState) =>
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
+	} catch (error) {
 		showErrorToast('Error updating a tree.');
+		logger.logError(error, 'Error updating a tree');
 	}
 };
 
@@ -207,8 +210,6 @@ export const waterTreeGroup = (treeGroup) => async (dispatch, getState) => {
 	}
 
 	const { _id: treeGroupId, health } = treeGroup;
-
-	console.log(treeGroup);
 
 	Toast.show({
 		text: 'Successfully updated watered tree group',
@@ -259,8 +260,9 @@ export const deleteTree = (tree) => async (dispatch, getState) => {
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
+	} catch (error) {
 		showErrorToast('Error deleting the tree.');
+		logger.logError(error, 'Error deleting the tree');
 	}
 };
 
@@ -286,8 +288,9 @@ export const deleteTreeGroup = (treeGroup) => async (dispatch, getState) => {
 		NavigationUtil.navigate('Home');
 
 		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
-		showErrorToast('Error deleting the tree.');
+	} catch (error) {
+		showErrorToast('Error deleting the tree group');
+		logger.logError(error, 'Error deleting the tree group');
 	}
 };
 
@@ -313,8 +316,9 @@ export const takeModActionForTreeGroup = (treeGroupId, approval) => async (dispa
 		NavigationUtil.navigate('Home');
 
 		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
+	} catch (error) {
 		showErrorToast('Error taking action');
+		logger.logError(error, 'Error taking moderator action on tree group');
 	}
 };
 
@@ -339,8 +343,9 @@ export const takeModActionForTree = (treeId, approval) => async (dispatch, getSt
 
 		NavigationUtil.navigate('Home');
 		dispatchFetchTreeGroupsAction(dispatch, getState);
-	} catch (err) {
+	} catch (error) {
 		showErrorToast('Error taking action');
+		logger.logError(error, 'Error taking moderator action on tree');
 	}
 };
 

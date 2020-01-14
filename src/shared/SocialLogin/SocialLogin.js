@@ -1,13 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-// import * as firebase from 'firebase';
+import { Button, Text } from 'native-base';
 import auth from '@react-native-firebase/auth';
+import analytics from '@react-native-firebase/analytics';
 import { LoginManager, AccessToken as FBAccessToken } from 'react-native-fbsdk';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import Config from 'react-native-config';
 
 import { showLoginFailed } from '../../utils/predefinedToasts';
-import { Button, Text } from 'native-base';
+import logger from '../../utils/logger';
 
 const { GOOGLE_WEB_CLIENT_ID } = Config;
 
@@ -25,6 +26,10 @@ const SocialLogin = ({ style }) => {
 			const credential = auth.FacebookAuthProvider.credential(accessToken);
 
 			await auth().signInWithCredential(credential);
+
+			analytics().logLogin({
+				method: 'facebook',
+			});
 		}
 	};
 
@@ -38,13 +43,16 @@ const SocialLogin = ({ style }) => {
 		);
 
 		await auth().signInWithCredential(credential);
+		analytics().logLogin({
+			method: 'google',
+		});
 	};
 
 	const handleFBSignIn = () => {
 		try {
 			signInWithFB();
 		} catch (error) {
-			console.log('Error login with facebook', error);
+			logger.logError(error, 'Error login with facebook');
 			showLoginFailed();
 		}
 	};
@@ -53,7 +61,7 @@ const SocialLogin = ({ style }) => {
 		try {
 			signInWithGoogle();
 		} catch (error) {
-			console.log('Error login with google', error);
+			logger.logError(error, 'Error login with google');
 			showLoginFailed();
 		}
 	};

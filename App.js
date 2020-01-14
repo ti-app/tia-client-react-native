@@ -10,11 +10,14 @@ import store from './src/store';
 import AppContent from './src';
 import constants from './src/config/common';
 import IntroSlides from './src/utils/introSlides';
+import logger from './src/utils/logger';
 
 const App = () => {
 	const [showIntro, setShowIntro] = useState(false);
 
 	useEffect(() => {
+		logger.logError(new Error('dummy error'), 'dummy errro');
+
 		setLaunchStatus();
 	}, []);
 
@@ -26,7 +29,7 @@ const App = () => {
 				constants.launchStatus.notInitial
 			);
 		} catch (error) {
-			console.log('Error setting launch status', error);
+			logger.logError(error, 'Error setting launch status');
 		}
 	};
 
@@ -36,8 +39,7 @@ const App = () => {
 			const launchStatus = value || constants.launchStatus.initial;
 			setShowIntro(launchStatus === constants.launchStatus.initial);
 		} catch (error) {
-			console.log('Error gettings launch status', error);
-			throw error;
+			logger.logError(error, 'Error gettings launch status');
 		}
 	};
 

@@ -1,6 +1,7 @@
 import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/errorToasts';
+import { showErrorToast } from '../../utils/predefinedToasts';
+import logger from '../../utils/logger';
 
 export const FETCH_TREE_ACTIVITIES_SUCCESS = 'FETCH_TREE_ACTIVITIES_SUCCESS';
 export const FETCH_USER_ACTIVITIES_SUCCESS = 'FETCH_USER_ACTIVITIES_SUCCESS';
@@ -13,8 +14,9 @@ export const fetchTreeActivities = (treeId) => async (dispatch) => {
 		});
 
 		dispatch(fetchTreeActivitiesSuccess(response.data));
-	} catch (err) {
-		showErrorToast('Error fetching tree activities.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error fetching tree activities');
+		logger.logError(error, 'Error fetching tree activities');
 	}
 };
 
@@ -26,8 +28,9 @@ export const fetchUserActivities = (userId) => async (dispatch) => {
 		});
 
 		dispatch(fetchUserActivitiesSuccess(response.data));
-	} catch (err) {
-		showErrorToast('Error fetching tree activities.', err, dispatch);
+	} catch (error) {
+		showErrorToast('Error fetching user activities');
+		logger.logError(error, 'Error fetching user activities');
 	}
 };
 

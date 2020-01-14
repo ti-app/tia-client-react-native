@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text, Icon, Button } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
+import analytics from '@react-native-firebase/analytics';
 import { useDispatch } from 'react-redux';
 // import * as firebase from 'firebase';
 import auth from '@react-native-firebase/auth';
@@ -13,6 +14,7 @@ import {
 	showSomethingBadToast,
 	showLoginFailed,
 } from '../../utils/predefinedToasts';
+import logger from '../../utils/logger';
 import { space } from '../../styles/variables';
 import * as colors from '../../styles/colors';
 
@@ -39,6 +41,9 @@ const LoginForm = ({ style, navigation }) => {
 			.signInWithEmailAndPassword(email, password)
 			.then(async (firebaseUser) => {
 				try {
+					analytics().logLogin({
+						method: 'email',
+					});
 					setLoading(false);
 					showWelcomeLoginToast();
 					navigation.navigate('Home');
@@ -46,13 +51,13 @@ const LoginForm = ({ style, navigation }) => {
 				} catch (error) {
 					setLoading(false);
 					showSomethingBadToast();
-					console.log('Error while saving user in async storage.', error);
+					logger.logError(error, 'Error while saving user in async storage.');
 				}
 			})
 			.catch((error) => {
 				setLoading(false);
 				showLoginFailed();
-				console.log('Error while login.', error);
+				logger.logError(error, 'Error while login.');
 			});
 	};
 

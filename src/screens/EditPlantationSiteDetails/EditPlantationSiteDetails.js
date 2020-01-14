@@ -47,7 +47,6 @@ const EditPlantationSiteScreen = () => {
 	]);
 
 	useEffect(() => {
-		console.log(selectedPlantationSite);
 		const {
 			wateringNearBy: _wateringNearBy,
 			soilQuality: _soilQuality,

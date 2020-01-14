@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 import InitialLoadingScreen from './screens/InitialLoadingScreen/InitialLoadingScreen';
 import AuthNavigator from './navigation/AuthNavigator';
@@ -19,6 +20,7 @@ import * as colors from './styles/colors';
 import { initializeAxiosInterceptors } from './utils/apiClient';
 import { selectLoading } from './store/reducers/ui-interactions.reducer';
 import { getFirebaseToken, getFirebaseUser } from './utils/firebase';
+import logger from './utils/logger';
 
 const AppContent = () => {
 	const [authStatus, setAuthStatus] = useState('checking');
@@ -49,10 +51,6 @@ const AppContent = () => {
 				checkNotificationPermissions();
 			}
 		});
-
-		// return () => {
-		// 	stopNotificationListeners();
-		// };
 	}, []);
 
 	const checkNotificationPermissions = async () => {
@@ -85,7 +83,7 @@ const AppContent = () => {
 			saveFCMTokenAndListen();
 		} catch (error) {
 			// User has rejected permissions
-			console.log('permission rejected');
+			logger.logError(error, 'Notification permission rejected');
 		}
 	};
 
@@ -105,20 +103,34 @@ const AppContent = () => {
 				showWelcomeLoginToast();
 				// prettier-ignore
 				const accessToken = await getFirebaseToken();
-				initializeAnalytics(user);
 				initializeInterceptors(accessToken);
 				const { role } = parseJwt(accessToken);
 				updateUserRole(role);
+				initializeAnalytics(user, role);
+				initializeCrashlytics(user, role);
 			}
 		});
 	}, [initializeInterceptors, setLoading, updateUser, updateUserRole]);
 
-	const initializeAnalytics = async (user) => {
-		const setUserId = () => analytics().setUserId(user.uid);
+	const initializeAnalytics = async (currentUser, role) => {
+		const setUserId = () => analytics().setUserId(currentUser.uid);
+		const setUserName = () => analytics().setUserProperty('user_name', currentUser.displayName);
+		const setUserRole = () => analytics().setUserProperty('user_role', role);
 		try {
-			await Promise.all([setUserId()]);
+			await Promise.all([setUserId(), setUserName(), setUserRole()]);
 		} catch (error) {
-			console.log('Error registering user data in google analytics');
+			logger.logError(error, 'Error registering user data in google analytics');
+		}
+	};
+
+	const initializeCrashlytics = async (currentUser, role) => {
+		const setUserId = () => crashlytics().setUserId(currentUser.uid);
+		const setUserName = () => crashlytics().setUserName('user_name', currentUser.displayName);
+		const setUserRole = () => crashlytics().setAttribute('user_role', role);
+		try {
+			await Promise.all([setUserId(), setUserName(), setUserRole()]);
+		} catch (error) {
+			logger.logError(error, 'Error registering user data in firebase crashlytics');
 		}
 	};
 
@@ -145,6 +157,16 @@ const AppContent = () => {
 			case 'authenticated':
 				return (
 					<MainTabNavigator
+						onNavigationStateChange={(prevState, currentState, action) => {
+							const currentRouteName = NavigationUtil.getActiveRouteName(currentState);
+							const previousRouteName = NavigationUtil.getActiveRouteName(prevState);
+
+							if (previousRouteName !== currentRouteName) {
+								// the line below uses the @react-native-firebase/analytics tracker
+								// change the tracker here to use other Mobile analytics SDK.
+								analytics().setCurrentScreen(currentRouteName, currentRouteName);
+							}
+						}}
 						ref={(navigatorRef) => {
 							NavigationUtil.setTopLevelNavigator(navigatorRef);
 						}}

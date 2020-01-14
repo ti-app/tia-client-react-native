@@ -143,6 +143,32 @@ keytool -list -printcert -jarfile app-release.apk
 adb logcat | grep 'com.tiapp'
 ```
 
+- To enable debug logging on your development device, set two adb shell flags before running your app:
+
+```
+adb shell setprop log.tag.Fabric DEBUG
+adb shell setprop log.tag.CrashlyticsCore DEBUG
+```
+
+To disable:
+
+```
+adb shell setprop log.tag.Fabric INFO
+adb shell setprop log.tag.CrashlyticsCore INFO
+```
+
+- To enable Analytics Debug mode on an Android device, execute the following commands:
+
+```
+adb shell setprop debug.firebase.analytics.app package_name
+```
+
+To disable:
+
+```
+adb shell setprop debug.firebase.analytics.app .none.
+```
+
 # Samples
 
 (Yet To Add)

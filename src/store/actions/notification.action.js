@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import apiClient from '../../utils/apiClient';
 
-import showErrorToast from '../../utils/errorToasts';
+import logger from '../../utils/logger';
 
 export const REGISTER_FCM_TOKEN_SUCCESS = 'REGISTER_FCM_TOKEN_SUCCESS';
 
@@ -9,7 +9,7 @@ export const registerFCMToken = (fcmToken) => async (dispatch) => {
 	try {
 		const response = await apiClient({
 			method: 'post',
-			url: `/user/notification/register`,
+			url: '/user/notification/register',
 			headers: { 'Content-Type': 'application/json' },
 			data: {
 				fcmToken,
@@ -17,8 +17,8 @@ export const registerFCMToken = (fcmToken) => async (dispatch) => {
 		});
 		await AsyncStorage.setItem('fcmTokenSaved', 'true');
 		console.log('TCL: registerFCMToken -> response', response);
-	} catch (err) {
-		showErrorToast('Failed to register notification token.', err, dispatch);
+	} catch (error) {
+		logger.logError(error, 'Failed to register notification token');
 	}
 };
 
@@ -28,7 +28,7 @@ export const deregisterFCMToken = () => async (dispatch) => {
 	try {
 		const response = await apiClient({
 			method: 'patch',
-			url: `/user/notification/deregister`,
+			url: '/user/notification/deregister',
 			headers: { 'Content-Type': 'application/json' },
 			data: {
 				fcmToken,
@@ -39,7 +39,7 @@ export const deregisterFCMToken = () => async (dispatch) => {
 			await AsyncStorage.removeItem('fcmToken');
 		}
 		console.log('TCL: deregisterFCMToken -> response', response);
-	} catch (err) {
-		showErrorToast('Failed to register notification token.', err, dispatch);
+	} catch (error) {
+		logger.logError(error, 'Failed to deregister notification token');
 	}
 };
