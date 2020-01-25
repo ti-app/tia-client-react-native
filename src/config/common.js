@@ -1,8 +1,11 @@
 import * as colors from '../styles/colors';
+import Config from 'react-native-config';
+
+const { API_BASE_URL } = Config;
 
 export default {
 	api: {
-		base: 'https://tia-server.herokuapp.com/v1',
+		base: API_BASE_URL,
 	},
 	roles: {
 		MODERATOR: 'moderator',
