@@ -22,6 +22,7 @@ jobs:
           name: Setup environment file
           command: |
             touch ${HOME}/tia-client-react-native/.env
+            echo "API_BASE_URL=$API_BASE_URL" >> ${HOME}/tia-client-react-native/.env
             echo "FIREBASE_CONFIG_API_KEY=$FIREBASE_CONFIG_API_KEY" >> ${HOME}/tia-client-react-native/.env
             echo "FIREBASE_CONFIG_AUTH_DOMAIN=$FIREBASE_CONFIG_AUTH_DOMAIN" >> ${HOME}/tia-client-react-native/.env
             echo "FIREBASE_CONFIG_DATABASE_URL=$FIREBASE_CONFIG_DATABASE_URL" >> ${HOME}/tia-client-react-native/.env
